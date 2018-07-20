@@ -30,7 +30,9 @@ SOURCES += \
     Token.cpp \
     Tokenizer.cpp \
     Parser.cpp \
-    Preprocessor.cpp
+    Preprocessor.cpp \
+    EvaluateNode.cpp \
+    NodeCreator.cpp
 
 HEADERS += \
         FormulaEngine.h \
@@ -41,7 +43,9 @@ HEADERS += \
     Token.h \
     Tokenizer.h \
     Parser.h \
-    Preprocessor.h
+    Preprocessor.h \
+    EvaluateNode.h \
+    NodeCreator.h
 
 unix {
     target.path = /usr/lib
