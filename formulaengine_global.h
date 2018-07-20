@@ -1,0 +1,13 @@
+#ifndef FORMULAENGINE_GLOBAL_H
+#define FORMULAENGINE_GLOBAL_H
+
+#include <QtCore>
+#include <type_traits>
+
+#if defined(FORMULAENGINE_LIBRARY)
+#  define FORMULAENGINESHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define FORMULAENGINESHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // FORMULAENGINE_GLOBAL_H
