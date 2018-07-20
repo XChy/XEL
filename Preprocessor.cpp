@@ -12,14 +12,8 @@ QString Preprocessor::process(QString expression)
 	for(auto it=expression.begin();it!=expression.end();++it){
 
 		if((*it)=='\"'){
-			if(isInQuotes){
-				isInQuotes=false;
-			}else{
-				isInQuotes=true;
-			}
-		}
-
-		if(it->isSpace()){
+			isInQuotes=!isInQuotes;
+		}else if(it->isSpace()){
 			if(!isInQuotes){
 				continue;
 			}
@@ -27,5 +21,6 @@ QString Preprocessor::process(QString expression)
 
 		result.append(*it);
 	}
+	qDebug()<<result;
 	return result;
 }

@@ -11,6 +11,7 @@ QList<Token> Tokenizer::analyze(QString expression) const
 	QList<Token> result;
 	auto it=expression.begin();
 	while(it!=expression.end()){
+		qDebug()<<(it==expression.end());
 		if(it->isNumber()){//number part
 			QString value;
 			value.append(*it);++it;//add number before decimal point
@@ -65,8 +66,8 @@ QList<Token> Tokenizer::analyze(QString expression) const
 			while(*it!='\"'){
 				value.append(*it);++it;
 			}
-			result.append(Token(Literal,value));
 			++it;
+			result.append(Token(Literal,value));
 		}else{
 			throw FormulaError(QString("Unknown char:")+(*it));
 		}

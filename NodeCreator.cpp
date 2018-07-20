@@ -5,6 +5,11 @@ UnaryOperatorCreator::UnaryOperatorCreator()
 
 }
 
+BinaryOperatorCreator::BinaryOperatorCreator()
+{
+
+}
+
 int BinaryOperatorCreator::priority() const
 {
 	return mPriority;

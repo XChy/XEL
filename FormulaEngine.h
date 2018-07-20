@@ -51,15 +51,15 @@ public:
 	void setBinaryOperator(const QString& name,Func func,int priority){
 		class Creator:public BinaryOperatorCreator{
 		public:
-			Creator(Func func):mFunc(func){setPriority(priority);}
+			Creator(Func func,int priority):mFunc(func){}
 			BinaryOperatorNode* create() const{
 				class Operator:public BinaryOperatorNode{
 				public:
 					Operator(Func func):
-						UnaryOperatorNode(),
+						BinaryOperatorNode(),
 						mFunc(func){}
 					Variant evaluate() const{
-						return mFunc(leftOperand().evaluate(),rightOperand().evaluate());
+						return mFunc(leftOperand()->evaluate(),rightOperand()->evaluate());
 					}
 					Func mFunc;
 				};
@@ -67,7 +67,7 @@ public:
 			}
 			Func mFunc;
 		};
-		mContext->unaryOperatorTable().insert(name,new Creator(func));
+		mContext->binaryOperatorTable().insert(name,new Creator(func,priority));
 	}
 
 	template<typename Func>
@@ -94,7 +94,7 @@ public:
 			}
 			Func mFunc;
 		};
-		mContext->unaryOperatorTable().insert(name,new Creator(func));
+		mContext->functionTable().insert(name,new Creator(func));
 	}
 
 	Variant evaluate() const;
