@@ -1,25 +1,27 @@
 #ifndef FORMULACONTEXT_H
 #define FORMULACONTEXT_H
 
-#include <formulaengine_global.h>
+#include <xel_global.h>
 #include <NodeCreator.h>
 #include <Variant.h>
 
-class FORMULAENGINESHARED_EXPORT FormulaContext
+class XELSHARED_EXPORT XELContext
 {
 public:
-	FormulaContext();
+	XELContext();
 	QString operatorChars() const;
+	void setOperatorChars(const QString& operatorChars);
 
 	QHash<QString, UnaryOperatorCreator*>& unaryOperatorTable();
-	QHash<QString, BinaryOperatorCreator*>& binaryOperatorTable();
-	QHash<QString, FunctionCreator*>& functionTable();
-	QHash<QString, Variant>& variableTable();
-
-	void setOperatorChars(const QString& operatorChars);
 	void setUnaryOperatorTable(const QHash<QString, UnaryOperatorCreator*>& unaryOperatorTable);
+
+	QHash<QString, BinaryOperatorCreator*>& binaryOperatorTable();
 	void setBinaryOperatorTable(const QHash<QString, BinaryOperatorCreator*>& binaryOperatorTable);
+
+	QHash<QString, FunctionCreator*>& functionTable();
 	void setFunctionTable(const QHash<QString, FunctionCreator*>& functionTable);
+
+	QHash<QString, Variant>& variableTable();
 	void setVariableTable(const QHash<QString, Variant>& variableTable);
 
 private:

@@ -21,6 +21,15 @@ QString Preprocessor::process(QString expression)
 
 		result.append(*it);
 	}
-	qDebug()<<result;
 	return result;
+}
+
+XELContext* Preprocessor::context() const
+{
+	return mContext;
+}
+
+void Preprocessor::setContext(XELContext* context)
+{
+	mContext = context;
 }

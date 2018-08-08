@@ -1,20 +1,20 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
-#include <formulaengine_global.h>
+#include <xel_global.h>
 #include <Token.h>
-#include <FormulaContext.h>
+#include <XELContext.h>
 
-class FORMULAENGINESHARED_EXPORT Tokenizer
+class XELSHARED_EXPORT Tokenizer
 {
 public:
 	Tokenizer();
-	QList<Token> analyze(QString expression) const;
-	FormulaContext* context() const;
+	virtual QList<Token> analyze(QString expression) const;
 
-	void setContext(FormulaContext* context);
+	XELContext* context() const;
+	void setContext(XELContext* context);
 private:
-	FormulaContext* mContext;
+	XELContext* mContext;
 };
 
 #endif // TOKENIZER_H

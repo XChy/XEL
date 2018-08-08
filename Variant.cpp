@@ -35,7 +35,7 @@ double Variant::toDouble() const
 	if(mType==VariantType::Double){
 		return mHolder->toConcrete<double>()->data();
 	}
-	throw FormulaError("Cannot cast "+Variant::toString(mType)+" to Double");
+	throw XELError("Cannot cast "+Variant::toString(mType)+" to Double");
 }
 
 QString Variant::toString() const
@@ -43,7 +43,7 @@ QString Variant::toString() const
 	if(mType==VariantType::String){
 		return mHolder->toConcrete<QString>()->data();
 	}
-	throw FormulaError("Cannot cast "+Variant::toString(mType)+" to String");
+	throw XELError("Cannot cast "+Variant::toString(mType)+" to String");
 }
 
 bool Variant::toBool() const
@@ -51,7 +51,7 @@ bool Variant::toBool() const
 	if(mType==VariantType::Bool){
 		return mHolder->toConcrete<bool>()->data();
 	}
-	throw FormulaError("Cannot cast "+Variant::toString(mType)+" to Bool");
+	throw XELError("Cannot cast "+Variant::toString(mType)+" to Bool");
 }
 
 double Variant::castDouble() const

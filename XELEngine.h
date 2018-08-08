@@ -1,28 +1,18 @@
-#ifndef FORMULAENGINE_H
-#define FORMULAENGINE_H
+#ifndef XELENGINE_H
+#define XELENGINE_H
 
-#include "formulaengine_global.h"
-#include <FormulaContext.h>
+#include "xel_global.h"
+#include <XELContext.h>
 #include <Variant.h>
 #include <Preprocessor.h>
 #include <Tokenizer.h>
 #include <Parser.h>
 
-class FORMULAENGINESHARED_EXPORT FormulaEngine
+class XELSHARED_EXPORT XELEngine
 {
 
 public:
-	FormulaEngine();
-	QString expression() const;
-	FormulaContext* context() const;
-
-	Variant& variable(const QString& name);
-
-	void setExpression(QString expression);
-	void setContext(FormulaContext* context);
-
-	void setVariable(const QString& name, const Variant& value);
-	void removeVariable(QString name);
+	XELEngine();
 
 	template<typename Func>
 	void setUnaryOperator(const QString& name,Func func){
@@ -51,7 +41,7 @@ public:
 	void setBinaryOperator(const QString& name,Func func,int priority){
 		class Creator:public BinaryOperatorCreator{
 		public:
-			Creator(Func func,int priority):mFunc(func){}
+			Creator(Func func,int priority):mFunc(func){setPriority(priority);}
 			BinaryOperatorNode* create() const{
 				class Operator:public BinaryOperatorNode{
 				public:
@@ -98,14 +88,34 @@ public:
 	}
 
 	Variant evaluate() const;
+
+	QString expression() const;
+	void setExpression(QString expression);
+
+	Variant& variable(const QString& name);
+	void setVariable(const QString& name, const Variant& value);
+	void removeVariable(QString name);
+
+	std::shared_ptr<XELContext> context() const;
+	void setContext(const std::shared_ptr<XELContext>& context);
+
+	std::shared_ptr<Preprocessor> preprocessor() const;
+	void setPreprocessor(const std::shared_ptr<Preprocessor>& preprocessor);
+
+	std::shared_ptr<Tokenizer> tokenizer() const;
+	void setTokenizer(const std::shared_ptr<Tokenizer>& tokenizer);
+
+	std::shared_ptr<Parser> parser() const;
+	void setParser(const std::shared_ptr<Parser>& parser);
+
 private:
 	QString mExpression;
-	FormulaContext* mContext;
-
-	Preprocessor preprocessor;
-	Tokenizer tokenizer;
-	Parser parser;
 	EvaluateNode* rootNode;
+
+	std::shared_ptr<XELContext> mContext;
+	std::shared_ptr<Preprocessor> mPreprocessor;
+	std::shared_ptr<Tokenizer> mTokenizer;
+	std::shared_ptr<Parser> mParser;
 };
 
 #endif // FORMULAENGINE_H

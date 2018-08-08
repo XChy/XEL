@@ -1,7 +1,7 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
-#include <formulaengine_global.h>
+#include <xel_global.h>
 #include <Variant.h>
 
 enum TokenType{
@@ -13,16 +13,16 @@ enum TokenType{
 	Comma
 };
 
-class FORMULAENGINESHARED_EXPORT Token
-{
+class XELSHARED_EXPORT Token{
 public:
 	Token();
 	Token(TokenType type);
 	Token(TokenType type,const Variant& value);
-	TokenType type() const;
-	Variant value() const;
 
+	TokenType type() const;
 	void setType(const TokenType& type);
+
+	Variant value() const;
 	void setValue(const Variant& value);
 
 private:

@@ -1,13 +1,19 @@
 #ifndef PREPROCESSOR_H
 #define PREPROCESSOR_H
 
-#include <formulaengine_global.h>
+#include <xel_global.h>
+#include <XELContext.h>
 
-class FORMULAENGINESHARED_EXPORT Preprocessor
+class XELSHARED_EXPORT Preprocessor
 {
 public:
 	Preprocessor();
-	QString process(QString expression);
+	virtual QString process(QString expression);
+
+	XELContext* context() const;
+	void setContext(XELContext* context);
+private:
+	XELContext* mContext;
 };
 
 #endif // PREPROCESSOR_H

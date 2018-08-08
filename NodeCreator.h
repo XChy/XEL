@@ -1,28 +1,27 @@
 #ifndef NODECREATOR_H
 #define NODECREATOR_H
 
-#include <formulaengine_global.h>
+#include <xel_global.h>
 #include <EvaluateNode.h>
 
-class FORMULAENGINESHARED_EXPORT UnaryOperatorCreator{
+class XELSHARED_EXPORT UnaryOperatorCreator{
 public:
 	UnaryOperatorCreator();
 	virtual UnaryOperatorNode* create() const=0;
 };
 
-class FORMULAENGINESHARED_EXPORT BinaryOperatorCreator{
+class XELSHARED_EXPORT BinaryOperatorCreator{
 public:
 	BinaryOperatorCreator();
 	virtual BinaryOperatorNode* create() const=0;
-	int priority() const;
 
+	int priority() const;
 	void setPriority(int priority);
 private:
 	int mPriority;
 };
 
-class FORMULAENGINESHARED_EXPORT FunctionCreator{
-public:
+class XELSHARED_EXPORT FunctionCreator{
 	FunctionCreator();
 	virtual FunctionNode* create() const=0;
 };

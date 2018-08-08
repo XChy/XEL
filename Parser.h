@@ -1,25 +1,25 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-#include <formulaengine_global.h>
-#include <FormulaContext.h>
+#include <xel_global.h>
+#include <XELContext.h>
 #include <EvaluateNode.h>
 #include <Token.h>
 
-class FORMULAENGINESHARED_EXPORT Parser
+class XELSHARED_EXPORT Parser
 {
 public:
 	Parser();
-	EvaluateNode* parse(const QList<Token>& tokenList);
-	FormulaContext* context() const;
+	virtual EvaluateNode* parse(const QList<Token>& tokenList);
 
-	void setContext(FormulaContext* context);
-//private:
-	FormulaContext* mContext;
-	EvaluateNode* parseNoParenthesesMiddle(QList<Token>::iterator begin, QList<Token>::iterator end);
-	EvaluateNode* parseValue(QList<Token>::iterator it);
-	UnaryOperatorNode* parseUnaryOperator(QList<Token>::iterator it);
-	std::tuple<BinaryOperatorNode*,int> parseBinaryOperator(QList<Token>::iterator it);
+	XELContext* context() const;
+	void setContext(XELContext* context);
+private:
+	XELContext* mContext;
+	EvaluateNode* parseNoParenthesesMiddle(QList<Token>::const_iterator begin, QList<Token>::const_iterator end);
+	EvaluateNode* parseValue(QList<Token>::const_iterator it);
+	UnaryOperatorNode* parseUnaryOperator(QList<Token>::const_iterator it);
+	std::tuple<BinaryOperatorNode*,int> parseBinaryOperator(QList<Token>::const_iterator it);
 };
 
 #endif // PARSER_H

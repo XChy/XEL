@@ -1,7 +1,7 @@
 #ifndef VARIANT_H
 #define VARIANT_H
 
-#include <FormulaError.h>
+#include <XELError.h>
 
 enum class VariantType{
 	Double,
@@ -39,7 +39,7 @@ private:
 	T mData;
 };
 
-class FORMULAENGINESHARED_EXPORT Variant
+class XELSHARED_EXPORT Variant
 {
 public:
 	Variant();

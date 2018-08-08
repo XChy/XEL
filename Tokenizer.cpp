@@ -11,7 +11,6 @@ QList<Token> Tokenizer::analyze(QString expression) const
 	QList<Token> result;
 	auto it=expression.begin();
 	while(it!=expression.end()){
-		qDebug()<<(it==expression.end());
 		if(it->isNumber()){//number part
 			QString value;
 			value.append(*it);++it;//add number before decimal point
@@ -69,18 +68,18 @@ QList<Token> Tokenizer::analyze(QString expression) const
 			++it;
 			result.append(Token(Literal,value));
 		}else{
-			throw FormulaError(QString("Unknown char:")+(*it));
+			throw XELError(QString("Unknown char:")+(*it));
 		}
 	}
 	return result;
 }
 
-FormulaContext* Tokenizer::context() const
+XELContext* Tokenizer::context() const
 {
 	return mContext;
 }
 
-void Tokenizer::setContext(FormulaContext* context)
+void Tokenizer::setContext(XELContext* context)
 {
 	mContext = context;
 }
