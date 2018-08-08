@@ -5,7 +5,7 @@ XELEngine::XELEngine()
 	  mParser(new Parser),
 	  mTokenizer(new Tokenizer),
 	  mPreprocessor(new Preprocessor),
-	  rootNode(nullptr)
+	  mRootNode(nullptr)
 {
 	mParser->setContext(mContext.get());
 	mTokenizer->setContext(mContext.get());
@@ -19,7 +19,7 @@ QString XELEngine::expression() const
 
 void XELEngine::setExpression(QString expression)
 {
-	rootNode=mParser->parse(mTokenizer->analyze(mPreprocessor->process(expression)));
+	mRootNode=mParser->parse(mTokenizer->analyze(mPreprocessor->process(expression)));
 	mExpression=expression;
 }
 
@@ -40,8 +40,8 @@ void XELEngine::removeVariable(QString name)
 
 Variant XELEngine::evaluate() const
 {
-	if(rootNode){
-		return rootNode->evaluate();
+	if(mRootNode){
+		return mRootNode->evaluate();
 	}
 	return Variant();
 }
@@ -87,4 +87,9 @@ std::shared_ptr<Parser> XELEngine::parser() const
 void XELEngine::setParser(const std::shared_ptr<Parser>& parser)
 {
 	mParser = parser;
+}
+
+EvaluateNode* XELEngine::rootNode() const
+{
+    return mRootNode;
 }

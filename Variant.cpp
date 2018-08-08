@@ -69,6 +69,23 @@ bool Variant::castBool() const
 	return mHolder->toConcrete<bool>()->data();
 }
 
+bool Variant::operator==(const Variant& variant) const
+{
+	if(type()==variant.type()){
+		switch (variant.type()) {
+			case VariantType::Double:
+				return castDouble()==variant.castDouble();
+			case VariantType::String:
+				return castString()==variant.castString();;
+			case VariantType::Bool:
+				return castBool()==variant.castBool();
+			default:
+				return true;
+		}
+	}
+	return false;
+}
+
 Variant& Variant::operator=(const Variant& variant)
 {
 	delete mHolder;

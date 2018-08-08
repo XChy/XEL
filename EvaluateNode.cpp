@@ -36,7 +36,11 @@ VariableNode::VariableNode()
 
 Variant VariableNode::evaluate() const
 {
-	return mVariableTable->operator [](mVariableName);
+	if(mVariableTable->contains(mVariableName)){
+		return mVariableTable->operator [](mVariableName);
+	}else{
+		throw XELError("No variable called "+mVariableName);
+	}
 }
 
 QString VariableNode::variableName() const

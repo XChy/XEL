@@ -6,6 +6,8 @@
 #include <EvaluateNode.h>
 #include <Token.h>
 
+typedef QList<Token>::const_iterator TokenIt;
+
 class XELSHARED_EXPORT Parser
 {
 public:
@@ -16,10 +18,16 @@ public:
 	void setContext(XELContext* context);
 private:
 	XELContext* mContext;
-	EvaluateNode* parseNoParenthesesMiddle(QList<Token>::const_iterator begin, QList<Token>::const_iterator end);
-	EvaluateNode* parseValue(QList<Token>::const_iterator it);
-	UnaryOperatorNode* parseUnaryOperator(QList<Token>::const_iterator it);
-	std::tuple<BinaryOperatorNode*,int> parseBinaryOperator(QList<Token>::const_iterator it);
+//	EvaluateNode* parseNoParenthesesMiddle(TokenIt begin, TokenIt end);
+//	EvaluateNode* parseNoParenthesesLeft(TokenIt begin, TokenIt end);
+	ValueNode* createValue(TokenIt it);
+	VariableNode* createVariable(TokenIt it);
+	UnaryOperatorNode* createUnaryOperator(TokenIt it);
+	std::tuple<BinaryOperatorNode*,int> createBinaryOperator(TokenIt it);
+	FunctionNode* createFunction(TokenIt it);
+	EvaluateNode* parseAll(TokenIt begin, TokenIt end);
+	EvaluateNode* parseNoUnaryOperatorOperand(TokenIt& it, TokenIt end);
+	EvaluateNode* parseOperand(TokenIt& it, TokenIt end);
 };
 
 #endif // PARSER_H

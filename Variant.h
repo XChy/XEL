@@ -74,10 +74,11 @@ public:
 
 	Variant& operator=(const Variant& variant);
 	template<typename T>
-	Variant& operator=(const T& variant){
-		reset(variant);
+	Variant& operator=(const T& value){
+		reset(value);
 		return *this;
 	}
+	bool operator==(const Variant& variant) const;
 
 	VariantType type() const;
 

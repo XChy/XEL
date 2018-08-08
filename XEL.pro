@@ -51,6 +51,3 @@ unix {
     target.path = /usr/lib
     INSTALLS += target
 }
-
-SUBDIRS += \
-    FormulaEngine.pro

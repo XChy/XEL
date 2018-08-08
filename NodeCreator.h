@@ -22,6 +22,7 @@ private:
 };
 
 class XELSHARED_EXPORT FunctionCreator{
+public:
 	FunctionCreator();
 	virtual FunctionNode* create() const=0;
 };

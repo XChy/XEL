@@ -6,22 +6,58 @@ Parser::Parser()
 
 }
 
-EvaluateNode* Parser::parseValue(QList<Token>::const_iterator it){
-	if(it->type()==Literal){
-		ValueNode* value=new ValueNode;
-		value->setValue(it->value());
-		return value;
-	}else if(it->type()==Identifier){
-		VariableNode* variable=new VariableNode;
-		variable->setVariableName(it->value().toString());
-		variable->setVariableTable(&mContext->variableTable());
-		return variable;
-	}else{
-		throw XELError("Is not Literal or Identifier");
+TokenIt findNextCloseParenthese(TokenIt begin,TokenIt end)
+{
+	int numOpenParentheses=1;
+	for(auto it=begin;it!=end;++it){
+		if(it->type()==OpenParentheses){
+			++numOpenParentheses;
+		}else if(it->type()==CloseParentheses){
+			--numOpenParentheses;
+		}
+		if(!numOpenParentheses){
+			return it;
+		}
 	}
+	return end;
 }
 
-UnaryOperatorNode* Parser::parseUnaryOperator(QList<Token>::const_iterator it){
+QList<TokenIt> findFunctionComma(TokenIt begin,TokenIt end)
+{
+	QList<TokenIt> result;
+	int numOpenParentheses=0;
+	for(auto it=begin;it!=end;++it){
+		if(it->type()==OpenParentheses){
+			++numOpenParentheses;
+		}else if(it->type()==CloseParentheses){
+			--numOpenParentheses;
+		}
+		if(it->type()==Comma){
+			if(!numOpenParentheses){
+				result.append(it);
+			}
+		}
+	}
+	return result;
+}
+
+ValueNode* Parser::createValue(TokenIt it)
+{
+	ValueNode* value=new ValueNode;
+	value->setValue(it->value());
+	return value;
+}
+
+VariableNode* Parser::createVariable(TokenIt it)
+{
+	VariableNode* variable=new VariableNode;
+	variable->setVariableName(it->value().toString());
+	variable->setVariableTable(&mContext->variableTable());
+	return variable;
+}
+
+UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
+{
 	if(it->type()==Operator){
 		if(!mContext->unaryOperatorTable().contains(it->value().toString())){
 			throw XELError("No unary Operator called "+it->value().toString());
@@ -32,7 +68,7 @@ UnaryOperatorNode* Parser::parseUnaryOperator(QList<Token>::const_iterator it){
 	}
 }
 
-std::tuple<BinaryOperatorNode*,int> Parser::parseBinaryOperator(QList<Token>::const_iterator it){
+std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator){
 		if(!mContext->binaryOperatorTable().contains(it->value().toString())){
 			throw XELError("No binary Operator called "+it->value().toString());
@@ -44,42 +80,101 @@ std::tuple<BinaryOperatorNode*,int> Parser::parseBinaryOperator(QList<Token>::co
 	}
 }
 
-EvaluateNode* Parser::parseNoParenthesesMiddle(QList<Token>::const_iterator begin, QList<Token>::const_iterator end){
-	auto it=begin;
-
-	EvaluateNode* root;
-	EvaluateNode* operand1;
-	if(it->type()==Operator){
-		auto unaryOper=parseUnaryOperator(it);
-		++it;if(it==end)throw XELError("cannot end in unary operator");
-		EvaluateNode* value1=parseValue(it);
-		unaryOper->setOperand(value1);
-		root=operand1=unaryOper;
-	}else{
-		EvaluateNode* value1=parseValue(it);
-		root=operand1=value1;
+FunctionNode* Parser::createFunction(TokenIt it)
+{
+	if(!mContext->functionTable().contains(it->value().toString())){
+		throw XELError("No function called "+it->value().castString());
 	}
+	auto creator=mContext->functionTable()[it->value().castString()];
+	return creator->create();
+}
+
+EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
+{
+	if(it->type()==Literal){
+		return createValue(it);
+	}else if(it->type()==Identifier){
+		if(it+1==end){
+			return createVariable(it);
+		}
+		if((it+1)->type()==OpenParentheses){
+			FunctionNode* func1=createFunction(it);
+			auto subFunctionEnd=findNextCloseParenthese(it+2,end);
+			if(subFunctionEnd!=it+2){
+				QList<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
+				if(commas.empty()){
+					func1->setParameters({parseAll(it+2,subFunctionEnd)});
+				}else{
+					QList<EvaluateNode*> params;
+					params.append(parseAll(it+2,commas[0]));
+					for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
+						if(itOfIt==commas.end()-1){
+							params.append(parseAll((*itOfIt)+1,subFunctionEnd));
+						}else{
+							params.append(parseAll((*itOfIt)+1,*(itOfIt+1)));
+						}
+					}
+					func1->setParameters(params);
+				}
+			}
+			it=subFunctionEnd;
+			return func1;
+		}else{
+			return createVariable(it);
+		}
+	}else if(it->type()==OpenParentheses){
+		auto subParsingEnd=findNextCloseParenthese(it+1,end);
+		if(subParsingEnd==end){
+			throw XELError("missing closeparenthese");
+		}
+		EvaluateNode* result=parseAll(it+1,subParsingEnd);
+		it=subParsingEnd;
+		return result;
+	}
+}
+
+EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
+{
+	if(it->type()==Operator){
+		UnaryOperatorNode* unary=createUnaryOperator(it);
+		if(++it==end)throw XELError("No value after operator");
+		unary->setOperand(parseNoUnaryOperatorOperand(it,end));
+		return unary;
+	}else{
+		return parseNoUnaryOperatorOperand(it,end);
+	}
+}
+
+EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
+	TokenIt it=begin;
+
+	EvaluateNode* root=nullptr;
+	EvaluateNode* operand1=parseOperand(it,end);
+	root=operand1;
+
 	if(++it==end)return root;
 
 	BinaryOperatorNode* operator1;
-	auto tuple=parseBinaryOperator(it);
+	auto tuple=createBinaryOperator(it);
 	operator1=std::get<0>(tuple);
 	int priority1=std::get<1>(tuple);
 	operator1->setLeftOperand(operand1);
 	root=operator1;
 	if(++it==end)throw XELError("No value after operator");
 
-	EvaluateNode* operand2=parseValue(it);
+	EvaluateNode* operand2=parseOperand(it,end);
 	operator1->setRightOperand(operand2);
 
 	++it;if(it==end)return root;
 
 	while(it!=end){
-		auto tuple=parseBinaryOperator(it);
+		auto tuple=createBinaryOperator(it);
 		BinaryOperatorNode* operator2=std::get<0>(tuple);
 		int priority2=std::get<1>(tuple);
 		if(++it==end)throw XELError("No value after operator");
-		EvaluateNode* operand3=parseValue(it);
+
+		EvaluateNode* operand3=parseOperand(it,end);
+
 		if(priority2<priority1){
 			operator2->setLeftOperand(root);
 			operator2->setRightOperand(operand3);
@@ -105,9 +200,10 @@ EvaluateNode* Parser::parseNoParenthesesMiddle(QList<Token>::const_iterator begi
 	return root;
 }
 
+
 EvaluateNode* Parser::parse(const QList<Token>& tokenList)
 {
-	return parseNoParenthesesMiddle(tokenList.begin(),tokenList.end());
+	return parseAll(tokenList.begin(),tokenList.end());
 }
 
 XELContext* Parser::context() const

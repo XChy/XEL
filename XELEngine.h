@@ -108,9 +108,10 @@ public:
 	std::shared_ptr<Parser> parser() const;
 	void setParser(const std::shared_ptr<Parser>& parser);
 
+	EvaluateNode* rootNode() const;
 private:
 	QString mExpression;
-	EvaluateNode* rootNode;
+	EvaluateNode* mRootNode;
 
 	std::shared_ptr<XELContext> mContext;
 	std::shared_ptr<Preprocessor> mPreprocessor;
