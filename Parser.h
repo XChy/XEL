@@ -18,8 +18,6 @@ public:
 	void setContext(XELContext* context);
 private:
 	XELContext* mContext;
-//	EvaluateNode* parseNoParenthesesMiddle(TokenIt begin, TokenIt end);
-//	EvaluateNode* parseNoParenthesesLeft(TokenIt begin, TokenIt end);
 	ValueNode* createValue(TokenIt it);
 	VariableNode* createVariable(TokenIt it);
 	UnaryOperatorNode* createUnaryOperator(TokenIt it);
