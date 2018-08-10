@@ -130,6 +130,8 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 		EvaluateNode* result=parseAll(it+1,subParsingEnd);
 		it=subParsingEnd;
 		return result;
+	}else{
+		throw XELError("Unknown operand");
 	}
 }
 
@@ -147,6 +149,7 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 
 EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	TokenIt it=begin;
+	if(it==end)throw XELError("Cannot be null");
 
 	EvaluateNode* root=nullptr;
 	EvaluateNode* operand1=parseOperand(it,end);
@@ -155,11 +158,11 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	if(++it==end)return root;
 
 	BinaryOperatorNode* operator1;
+	int priority1;
 	auto tuple=createBinaryOperator(it);
-	operator1=std::get<0>(tuple);
-	int priority1=std::get<1>(tuple);
+	root=operator1=std::get<0>(tuple);
+	priority1=std::get<1>(tuple);
 	operator1->setLeftOperand(operand1);
-	root=operator1;
 	if(++it==end)throw XELError("No value after operator");
 
 	EvaluateNode* operand2=parseOperand(it,end);

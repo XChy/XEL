@@ -38,6 +38,11 @@ QList<Token> Tokenizer::analyze(QString expression) const
 			value.append(*it);++it;
 			while(mContext->operatorChars().contains(*it)){
 				value.append(*it);++it;
+				if((!mContext->binaryOperatorTable().contains(value))&&(!mContext->unaryOperatorTable().contains(value))){
+					value.remove(value.size()-1,1);
+					--it;
+					break;
+				}
 			}
 			result.append(Token(Operator,value));
 		}else if(it->isLetter()||*it=='_'){
