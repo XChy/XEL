@@ -13,7 +13,7 @@ enum TokenType{
 	Comma
 };
 
-class XELSHARED_EXPORT Token{
+class XEL_EXPORT Token{
 public:
 	Token();
 	Token(TokenType type);

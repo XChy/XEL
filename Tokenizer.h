@@ -5,7 +5,7 @@
 #include <Token.h>
 #include <XELContext.h>
 
-class XELSHARED_EXPORT Tokenizer
+class XEL_EXPORT Tokenizer
 {
 public:
 	Tokenizer();

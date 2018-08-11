@@ -4,10 +4,12 @@
 #include <QtCore>
 #include <memory>
 
-#if defined(XEL_LIBRARY)
-#  define XELSHARED_EXPORT Q_DECL_EXPORT
+#if defined(XEL_SHARED_LIBRARY)
+#  define XEL_EXPORT Q_DECL_EXPORT
+#elif defined(XEL_STATIC_LIBRARY)
+#  define XEL_EXPORT
 #else
-#  define XELSHARED_EXPORT Q_DECL_IMPORT
+#  define XEL_EXPORT Q_DECL_IMPORT
 #endif
 
 #endif // FORMULAENGINE_GLOBAL_H

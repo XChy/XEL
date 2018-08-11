@@ -8,7 +8,7 @@
 
 typedef QList<Token>::const_iterator TokenIt;
 
-class XELSHARED_EXPORT Parser
+class XEL_EXPORT Parser
 {
 public:
 	Parser();

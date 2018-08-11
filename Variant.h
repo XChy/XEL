@@ -5,97 +5,87 @@
 
 enum class VariantType{
 	Double,
+	Int,
 	String,
 	Bool,
-	Unknown
+	Null
 };
 
-template<typename T>
-class ConcreteHolder;
-
-class VariantHolder{
+struct VariantHolder{
 public:
-	template<typename T>
-	ConcreteHolder<T>* toConcrete(){
-		return static_cast<ConcreteHolder<T>*>(this);
-	}
-	virtual ~VariantHolder(){}
+	union{
+	double doubleValue;
+	int intValue;
+	bool boolValue;
+	};
+	QString stringValue;
 };
 
-template<typename T>
-class ConcreteHolder:public VariantHolder{
-public:
-	ConcreteHolder(){}
-	ConcreteHolder(T data){
-		mData=data;
-	}
-	T data(){
-		return mData;
-	}
-	void setData(const T& data){
-		mData=data;
-	}
-private:
-	T mData;
-};
-
-class XELSHARED_EXPORT Variant
+class XEL_EXPORT Variant
 {
 public:
 	Variant();
-	template<typename T>
-	Variant(const T& variant)
-		:mType(typeOf<T>()),
-		  mHolder(new ConcreteHolder<T>(variant))
-	{}
+	Variant(double value);
+	Variant(int value);
+	Variant(const QString value);
+	Variant(bool value);
+
 	Variant(const Variant& value);
 
-	template<typename T>
-	void set(const T& variant){
-		mHolder->toConcrete<T>()->setData(variant);
-	}
+	// Don't change data member "type"
+	void set(double value);
+	void set(int value);
+	void set(const QString& value);
+	void set(bool value);
 
-	template<typename T>
-	void reset(const T& variant){
-		delete mHolder;
-		mType=typeOf<T>();
-		mHolder=new ConcreteHolder<T>(variant);
-	}
+	// Change data member "type" as corresponding VariantType
+	void reset(double value);
+	void reset(int value);
+	void reset(const QString& value);
+	void reset(bool value);
 
+	// Change data member "type" as VariantType::Null
 	void clear();
 
-	double toDouble() const;
-	QString toString() const;
-	bool toBool() const;
+	// Safe:will throw error,
+	// and convert int to double,double to int,int to bool
+	// but don't convert double,int,bool to string
+	double convertDouble() const;
+	int convertInt() const;
+	QString convertString() const;
+	bool convertBool() const;
 
-	double castDouble() const;
-	QString castString() const;
-	bool castBool() const;
+	//convert double,int,bool,Null to string
+	QString toString() const;
+
+	// Unsafe:read from memory directly
+	double doubleValue() const;
+	int intValue() const;
+	QString stringValue() const;
+	bool boolValue() const;
 
 	Variant& operator=(const Variant& variant);
-	template<typename T>
-	Variant& operator=(const T& value){
-		reset(value);
-		return *this;
-	}
+
+	//reset(value)
+	Variant& operator=(double value);
+	Variant& operator=(int value);
+	Variant& operator=(const QString& value);
+	Variant& operator=(bool value);
+
+	// (1==1.0):true
 	bool operator==(const Variant& variant) const;
 
 	VariantType type() const;
 
-	template<typename T>
-	static VariantType typeOf(){
-		if(std::is_same<T,double>::value)return VariantType::Double;
-		if(std::is_same<T,QString>::value)return VariantType::String;
-		if(std::is_same<T,bool>::value)return VariantType::Bool;
-		return VariantType::Unknown;
-	}
+	static QString convertString(VariantType type);
 
-	static QString toString(VariantType type);
-
-	~Variant();
-
+	// convertXXX()
+	operator double() const;
+	operator int() const;
+	operator QString() const;
+	operator bool() const;
 private:
-	VariantHolder* mHolder;
+	VariantHolder mHolder;
 	VariantType mType;
 };
 

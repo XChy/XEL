@@ -4,13 +4,13 @@
 #include <xel_global.h>
 #include <EvaluateNode.h>
 
-class XELSHARED_EXPORT UnaryOperatorCreator{
+class XEL_EXPORT UnaryOperatorCreator{
 public:
 	UnaryOperatorCreator();
 	virtual UnaryOperatorNode* create() const=0;
 };
 
-class XELSHARED_EXPORT BinaryOperatorCreator{
+class XEL_EXPORT BinaryOperatorCreator{
 public:
 	BinaryOperatorCreator();
 	virtual BinaryOperatorNode* create() const=0;
@@ -21,7 +21,7 @@ private:
 	int mPriority;
 };
 
-class XELSHARED_EXPORT FunctionCreator{
+class XEL_EXPORT FunctionCreator{
 public:
 	FunctionCreator();
 	virtual FunctionNode* create() const=0;

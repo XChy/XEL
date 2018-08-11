@@ -4,7 +4,7 @@
 #include <xel_global.h>
 #include <XELContext.h>
 
-class XELSHARED_EXPORT Preprocessor
+class XEL_EXPORT Preprocessor
 {
 public:
 	Preprocessor();

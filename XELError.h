@@ -3,7 +3,7 @@
 
 #include <xel_global.h>
 
-class XELSHARED_EXPORT XELError
+class XEL_EXPORT XELError
 {
 public:
 	XELError(QString errorString);

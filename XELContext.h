@@ -5,7 +5,7 @@
 #include <NodeCreator.h>
 #include <Variant.h>
 
-class XELSHARED_EXPORT XELContext
+class XEL_EXPORT XELContext
 {
 public:
 	XELContext();

@@ -59,8 +59,8 @@ VariableNode* Parser::createVariable(TokenIt it)
 UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 {
 	if(it->type()==Operator){
-		if(!mContext->unaryOperatorTable().contains(it->value().toString())){
-			throw XELError("No unary Operator called "+it->value().toString());
+		if(!mContext->unaryOperatorTable().contains(it->value().convertString())){
+			throw XELError("No unary Operator called "+it->value().stringValue());
 		}
 		return mContext->unaryOperatorTable()[it->value().toString()]->create();
 	}else{
@@ -70,10 +70,10 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 
 std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator){
-		if(!mContext->binaryOperatorTable().contains(it->value().toString())){
-			throw XELError("No binary Operator called "+it->value().toString());
+		if(!mContext->binaryOperatorTable().contains(it->value().convertString())){
+			throw XELError("No binary Operator called "+it->value().stringValue());
 		}
-		auto creator=mContext->binaryOperatorTable()[it->value().toString()];
+		auto creator=mContext->binaryOperatorTable()[it->value().stringValue()];
 		return std::make_tuple(creator->create(),creator->priority());
 	}else{
 		throw XELError("Is not binary operator");
@@ -82,10 +82,10 @@ std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
 
 FunctionNode* Parser::createFunction(TokenIt it)
 {
-	if(!mContext->functionTable().contains(it->value().toString())){
-		throw XELError("No function called "+it->value().castString());
+	if(!mContext->functionTable().contains(it->value().convertString())){
+		throw XELError("No function called "+it->value().stringValue());
 	}
-	auto creator=mContext->functionTable()[it->value().castString()];
+	auto creator=mContext->functionTable()[it->value().stringValue()];
 	return creator->create();
 }
 
@@ -149,7 +149,11 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 
 EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	TokenIt it=begin;
-	if(it==end)throw XELError("Cannot be null");
+	if(it==end){
+		ValueNode* value=new ValueNode;
+		value->setValue(Variant());
+		return value;
+	}
 
 	EvaluateNode* root=nullptr;
 	EvaluateNode* operand1=parseOperand(it,end);

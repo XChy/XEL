@@ -8,13 +8,15 @@ Tokenizer::Tokenizer()
 
 void Tokenizer::analyzeDecAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
 {
+	bool isDouble=false;
 	value.append(*it);++it;
-	while(it->isNumber()){
+	while(it->isDigit()){
 		value.append(*it);++it;
 	}
 	if(*it=='.'){
+		isDouble=true;
 		value.append(*it);++it;;//add decimal point
-		while(it->isNumber()){
+		while(it->isDigit()){
 			value.append(*it);++it;//add number behind decimal point
 		}
 	}
@@ -23,11 +25,15 @@ void Tokenizer::analyzeDecAndNext(QString::const_iterator& it, QString& value, Q
 		if(*it=='+'||*it=="-"){
 			value.append(*it);++it;
 		}
-		while(it->isNumber()){
+		while(it->isDigit()){
 			value.append(*it);++it;
 		}
 	}
-	tokens.append(Token(Literal,value.toDouble()));
+	if(isDouble){
+		tokens.append(Token(Literal,value.toDouble()));
+	}else{
+		tokens.append(Token(Literal,value.toInt()));
+	}
 }
 
 void Tokenizer::analyzeHexAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
@@ -36,7 +42,7 @@ void Tokenizer::analyzeHexAndNext(QString::const_iterator& it, QString& value, Q
 	while(it->isDigit()||isLetter){
 		value.append(*it);++it;
 	}
-	tokens.append(Token(Literal,double(value.toInt(nullptr,16))));
+	tokens.append(Token(Literal,value.toInt(nullptr,16)));
 }
 
 void Tokenizer::analyzeBinAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
@@ -44,7 +50,7 @@ void Tokenizer::analyzeBinAndNext(QString::const_iterator& it, QString& value, Q
 	while(*it=="0"||*it=="1"){
 		value.append(*it);++it;
 	}
-	tokens.append(Token(Literal,double(value.toInt(nullptr,2))));
+	tokens.append(Token(Literal,value.toInt(nullptr,2)));
 }
 
 QList<Token> Tokenizer::analyze(QString expression) const
@@ -65,7 +71,7 @@ QList<Token> Tokenizer::analyze(QString expression) const
 					++it;//needn't analyze '0b' part
 					analyzeBinAndNext(it,value,result);
 				}else{
-					//needn't analyze '0' part
+					it=tokenBegin;
 					analyzeDecAndNext(it,value,result);
 				}
 			}else{

@@ -9,7 +9,12 @@ QT       -= gui
 TARGET = XEL
 TEMPLATE = lib
 
-DEFINES += XEL_LIBRARY
+DEFINES += XEL_STATIC_LIBRARY
+
+contains(DEFINES,XEL_STATIC_LIBRARY)
+{
+CONFIG += staticlib
+}
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -32,7 +37,8 @@ SOURCES += \
     Variant.cpp \
     XELEngine.cpp \
     XELError.cpp \
-    XELContext.cpp
+    XELContext.cpp \
+    XString.cpp
 
 HEADERS += \
     EvaluateNode.h \
@@ -45,7 +51,8 @@ HEADERS += \
     XELEngine.h \
     xel_global.h \
     XELError.h \
-    XELContext.h
+    XELContext.h \
+    XString.h
 
 unix {
     target.path = /usr/lib

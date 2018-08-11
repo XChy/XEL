@@ -8,7 +8,7 @@
 #include <Tokenizer.h>
 #include <Parser.h>
 
-class XELSHARED_EXPORT XELEngine
+class XEL_EXPORT XELEngine
 {
 
 public:
@@ -18,21 +18,21 @@ public:
 	void setUnaryOperator(const QString& name,Func func){
 		class Creator:public UnaryOperatorCreator{
 		public:
-			Creator(Func func):mFunc(func){}
+			Creator(Func func):mEvalFunc(func){}
 			UnaryOperatorNode* create() const{
 				class Operator:public UnaryOperatorNode{
 				public:
 					Operator(Func func):
 						UnaryOperatorNode(),
-						mFunc(func){}
+						mEvalFunc(func){}
 					Variant evaluate() const{
-						return mFunc(operand()->evaluate());
+						return mEvalFunc(operand()->evaluate());
 					}
-					Func mFunc;
+					Func mEvalFunc;
 				};
-				return new Operator(mFunc);
+				return new Operator(mEvalFunc);
 			}
-			Func mFunc;
+			Func mEvalFunc;
 		};
 		mContext->unaryOperatorTable().insert(name,new Creator(func));
 	}
@@ -41,50 +41,50 @@ public:
 	void setBinaryOperator(const QString& name,Func func,int priority){
 		class Creator:public BinaryOperatorCreator{
 		public:
-			Creator(Func func,int priority):mFunc(func){setPriority(priority);}
+			Creator(Func func,int priority):mEvalFunc(func){setPriority(priority);}
 			BinaryOperatorNode* create() const{
 				class Operator:public BinaryOperatorNode{
 				public:
 					Operator(Func func):
 						BinaryOperatorNode(),
-						mFunc(func){}
+						mEvalFunc(func){}
 					Variant evaluate() const{
-						return mFunc(leftOperand()->evaluate(),rightOperand()->evaluate());
+						return mEvalFunc(leftOperand()->evaluate(),rightOperand()->evaluate());
 					}
-					Func mFunc;
+					Func mEvalFunc;
 				};
-				return new Operator(mFunc);
+				return new Operator(mEvalFunc);
 			}
-			Func mFunc;
+			Func mEvalFunc;
 		};
 		mContext->binaryOperatorTable().insert(name,new Creator(func,priority));
 	}
 
-	template<typename Func>
-	void setFunction(const QString& name,Func func){
+	template<typename EvalFunc>
+	void setFunction(const QString& name,EvalFunc evalFunc){
 		class Creator:public FunctionCreator{
 		public:
-			Creator(Func func):mFunc(func){}
+			Creator(EvalFunc func):mEvalFunc(func){}
 			FunctionNode* create() const{
 				class Function:public FunctionNode{
 				public:
-					Function(Func func):
+					Function(EvalFunc func):
 						FunctionNode(),
-						mFunc(func){}
+						mEvalFunc(func){}
 					Variant evaluate() const{
 						QList<Variant> variants;
 						for(EvaluateNode* node:parameters()){
 							variants.append(node->evaluate());
 						}
-						return mFunc(variants);
+						return mEvalFunc(variants);
 					}
-					Func mFunc;
+					EvalFunc mEvalFunc;
 				};
-				return new Function(mFunc);
+				return new Function(mEvalFunc);
 			}
-			Func mFunc;
+			EvalFunc mEvalFunc;
 		};
-		mContext->functionTable().insert(name,new Creator(func));
+		mContext->functionTable().insert(name,new Creator(evalFunc));
 	}
 
 	Variant evaluate() const;

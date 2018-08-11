@@ -4,7 +4,7 @@
 #include <xel_global.h>
 #include <Variant.h>
 
-class XELSHARED_EXPORT EvaluateNode
+class XEL_EXPORT EvaluateNode
 {
 public:
 	EvaluateNode();
@@ -12,7 +12,7 @@ public:
 	virtual ~EvaluateNode();
 };
 
-class XELSHARED_EXPORT ValueNode:public EvaluateNode{
+class XEL_EXPORT ValueNode:public EvaluateNode{
 public:
 	ValueNode();
 	virtual Variant evaluate() const;
@@ -24,7 +24,7 @@ private:
 	Variant mValue;
 };
 
-class XELSHARED_EXPORT VariableNode:public EvaluateNode{
+class XEL_EXPORT VariableNode:public EvaluateNode{
 public:
 	VariableNode();
 	virtual Variant evaluate() const;
@@ -39,7 +39,7 @@ private:
 	QHash<QString, Variant>* mVariableTable;
 };
 
-class XELSHARED_EXPORT UnaryOperatorNode:public EvaluateNode{
+class XEL_EXPORT UnaryOperatorNode:public EvaluateNode{
 public:
 	UnaryOperatorNode();
 	virtual Variant evaluate() const=0;
@@ -52,7 +52,7 @@ private:
 	EvaluateNode* mOperand;
 };
 
-class XELSHARED_EXPORT BinaryOperatorNode:public EvaluateNode{
+class XEL_EXPORT BinaryOperatorNode:public EvaluateNode{
 public:
 	BinaryOperatorNode();
 	virtual Variant evaluate() const=0;
@@ -69,7 +69,7 @@ private:
 	EvaluateNode* mRightOperand;
 };
 
-class XELSHARED_EXPORT FunctionNode:public EvaluateNode{
+class XEL_EXPORT FunctionNode:public EvaluateNode{
 public:
 	FunctionNode();
 	virtual Variant evaluate() const=0;
