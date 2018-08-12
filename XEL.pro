@@ -3,18 +3,14 @@
 # Project created by QtCreator 2018-08-08T17:20:19
 #
 #-------------------------------------------------
-
-QT       -= gui
+CONFIG -= QT
 
 TARGET = XEL
 TEMPLATE = lib
 
-DEFINES += XEL_STATIC_LIBRARY
-
-contains(DEFINES,XEL_STATIC_LIBRARY)
-{
-CONFIG += staticlib
-}
+DEFINES += XEL_SHARED_LIBRARY
+#DEFINES += XEL_STATIC_LIBRARY
+#CONFIG += staticlib
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings

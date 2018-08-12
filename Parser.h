@@ -6,13 +6,13 @@
 #include <EvaluateNode.h>
 #include <Token.h>
 
-typedef QList<Token>::const_iterator TokenIt;
+typedef std::vector<Token>::const_iterator TokenIt;
 
 class XEL_EXPORT Parser
 {
 public:
 	Parser();
-	virtual EvaluateNode* parse(const QList<Token>& tokenList);
+	virtual EvaluateNode* parse(const std::vector<Token>& tokenList);
 
 	XELContext* context() const;
 	void setContext(XELContext* context);

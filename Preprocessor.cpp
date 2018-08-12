@@ -5,10 +5,10 @@ Preprocessor::Preprocessor()
 
 }
 
-QString Preprocessor::process(QString expression)
+XString Preprocessor::process(XString expression)
 {
 	bool isInQuotes=false;
-	QString result;
+	XString result;
 	for(auto it=expression.begin();it!=expression.end();++it){
 
 		if((*it)=='\"'){

@@ -15,7 +15,7 @@ public:
 	XELEngine();
 
 	template<typename Func>
-	void setUnaryOperator(const QString& name,Func func){
+	void setUnaryOperator(const XString& name,Func func){
 		class Creator:public UnaryOperatorCreator{
 		public:
 			Creator(Func func):mEvalFunc(func){}
@@ -34,11 +34,11 @@ public:
 			}
 			Func mEvalFunc;
 		};
-		mContext->unaryOperatorTable().insert(name,new Creator(func));
+		mContext->unaryOperatorTable()[name]=new Creator(func);
 	}
 
 	template<typename Func>
-	void setBinaryOperator(const QString& name,Func func,int priority){
+	void setBinaryOperator(const XString& name,Func func,int priority){
 		class Creator:public BinaryOperatorCreator{
 		public:
 			Creator(Func func,int priority):mEvalFunc(func){setPriority(priority);}
@@ -57,11 +57,11 @@ public:
 			}
 			Func mEvalFunc;
 		};
-		mContext->binaryOperatorTable().insert(name,new Creator(func,priority));
+		mContext->binaryOperatorTable()[name]=new Creator(func,priority);
 	}
 
 	template<typename EvalFunc>
-	void setFunction(const QString& name,EvalFunc evalFunc){
+	void setFunction(const XString& name,EvalFunc evalFunc){
 		class Creator:public FunctionCreator{
 		public:
 			Creator(EvalFunc func):mEvalFunc(func){}
@@ -72,9 +72,9 @@ public:
 						FunctionNode(),
 						mEvalFunc(func){}
 					Variant evaluate() const{
-						QList<Variant> variants;
+						std::vector<Variant> variants;
 						for(EvaluateNode* node:parameters()){
-							variants.append(node->evaluate());
+							variants.push_back(node->evaluate());
 						}
 						return mEvalFunc(variants);
 					}
@@ -84,17 +84,17 @@ public:
 			}
 			EvalFunc mEvalFunc;
 		};
-		mContext->functionTable().insert(name,new Creator(evalFunc));
+		mContext->functionTable()[name]=new Creator(evalFunc);
 	}
 
 	Variant evaluate() const;
 
-	QString expression() const;
-	void setExpression(QString expression);
+	XString expression() const;
+	void setExpression(XString expression);
 
-	Variant& variable(const QString& name);
-	void setVariable(const QString& name, const Variant& value);
-	void removeVariable(QString name);
+	Variant& variable(const XString& name);
+	void setVariable(const XString& name, const Variant& value);
+	void removeVariable(XString name);
 
 	std::shared_ptr<XELContext> context() const;
 	void setContext(const std::shared_ptr<XELContext>& context);
@@ -110,7 +110,7 @@ public:
 
 	EvaluateNode* rootNode() const;
 private:
-	QString mExpression;
+	XString mExpression;
 	EvaluateNode* mRootNode;
 
 	std::shared_ptr<XELContext> mContext;

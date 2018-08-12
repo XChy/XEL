@@ -22,9 +22,9 @@ TokenIt findNextCloseParenthese(TokenIt begin,TokenIt end)
 	return end;
 }
 
-QList<TokenIt> findFunctionComma(TokenIt begin,TokenIt end)
+std::vector<TokenIt> findFunctionComma(TokenIt begin,TokenIt end)
 {
-	QList<TokenIt> result;
+	std::vector<TokenIt> result;
 	int numOpenParentheses=0;
 	for(auto it=begin;it!=end;++it){
 		if(it->type()==OpenParentheses){
@@ -34,7 +34,7 @@ QList<TokenIt> findFunctionComma(TokenIt begin,TokenIt end)
 		}
 		if(it->type()==Comma){
 			if(!numOpenParentheses){
-				result.append(it);
+				result.push_back(it);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ VariableNode* Parser::createVariable(TokenIt it)
 UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 {
 	if(it->type()==Operator){
-		if(!mContext->unaryOperatorTable().contains(it->value().convertString())){
+		if(!mContext->unaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No unary Operator called "+it->value().stringValue());
 		}
 		return mContext->unaryOperatorTable()[it->value().toString()]->create();
@@ -70,7 +70,7 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 
 std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator){
-		if(!mContext->binaryOperatorTable().contains(it->value().convertString())){
+		if(!mContext->binaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No binary Operator called "+it->value().stringValue());
 		}
 		auto creator=mContext->binaryOperatorTable()[it->value().stringValue()];
@@ -82,7 +82,7 @@ std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
 
 FunctionNode* Parser::createFunction(TokenIt it)
 {
-	if(!mContext->functionTable().contains(it->value().convertString())){
+	if(!mContext->functionTable().operator [](it->value().convertString())){
 		throw XELError("No function called "+it->value().stringValue());
 	}
 	auto creator=mContext->functionTable()[it->value().stringValue()];
@@ -101,17 +101,17 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 			FunctionNode* func1=createFunction(it);
 			auto subFunctionEnd=findNextCloseParenthese(it+2,end);
 			if(subFunctionEnd!=it+2){
-				QList<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
+				std::vector<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
 				if(commas.empty()){
 					func1->setParameters({parseAll(it+2,subFunctionEnd)});
 				}else{
-					QList<EvaluateNode*> params;
-					params.append(parseAll(it+2,commas[0]));
+					std::vector<EvaluateNode*> params;
+					params.push_back(parseAll(it+2,commas[0]));
 					for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
 						if(itOfIt==commas.end()-1){
-							params.append(parseAll((*itOfIt)+1,subFunctionEnd));
+							params.push_back(parseAll((*itOfIt)+1,subFunctionEnd));
 						}else{
-							params.append(parseAll((*itOfIt)+1,*(itOfIt+1)));
+							params.push_back(parseAll((*itOfIt)+1,*(itOfIt+1)));
 						}
 					}
 					func1->setParameters(params);
@@ -208,7 +208,7 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 }
 
 
-EvaluateNode* Parser::parse(const QList<Token>& tokenList)
+EvaluateNode* Parser::parse(const std::vector<Token>& tokenList)
 {
 	return parseAll(tokenList.begin(),tokenList.end());
 }

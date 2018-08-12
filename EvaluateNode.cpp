@@ -36,29 +36,29 @@ VariableNode::VariableNode()
 
 Variant VariableNode::evaluate() const
 {
-	if(mVariableTable->contains(mVariableName)){
+	if(mVariableTable->operator [](mVariableName)){
 		return mVariableTable->operator [](mVariableName);
 	}else{
 		throw XELError("No variable called "+mVariableName);
 	}
 }
 
-QString VariableNode::variableName() const
+XString VariableNode::variableName() const
 {
 	return mVariableName;
 }
 
-void VariableNode::setVariableName(const QString& variableName)
+void VariableNode::setVariableName(const XString& variableName)
 {
 	mVariableName = variableName;
 }
 
-QHash<QString, Variant>* VariableNode::variableTable() const
+std::unordered_map<XString, Variant, XStringHasher>* VariableNode::variableTable() const
 {
 	return mVariableTable;
 }
 
-void VariableNode::setVariableTable(QHash<QString, Variant>* variableTable)
+void VariableNode::setVariableTable(std::unordered_map<XString, Variant, XStringHasher>* variableTable)
 {
 	mVariableTable = variableTable;
 }
@@ -125,17 +125,19 @@ FunctionNode::FunctionNode()
 	:EvaluateNode()
 {}
 
-QList<EvaluateNode*> FunctionNode::parameters() const
+std::vector<EvaluateNode*> FunctionNode::parameters() const
 {
 	return mParameters;
 }
 
-void FunctionNode::setParameters(const QList<EvaluateNode*>& parameters)
+void FunctionNode::setParameters(const std::vector<EvaluateNode*>& parameters)
 {
 	mParameters = parameters;
 }
 
 FunctionNode::~FunctionNode()
 {
-	qDeleteAll(mParameters);
+	for(auto it=parameters().begin();it!=parameters().end();++it){
+		delete *it;
+	}
 }

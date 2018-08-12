@@ -9,15 +9,15 @@ class XEL_EXPORT Tokenizer
 {
 public:
 	Tokenizer();
-	virtual QList<Token> analyze(QString expression) const;
+	virtual std::vector<Token> analyze(XString expression) const;
 
 	XELContext* context() const;
 	void setContext(XELContext* context);
 private:
 	XELContext* mContext;
-	void analyzeDecAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const;
-	void analyzeHexAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const;
-	void analyzeBinAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const;
+	void analyzeDecAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
+	void analyzeHexAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
+	void analyzeBinAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
 };
 
 #endif // TOKENIZER_H

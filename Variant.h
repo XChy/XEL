@@ -18,7 +18,7 @@ public:
 	int intValue;
 	bool boolValue;
 	};
-	QString stringValue;
+	XString stringValue;
 };
 
 class XEL_EXPORT Variant
@@ -27,7 +27,7 @@ public:
 	Variant();
 	Variant(double value);
 	Variant(int value);
-	Variant(const QString value);
+	Variant(const XString value);
 	Variant(bool value);
 
 	Variant(const Variant& value);
@@ -35,13 +35,13 @@ public:
 	// Don't change data member "type"
 	void set(double value);
 	void set(int value);
-	void set(const QString& value);
+	void set(const XString& value);
 	void set(bool value);
 
 	// Change data member "type" as corresponding VariantType
 	void reset(double value);
 	void reset(int value);
-	void reset(const QString& value);
+	void reset(const XString& value);
 	void reset(bool value);
 
 	// Change data member "type" as VariantType::Null
@@ -52,16 +52,16 @@ public:
 	// but don't convert double,int,bool to string
 	double convertDouble() const;
 	int convertInt() const;
-	QString convertString() const;
+	XString convertString() const;
 	bool convertBool() const;
 
 	//convert double,int,bool,Null to string
-	QString toString() const;
+	XString toString() const;
 
 	// Unsafe:read from memory directly
 	double doubleValue() const;
 	int intValue() const;
-	QString stringValue() const;
+	XString stringValue() const;
 	bool boolValue() const;
 
 	Variant& operator=(const Variant& variant);
@@ -69,7 +69,7 @@ public:
 	//reset(value)
 	Variant& operator=(double value);
 	Variant& operator=(int value);
-	Variant& operator=(const QString& value);
+	Variant& operator=(const XString& value);
 	Variant& operator=(bool value);
 
 	// (1==1.0):true
@@ -77,12 +77,12 @@ public:
 
 	VariantType type() const;
 
-	static QString convertString(VariantType type);
+	static XString convertString(VariantType type);
 
 	// convertXXX()
 	operator double() const;
 	operator int() const;
-	operator QString() const;
+	operator XString() const;
 	operator bool() const;
 private:
 	VariantHolder mHolder;

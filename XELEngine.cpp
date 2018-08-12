@@ -12,30 +12,30 @@ XELEngine::XELEngine()
 	mPreprocessor->setContext(mContext.get());
 }
 
-QString XELEngine::expression() const
+XString XELEngine::expression() const
 {
 	return mExpression;
 }
 
-void XELEngine::setExpression(QString expression)
+void XELEngine::setExpression(XString expression)
 {
 	mRootNode=mParser->parse(mTokenizer->analyze(mPreprocessor->process(expression)));
 	mExpression=expression;
 }
 
-Variant& XELEngine::variable(const QString& name)
+Variant& XELEngine::variable(const XString& name)
 {
 	return mContext->variableTable()[name];
 }
 
-void XELEngine::setVariable(const QString& name, const Variant& value)
+void XELEngine::setVariable(const XString& name, const Variant& value)
 {
-	mContext->variableTable().insert(name,value);
+	mContext->variableTable()[name]=value;
 }
 
-void XELEngine::removeVariable(QString name)
+void XELEngine::removeVariable(XString name)
 {
-	mContext->variableTable().remove(name);
+	mContext->variableTable().erase(name);
 }
 
 Variant XELEngine::evaluate() const

@@ -6,52 +6,52 @@ XELContext::XELContext()
 
 }
 
-QString XELContext::operatorChars() const
+XString XELContext::operatorChars() const
 {
 	return mOperatorChars;
 }
 
-void XELContext::setOperatorChars(const QString& operatorChars)
+void XELContext::setOperatorChars(const XString& operatorChars)
 {
 	mOperatorChars = operatorChars;
 }
 
-QHash<QString, UnaryOperatorCreator*>& XELContext::unaryOperatorTable()
+std::unordered_map<XString, UnaryOperatorCreator*, XStringHasher>& XELContext::unaryOperatorTable()
 {
 	return mUnaryOperatorTable;
 }
 
-void XELContext::setUnaryOperatorTable(const QHash<QString, UnaryOperatorCreator*>& unaryOperatorTable)
+void XELContext::setUnaryOperatorTable(const std::unordered_map<XString, UnaryOperatorCreator*, XStringHasher>& unaryOperatorTable)
 {
 	mUnaryOperatorTable = unaryOperatorTable;
 }
 
-QHash<QString, BinaryOperatorCreator*>& XELContext::binaryOperatorTable()
+std::unordered_map<XString, BinaryOperatorCreator*, XStringHasher>& XELContext::binaryOperatorTable()
 {
 	return mBinaryOperatorTable;
 }
 
-void XELContext::setBinaryOperatorTable(const QHash<QString, BinaryOperatorCreator*>& binaryOperatorTable)
+void XELContext::setBinaryOperatorTable(const std::unordered_map<XString, BinaryOperatorCreator*, XStringHasher>& binaryOperatorTable)
 {
 	mBinaryOperatorTable = binaryOperatorTable;
 }
 
-QHash<QString, FunctionCreator*>& XELContext::functionTable()
+std::unordered_map<XString, FunctionCreator*, XStringHasher>& XELContext::functionTable()
 {
 	return mFunctionTable;
 }
 
-void XELContext::setFunctionTable(const QHash<QString, FunctionCreator*>& functionTable)
+void XELContext::setFunctionTable(const std::unordered_map<XString, FunctionCreator*, XStringHasher>& functionTable)
 {
 	mFunctionTable = functionTable;
 }
 
-QHash<QString, Variant>& XELContext::variableTable()
+std::unordered_map<XString, Variant, XStringHasher>& XELContext::variableTable()
 {
     return mVariableTable;
 }
 
-void XELContext::setVariableTable(const QHash<QString, Variant>& variableTable)
+void XELContext::setVariableTable(const std::unordered_map<XString, Variant, XStringHasher>& variableTable)
 {
     mVariableTable = variableTable;
 }

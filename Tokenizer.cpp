@@ -6,7 +6,7 @@ Tokenizer::Tokenizer()
 
 }
 
-void Tokenizer::analyzeDecAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
+void Tokenizer::analyzeDecAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const
 {
 	bool isDouble=false;
 	value.append(*it);++it;
@@ -22,7 +22,7 @@ void Tokenizer::analyzeDecAndNext(QString::const_iterator& it, QString& value, Q
 	}
 	if(*it=='e'){// 'e' part
 		value.append(*it);++it;
-		if(*it=='+'||*it=="-"){
+		if(*it=='+'||*it=='-'){
 			value.append(*it);++it;
 		}
 		while(it->isDigit()){
@@ -30,36 +30,36 @@ void Tokenizer::analyzeDecAndNext(QString::const_iterator& it, QString& value, Q
 		}
 	}
 	if(isDouble){
-		tokens.append(Token(Literal,value.toDouble()));
+		tokens.push_back(Token(Literal,value.toDouble()));
 	}else{
-		tokens.append(Token(Literal,value.toInt()));
+		tokens.push_back(Token(Literal,value.toInt()));
 	}
 }
 
-void Tokenizer::analyzeHexAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
+void Tokenizer::analyzeHexAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const
 {
-	bool isLetter=((*it)>'a'&&(*it)>'b')||((*it)>'A'&&(*it)>'B');
-	while(it->isDigit()||isLetter){
+	bool isHexLetter=((*it)>'a'&&(*it)<'f')||((*it)>'A'&&(*it)<'F');
+	while(it->isDigit()||isHexLetter){
 		value.append(*it);++it;
 	}
-	tokens.append(Token(Literal,value.toInt(nullptr,16)));
+	tokens.push_back(Token(Literal,value.toInt(16)));
 }
 
-void Tokenizer::analyzeBinAndNext(QString::const_iterator& it, QString& value, QList<Token>& tokens) const
+void Tokenizer::analyzeBinAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const
 {
-	while(*it=="0"||*it=="1"){
+	while(*it=='0'||*it=='1'){
 		value.append(*it);++it;
 	}
-	tokens.append(Token(Literal,value.toInt(nullptr,2)));
+	tokens.push_back(Token(Literal,value.toInt(2)));
 }
 
-QList<Token> Tokenizer::analyze(QString expression) const
+std::vector<Token> Tokenizer::analyze(XString expression) const
 {
-	QList<Token> result;
-	QString::const_iterator it=expression.begin();
+	std::vector<Token> result;
+	XString::const_iterator it=expression.begin();
 	while(it!=expression.end()){
-		if(it->isNumber()){//number
-			QString value;
+		if(it->isDigit()){//number
+			XString value;
 			auto tokenBegin=it;
 
 			if(*it=='0'){
@@ -78,46 +78,46 @@ QList<Token> Tokenizer::analyze(QString expression) const
 				analyzeDecAndNext(it, value, result);
 			}
 		}else if(mContext->operatorChars().contains(*it)){
-			QString value;
+			XString value;
 			value.append(*it);++it;
 			while(mContext->operatorChars().contains(*it)){
 				value.append(*it);++it;
-				if((!mContext->binaryOperatorTable().contains(value))&&(!mContext->unaryOperatorTable().contains(value))){
+				if((!mContext->binaryOperatorTable().operator [](value))&&(!mContext->unaryOperatorTable().operator [](value))){
 					value.remove(value.size()-1,1);
 					--it;
 					break;
 				}
 			}
-			result.append(Token(Operator,value));
+			result.push_back(Token(Operator,value));
 		}else if(it->isLetter()||*it=='_'){
-			QString value;
+			XString value;
 			value.append(*it);++it;;
-			while(it->isLetterOrNumber()||*it=='_'){
+			while(it->isLetterOrDigit()||*it=='_'){
 				value.append(*it);++it;;
 			}
 			if(value=="true"){
-				result.append(Token(Literal,true));
+				result.push_back(Token(Literal,true));
 			}else if(value=="false"){
-				result.append(Token(Literal,false));
+				result.push_back(Token(Literal,false));
 			}else{
-				result.append(Token(Identifier,value));
+				result.push_back(Token(Identifier,value));
 			}
 		}else if(*it=='('){
-			result.append(Token(OpenParentheses));++it;
+			result.push_back(Token(OpenParentheses));++it;
 		}else if(*it==')'){
-			result.append(Token(CloseParentheses));++it;
+			result.push_back(Token(CloseParentheses));++it;
 		}else if(*it==','){
-			result.append(Token(Comma));++it;;
+			result.push_back(Token(Comma));++it;;
 		}else if(*it=='\"'){
 			++it;
-			QString value;
+			XString value;
 			while(*it!='\"'){
 				value.append(*it);++it;
 			}
 			++it;
-			result.append(Token(Literal,value));
+			result.push_back(Token(Literal,value));
 		}else{
-			throw XELError(QString("Unknown char:")+(*it));
+			throw XELError(XString("Unknown char:").append(*it));
 		}
 	}
 	return result;

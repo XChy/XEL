@@ -2,16 +2,17 @@
 #define XELERROR_H
 
 #include <xel_global.h>
+#include <XString.h>
 
 class XEL_EXPORT XELError
 {
 public:
-	XELError(QString errorString);
-	QString errorString() const;
+	XELError(XString errorString);
+	XString errorString() const;
 
-	void setErrorString(const QString& errorString);
+	void setErrorString(const XString& errorString);
 private:
-	QString mErrorString;
+	XString mErrorString;
 };
 
 #endif // FORMULAERROR_H

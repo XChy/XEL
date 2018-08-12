@@ -8,7 +8,7 @@ class XEL_EXPORT Preprocessor
 {
 public:
 	Preprocessor();
-	virtual QString process(QString expression);
+	virtual XString process(XString expression);
 
 	XELContext* context() const;
 	void setContext(XELContext* context);

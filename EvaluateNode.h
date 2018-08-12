@@ -3,6 +3,7 @@
 
 #include <xel_global.h>
 #include <Variant.h>
+#include <unordered_map>
 
 class XEL_EXPORT EvaluateNode
 {
@@ -29,14 +30,14 @@ public:
 	VariableNode();
 	virtual Variant evaluate() const;
 
-	QString variableName() const;
-	QHash<QString, Variant>* variableTable() const;
+	XString variableName() const;
+	std::unordered_map<XString, Variant, XStringHasher>* variableTable() const;
 
-	void setVariableName(const QString& variableName);
-	void setVariableTable(QHash<QString, Variant>* variableTable);
+	void setVariableName(const XString& variableName);
+	void setVariableTable(std::unordered_map<XString, Variant, XStringHasher>* variableTable);
 private:
-	QString mVariableName;
-	QHash<QString, Variant>* mVariableTable;
+	XString mVariableName;
+	std::unordered_map<XString, Variant, XStringHasher>* mVariableTable;
 };
 
 class XEL_EXPORT UnaryOperatorNode:public EvaluateNode{
@@ -74,12 +75,12 @@ public:
 	FunctionNode();
 	virtual Variant evaluate() const=0;
 
-	QList<EvaluateNode*> parameters() const;
-	void setParameters(const QList<EvaluateNode*>& parameters);
+	std::vector<EvaluateNode*> parameters() const;
+	void setParameters(const std::vector<EvaluateNode*>& parameters);
 
 	virtual ~FunctionNode();
 private:
-	QList<EvaluateNode*> mParameters;
+	std::vector<EvaluateNode*> mParameters;
 };
 
 

@@ -14,7 +14,7 @@ Variant::Variant(int value)
 	reset(value);
 }
 
-Variant::Variant(const QString value)
+Variant::Variant(const XString value)
 {
 	reset(value);
 }
@@ -42,7 +42,7 @@ void Variant::set(int value)
 	mHolder.intValue=value;
 }
 
-void Variant::set(const QString& value)
+void Variant::set(const XString& value)
 {
 	mHolder.stringValue=value;
 }
@@ -64,7 +64,7 @@ void Variant::reset(int value)
 	set(value);
 }
 
-void Variant::reset(const QString& value)
+void Variant::reset(const XString& value)
 {
 	mType=VariantType::String;
 	set(value);
@@ -101,7 +101,7 @@ int Variant::convertInt() const
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Double");
 }
 
-QString Variant::convertString() const
+XString Variant::convertString() const
 {
 	if(mType==VariantType::String){
 		return mHolder.stringValue;
@@ -117,13 +117,13 @@ bool Variant::convertBool() const
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Bool");
 }
 
-QString Variant::toString() const
+XString Variant::toString() const
 {
 	switch (type()) {
 		case VariantType::Double:
-			return QString::number(mHolder.doubleValue);
+			return XString::number(mHolder.doubleValue);
 		case VariantType::Int:
-			return QString::number(mHolder.intValue);
+			return XString::number(mHolder.intValue);
 		case VariantType::String:
 			return mHolder.stringValue;
 		case VariantType::Bool:
@@ -143,7 +143,7 @@ int Variant::intValue() const
 	return mHolder.intValue;
 }
 
-QString Variant::stringValue() const
+XString Variant::stringValue() const
 {
 	return mHolder.stringValue;
 }
@@ -172,7 +172,7 @@ Variant& Variant::operator=(int value)
 	return *this;
 }
 
-Variant& Variant::operator=(const QString& value)
+Variant& Variant::operator=(const XString& value)
 {
 	reset(value);
 	return *this;
@@ -211,7 +211,7 @@ VariantType Variant::type() const
 	return mType;
 }
 
-QString Variant::convertString(VariantType type)
+XString Variant::convertString(VariantType type)
 {
 	switch(type){
 		case VariantType::Double:
@@ -237,7 +237,7 @@ Variant::operator int() const
 	return convertInt();
 }
 
-Variant::operator QString() const
+Variant::operator XString() const
 {
 	return convertString();
 }
