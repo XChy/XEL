@@ -121,12 +121,9 @@ XString::XString(const XString& other)
 	:d(other.d)
 {}
 
-XString::XString(const char* ascii)
+XString::XString(const char* utf8)
+	:XString(XString::fromUtf8(utf8))
 {
-	int len=strlen(ascii);
-	d.ref=new Ref<StringData>(new StringData(len+1));
-	d.data()->size=len;
-	xstrcpy(d.data()->data,ascii,len+1);
 }
 
 XString::XString(const wchar_t* wstr)
@@ -171,13 +168,8 @@ XString&XString::operator=(const char16_t* ustr){
 	return *this;
 }
 
-XString& XString::operator=(const char* ascii){
-	int len=strlen(ascii);
-	if(d.data()->allocSize<len+1){
-		delete d.data()->data;
-		d.data()->allocate(len+1);
-	}
-	xstrcpy(d.data()->data,ascii,len+1);
+XString& XString::operator=(const char* utf8){
+	*this=fromUtf8(utf8);
 	return *this;
 }
 
@@ -490,49 +482,51 @@ XString XString::fromUtf8(const char* data)
 	return result;
 }
 
-XString XString::number(int v)
+XString XString::number(int v,int base)
 {
 	XString result;
-	if(v<0){
-		result.append('-');
-	}
-	while(v){
-		result.append(XChar(char(v%10+'0')));
-		v/=10;
-	}
-	return result.reverse();
-}
-
-XString XString::number(double v,int prec)
-{
-	XString result;
-	int intPart=fabs(v);
-	double decPart=fabs(v)-intPart;
-	if(intPart==0){
-		result.append('0');
-	}else{
-		while(intPart){
-			result.append(XChar(char(intPart%10+'0')));
-			intPart/=10;
-		}
-		if(v<0){
-			result.append('-');
-		}
-		result.reverse();
-	}
-
-	if(decPart){
-		result.append('.');
-		while(prec--){
-			int currentDigit=int(decPart*=10);
-			if(!currentDigit){
-				break;
+	switch (base) {
+		case 2:
+			if(v<0){
+				result.append('-');
 			}
-			result.append(XChar(char(currentDigit+'0')));
-			decPart-=currentDigit;
-		}
+			while(v){
+				result.append((v&1)?'1':'0');
+				v>>=1;
+			}
+		case 10:
+			while(v){
+				result.append(XChar(char(v%10+'0')));
+				v/=10;
+			}
+			if(v<0){
+				result.append('-');
+			}
+			result.reverse();
+			break;
+		case 16:
+			if(v<0){
+				result.append('-');
+			}
+			while(v){
+				int base16=v&0xf;
+				if(base16>=0&&base16<=9){
+					result.append(char(base16+'0'));
+				}else{
+					result.append(char(base16-10+'a'));
+				}
+				v>>=4;
+			}
 	}
 	return result;
+
+}
+
+XString XString::number(double v)
+{
+	char buffer[256];
+	snprintf(buffer, sizeof(buffer), "%g", v);
+	return XString(buffer);
 }
 
 XString::iterator XString::begin(){
@@ -562,7 +556,7 @@ void XString::detach(){
 	d.ref=new Ref<StringData>(new StringData(*d.data()));
 }
 
-XString operator+(const char* ascii,const XString& xstr)
+XString operator+(const char* utf8,const XString& xstr)
 {
-	return XString(ascii).append(xstr);
+	return XString(utf8).append(xstr);
 }

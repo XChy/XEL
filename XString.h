@@ -125,7 +125,7 @@ class XEL_EXPORT XString{
 public:
 	XString();
 	XString(const XString& other);
-	XString(const char* ascii);
+	XString(const char* utf8);
 	XString(const wchar_t* wstr);
 	XString(const char16_t* ustr);
 
@@ -134,7 +134,7 @@ public:
 
 	int size() const;
 
-	XString& operator=(const char* ascii);
+	XString& operator=(const char* utf8);
 	XString& operator=(const wchar_t* wstr);
 	XString& operator=(const char16_t* ustr);
 
@@ -173,8 +173,8 @@ public:
 
 	static XString fromUtf8(const char* data);
 
-	static XString number(int v);
-	static XString number(double v, int prec=6);
+	static XString number(int v, int base=10);
+	static XString number(double v);
 
 	typedef XChar* iterator;
 	iterator begin();
@@ -192,7 +192,7 @@ private:
 	SharedData<StringData> d;
 };
 
-XString operator+(const char* cstr,const XString& xstr);
+XString operator+(const char* utf8,const XString& xstr);
 
 class XStringHasher
 {
