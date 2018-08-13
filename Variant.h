@@ -27,7 +27,7 @@ public:
 	Variant();
 	Variant(double value);
 	Variant(int value);
-	Variant(const XString value);
+	Variant(const XString& value);
 	Variant(bool value);
 
 	Variant(const Variant& value);

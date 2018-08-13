@@ -3,7 +3,6 @@
 
 #include <xel_global.h>
 #include <Variant.h>
-#include <unordered_map>
 
 class XEL_EXPORT EvaluateNode
 {
@@ -31,13 +30,13 @@ public:
 	virtual Variant evaluate() const;
 
 	XString variableName() const;
-	std::unordered_map<XString, Variant, XStringHasher>* variableTable() const;
+	std::unordered_map<XString, Variant>* variableTable() const;
 
 	void setVariableName(const XString& variableName);
-	void setVariableTable(std::unordered_map<XString, Variant, XStringHasher>* variableTable);
+	void setVariableTable(std::unordered_map<XString, Variant>* variableTable);
 private:
 	XString mVariableName;
-	std::unordered_map<XString, Variant, XStringHasher>* mVariableTable;
+	std::unordered_map<XString, Variant>* mVariableTable;
 };
 
 class XEL_EXPORT UnaryOperatorNode:public EvaluateNode{

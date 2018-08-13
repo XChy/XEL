@@ -13,23 +13,23 @@ public:
 	XString operatorChars() const;
 	void setOperatorChars(const XString& operatorChars);
 
-	std::unordered_map<XString, UnaryOperatorCreator*, XStringHasher>& unaryOperatorTable();
-	void setUnaryOperatorTable(const std::unordered_map<XString, UnaryOperatorCreator*, XStringHasher>& unaryOperatorTable);
+	std::unordered_map<XString, UnaryOperatorCreator*>& unaryOperatorTable();
+	void setUnaryOperatorTable(const std::unordered_map<XString, UnaryOperatorCreator*>& unaryOperatorTable);
 
-	std::unordered_map<XString, BinaryOperatorCreator*, XStringHasher>& binaryOperatorTable();
-	void setBinaryOperatorTable(const std::unordered_map<XString, BinaryOperatorCreator*, XStringHasher>& binaryOperatorTable);
+	std::unordered_map<XString, BinaryOperatorCreator*>& binaryOperatorTable();
+	void setBinaryOperatorTable(const std::unordered_map<XString, BinaryOperatorCreator*>& binaryOperatorTable);
 
-	std::unordered_map<XString, FunctionCreator*, XStringHasher>& functionTable();
-	void setFunctionTable(const std::unordered_map<XString, FunctionCreator*, XStringHasher>& functionTable);
+	std::unordered_map<XString, FunctionCreator*>& functionTable();
+	void setFunctionTable(const std::unordered_map<XString, FunctionCreator*>& functionTable);
 
-	std::unordered_map<XString, Variant, XStringHasher>& variableTable();
-	void setVariableTable(const std::unordered_map<XString, Variant, XStringHasher>& variableTable);
+	std::unordered_map<XString, Variant>& variableTable();
+	void setVariableTable(const std::unordered_map<XString, Variant>& variableTable);
 
 private:
-	std::unordered_map<XString,Variant, XStringHasher> mVariableTable;
-	std::unordered_map<XString,UnaryOperatorCreator*, XStringHasher> mUnaryOperatorTable;
-	std::unordered_map<XString,BinaryOperatorCreator*, XStringHasher> mBinaryOperatorTable;
-	std::unordered_map<XString,FunctionCreator*, XStringHasher> mFunctionTable;
+	std::unordered_map<XString,Variant> mVariableTable;
+	std::unordered_map<XString,UnaryOperatorCreator*> mUnaryOperatorTable;
+	std::unordered_map<XString,BinaryOperatorCreator*> mBinaryOperatorTable;
+	std::unordered_map<XString,FunctionCreator*> mFunctionTable;
 	XString mOperatorChars;
 };
 

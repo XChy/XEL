@@ -194,9 +194,11 @@ private:
 
 XString operator+(const char* utf8,const XString& xstr);
 
-class XStringHasher
+namespace std {
+
+template<>
+struct hash<XString>
 {
-public:
 	size_t operator()(const XString& xstr) const
 	{
 		int base=131;
@@ -204,16 +206,6 @@ public:
 		for(auto it=xstr.begin();it!=xstr.begin();++it)
 			ans=ans*base+(unsigned long long)(*(ushort*)it);
 		return ans&0x7fffffff;
-	}
-};
-
-namespace std {
-
-template<>
-struct hash<XString>
-{
-	size_t operator()(const XString& xstr) const{
-		return XStringHasher()(xstr);
 	}
 };
 

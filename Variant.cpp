@@ -14,7 +14,7 @@ Variant::Variant(int value)
 	reset(value);
 }
 
-Variant::Variant(const XString value)
+Variant::Variant(const XString& value)
 {
 	reset(value);
 }
@@ -25,9 +25,9 @@ Variant::Variant(bool value)
 }
 
 Variant::Variant(const Variant& value)
-	:mType(value.type())
+	:mType(value.type()),
+	  mHolder(value.mHolder)
 {
-	mHolder=value.mHolder;
 }
 
 

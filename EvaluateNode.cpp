@@ -36,7 +36,7 @@ VariableNode::VariableNode()
 
 Variant VariableNode::evaluate() const
 {
-	if(mVariableTable->operator [](mVariableName)){
+	if(!(mVariableTable->find(mVariableName)==mVariableTable->end())){
 		return mVariableTable->operator [](mVariableName);
 	}else{
 		throw XELError("No variable called "+mVariableName);
@@ -53,12 +53,12 @@ void VariableNode::setVariableName(const XString& variableName)
 	mVariableName = variableName;
 }
 
-std::unordered_map<XString, Variant, XStringHasher>* VariableNode::variableTable() const
+std::unordered_map<XString, Variant>* VariableNode::variableTable() const
 {
 	return mVariableTable;
 }
 
-void VariableNode::setVariableTable(std::unordered_map<XString, Variant, XStringHasher>* variableTable)
+void VariableNode::setVariableTable(std::unordered_map<XString, Variant>* variableTable)
 {
 	mVariableTable = variableTable;
 }
