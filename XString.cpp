@@ -506,14 +506,17 @@ XString XString::number(int v)
 XString XString::number(double v,int prec)
 {
 	XString result;
-	int intPart=v;
-	double decPart=v-intPart;
-	if(!intPart){
+	int intPart=fabs(v);
+	double decPart=fabs(v)-intPart;
+	if(intPart==0){
 		result.append('0');
 	}else{
 		while(intPart){
 			result.append(XChar(char(intPart%10+'0')));
 			intPart/=10;
+		}
+		if(v<0){
+			result.append('-');
 		}
 		result.reverse();
 	}

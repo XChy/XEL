@@ -138,10 +138,16 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 {
 	if(it->type()==Operator){
-		UnaryOperatorNode* unary=createUnaryOperator(it);
-		if(++it==end)throw XELError("No value after operator");
-		unary->setOperand(parseNoUnaryOperatorOperand(it,end));
-		return unary;
+		UnaryOperatorNode* root=createUnaryOperator(it);
+		UnaryOperatorNode* nodeEnd=root;
+		while((++it)->type()==Operator){
+			UnaryOperatorNode* last=nodeEnd;
+			UnaryOperatorNode* nodeEnd=createUnaryOperator(it);
+			last->setOperand(nodeEnd);
+		}
+		if(it==end)throw XELError("No value after operator");
+		nodeEnd->setOperand(parseNoUnaryOperatorOperand(it,end));
+		return root;
 	}else{
 		return parseNoUnaryOperatorOperand(it,end);
 	}
