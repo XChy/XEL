@@ -3,8 +3,6 @@
 
 #include <xel_global.h>
 
-typedef unsigned char uchar;
-
 template<typename T>
 class XEL_EXPORT Ref{
 public:
@@ -119,21 +117,28 @@ private:
 	char16_t ucs;
 };
 
-class XEL_EXPORT XString{//ucs2
+//XString
+// Encoding:UCS2
+// Copy on write
+
+class XEL_EXPORT XString{
 public:
 	XString();
 	XString(const XString& other);
-	XString(const char* cstr);
+	XString(const char* ascii);
 	XString(const wchar_t* wstr);
 	XString(const char16_t* ustr);
-	char16_t* data() const;
+
+	const XChar* data() const;
+	XChar* data();
+
 	int size() const;
 
-	XString& operator=(const char* cstr);
+	XString& operator=(const char* ascii);
 	XString& operator=(const wchar_t* wstr);
 	XString& operator=(const char16_t* ustr);
 
-	XString& append(const char* cstr);
+	XString& append(const char* ascii);
 	XString& append(const wchar_t* wstr);
 	XString& append(const XString& other);
 	XString& append(const char16_t* ustr);
@@ -147,6 +152,9 @@ public:
 	XString operator+(const char16_t* ustr) const;
 	XString operator+(XChar xc) const;
 
+	XChar operator[](int index) const;
+	XChar& operator[](int index);
+
 	bool operator==(const XString& other) const;
 
 	bool contains(XChar xc) const;
@@ -156,9 +164,14 @@ public:
 	void removeLast();
 
 	std::string toStdString() const;
+	std::u16string toUtf16String() const;
+
+	const XChar* unicode() const;
 
 	int toInt(int base=10) const;
 	double toDouble() const;
+
+	static XString fromUtf8(const char* data);
 
 	static XString number(int v);
 	static XString number(double v, int prec=6);

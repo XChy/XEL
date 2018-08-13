@@ -121,12 +121,12 @@ XString::XString(const XString& other)
 	:d(other.d)
 {}
 
-XString::XString(const char* cstr)
+XString::XString(const char* ascii)
 {
-	int len=strlen(cstr);
+	int len=strlen(ascii);
 	d.ref=new Ref<StringData>(new StringData(len+1));
 	d.data()->size=len;
-	xstrcpy(d.data()->data,cstr,len+1);
+	xstrcpy(d.data()->data,ascii,len+1);
 }
 
 XString::XString(const wchar_t* wstr)
@@ -145,9 +145,14 @@ XString::XString(const char16_t* ustr)
 	xstrcpy(d.data()->data,ustr,len+1);
 }
 
-char16_t*XString::data() const
+const XChar* XString::data() const
 {
-	return d.data()->data;
+	return (const XChar*)d.data()->data;
+}
+
+XChar* XString::data()
+{
+	return (XChar*)d.data()->data;
 }
 
 int XString::size() const
@@ -166,13 +171,13 @@ XString&XString::operator=(const char16_t* ustr){
 	return *this;
 }
 
-XString& XString::operator=(const char* cstr){
-	int len=strlen(cstr);
+XString& XString::operator=(const char* ascii){
+	int len=strlen(ascii);
 	if(d.data()->allocSize<len+1){
 		delete d.data()->data;
 		d.data()->allocate(len+1);
 	}
-	xstrcpy(d.data()->data,cstr,len+1);
+	xstrcpy(d.data()->data,ascii,len+1);
 	return *this;
 }
 
@@ -187,16 +192,16 @@ XString& XString::operator=(const wchar_t* wstr){
 	return *this;
 }
 
-XString& XString::append(const char* cstr){
+XString& XString::append(const char* ascii){
 	if(!isDetach()){
 		detach();
 	}
-	int otherSize=strlen(cstr);
+	int otherSize=strlen(ascii);
 	int totalSize=d.data()->size+otherSize;
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,cstr,otherSize+1);
+	xstrcpy(d.data()->data+d.data()->size,ascii,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -224,7 +229,7 @@ XString& XString::append(const XString& other){
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,other.data(),otherSize+1);
+	xstrcpy(d.data()->data+d.data()->size,other.d.data()->data,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -264,9 +269,9 @@ XString& XString::reverse()
 	return *this;
 }
 
-XString XString::operator+(const char* cstr) const
+XString XString::operator+(const char* ascii) const
 {
-	return XString(*this).append(cstr);
+	return XString(*this).append(ascii);
 }
 
 XString XString::operator+(const wchar_t* wstr) const
@@ -287,6 +292,16 @@ XString XString::operator+(const char16_t* ustr) const
 XString XString::operator+(XChar xc) const
 {
 	return XString(*this).append(xc);
+}
+
+XChar XString::operator[](int index) const
+{
+	return d.data()->data[index];
+}
+
+XChar& XString::operator[](int index)
+{
+	return data()[index];
 }
 
 bool XString::operator==(const XString& other) const
@@ -336,9 +351,24 @@ void XString::removeLast(){
 std::string XString::toStdString() const
 {
 	std::string result;
-	for(char16_t* p=data();p!=data()+size();++p){
+	for(char16_t* p=(char16_t*)data();p!=(char16_t*)data()+size();++p){
 		result.push_back(*p);
 	}
+	return result;
+}
+
+std::u16string XString::toUtf16String() const
+{
+	std::u16string result;
+	for(char16_t* p=(char16_t*)data();p!=(char16_t*)data()+size();++p){
+		result.push_back(*p);
+	}
+	return result;
+}
+
+const XChar* XString::unicode() const
+{
+	return data();
 }
 
 int XString::toInt(int base) const
@@ -426,6 +456,40 @@ E:
 	return result;
 }
 
+XString XString::fromUtf8(const char* data)
+{
+	XString result;
+	for(uchar* it=(uchar*)data;(*it)!='\0';++it){
+		if(*it<192){
+			result.append(*it);
+		}else if(*it<224){
+			ushort ucs;
+			uint utf8;
+			uchar utf8_1=(*it)^0xc0;
+			uchar utf8_2=(*++it)^0x80;
+			utf8+=utf8_1;
+			utf8<<=6;
+			utf8+=utf8_2;
+			ucs=utf8;
+			result.append(ucs);
+		}else if(*it<240){
+			ushort ucs;
+			uint utf8=0;
+			uchar utf8_1=(*it)^0xe0;
+			uchar utf8_2=(*++it)^0x80;
+			uchar utf8_3=(*++it)^0x80;
+			utf8+=utf8_1;
+			utf8<<=6;
+			utf8+=utf8_2;
+			utf8<<=6;
+			utf8+=utf8_3;
+			ucs=utf8;
+			result.append(ucs);
+		}
+	}
+	return result;
+}
+
 XString XString::number(int v)
 {
 	XString result;
@@ -495,7 +559,7 @@ void XString::detach(){
 	d.ref=new Ref<StringData>(new StringData(*d.data()));
 }
 
-XString operator+(const char* cstr,const XString& xstr)
+XString operator+(const char* ascii,const XString& xstr)
 {
-	return XString(cstr).append(xstr);
+	return XString(ascii).append(xstr);
 }

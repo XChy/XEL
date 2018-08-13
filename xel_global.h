@@ -28,7 +28,7 @@ typedef unsigned long long ulonglong;
 #elif defined(XEL_STATIC_LIBRARY)
 #  define XEL_EXPORT
 #else
-#  define XEL_EXPORT Q_DECL_IMPORT
+#  define XEL_EXPORT DECL_IMPORT
 #endif
 
 #endif // FORMULAENGINE_GLOBAL_H
