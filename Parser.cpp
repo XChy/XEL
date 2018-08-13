@@ -142,7 +142,7 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 		UnaryOperatorNode* nodeEnd=root;
 		while((++it)->type()==Operator){
 			UnaryOperatorNode* last=nodeEnd;
-			UnaryOperatorNode* nodeEnd=createUnaryOperator(it);
+			nodeEnd=createUnaryOperator(it);
 			last->setOperand(nodeEnd);
 		}
 		if(it==end)throw XELError("No value after operator");
