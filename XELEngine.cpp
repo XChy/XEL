@@ -35,7 +35,7 @@ void XELEngine::setVariable(const XString& name, const Variant& value)
 
 void XELEngine::removeVariable(XString name)
 {
-	mContext->variableTable().erase(name);
+	mContext->variableTable().remove(name);
 }
 
 Variant XELEngine::evaluate() const

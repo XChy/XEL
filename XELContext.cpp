@@ -16,42 +16,42 @@ void XELContext::setOperatorChars(const XString& operatorChars)
 	mOperatorChars = operatorChars;
 }
 
-std::unordered_map<XString, UnaryOperatorCreator*>& XELContext::unaryOperatorTable()
+XHashMap<XString, UnaryOperatorCreator*>& XELContext::unaryOperatorTable()
 {
 	return mUnaryOperatorTable;
 }
 
-void XELContext::setUnaryOperatorTable(const std::unordered_map<XString, UnaryOperatorCreator*>& unaryOperatorTable)
+void XELContext::setUnaryOperatorTable(const XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable)
 {
 	mUnaryOperatorTable = unaryOperatorTable;
 }
 
-std::unordered_map<XString, BinaryOperatorCreator*>& XELContext::binaryOperatorTable()
+XHashMap<XString, BinaryOperatorCreator*>& XELContext::binaryOperatorTable()
 {
 	return mBinaryOperatorTable;
 }
 
-void XELContext::setBinaryOperatorTable(const std::unordered_map<XString, BinaryOperatorCreator*>& binaryOperatorTable)
+void XELContext::setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable)
 {
 	mBinaryOperatorTable = binaryOperatorTable;
 }
 
-std::unordered_map<XString, FunctionCreator*>& XELContext::functionTable()
+XHashMap<XString, FunctionCreator*>& XELContext::functionTable()
 {
 	return mFunctionTable;
 }
 
-void XELContext::setFunctionTable(const std::unordered_map<XString, FunctionCreator*>& functionTable)
+void XELContext::setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable)
 {
 	mFunctionTable = functionTable;
 }
 
-std::unordered_map<XString, Variant>& XELContext::variableTable()
+XHashMap<XString, Variant>& XELContext::variableTable()
 {
     return mVariableTable;
 }
 
-void XELContext::setVariableTable(const std::unordered_map<XString, Variant>& variableTable)
+void XELContext::setVariableTable(const XHashMap<XString, Variant>& variableTable)
 {
     mVariableTable = variableTable;
 }

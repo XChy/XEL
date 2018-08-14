@@ -2,7 +2,7 @@
 #define FORMULACONTEXT_H
 
 #include <xel_global.h>
-#include <unordered_map>
+#include <XHashMap.h>
 #include <NodeCreator.h>
 #include <Variant.h>
 
@@ -13,23 +13,23 @@ public:
 	XString operatorChars() const;
 	void setOperatorChars(const XString& operatorChars);
 
-	std::unordered_map<XString, UnaryOperatorCreator*>& unaryOperatorTable();
-	void setUnaryOperatorTable(const std::unordered_map<XString, UnaryOperatorCreator*>& unaryOperatorTable);
+	XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable();
+	void setUnaryOperatorTable(const XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable);
 
-	std::unordered_map<XString, BinaryOperatorCreator*>& binaryOperatorTable();
-	void setBinaryOperatorTable(const std::unordered_map<XString, BinaryOperatorCreator*>& binaryOperatorTable);
+	XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable();
+	void setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable);
 
-	std::unordered_map<XString, FunctionCreator*>& functionTable();
-	void setFunctionTable(const std::unordered_map<XString, FunctionCreator*>& functionTable);
+	XHashMap<XString, FunctionCreator*>& functionTable();
+	void setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable);
 
-	std::unordered_map<XString, Variant>& variableTable();
-	void setVariableTable(const std::unordered_map<XString, Variant>& variableTable);
+	XHashMap<XString, Variant>& variableTable();
+	void setVariableTable(const XHashMap<XString, Variant>& variableTable);
 
 private:
-	std::unordered_map<XString,Variant> mVariableTable;
-	std::unordered_map<XString,UnaryOperatorCreator*> mUnaryOperatorTable;
-	std::unordered_map<XString,BinaryOperatorCreator*> mBinaryOperatorTable;
-	std::unordered_map<XString,FunctionCreator*> mFunctionTable;
+	XHashMap<XString,Variant> mVariableTable;
+	XHashMap<XString,UnaryOperatorCreator*> mUnaryOperatorTable;
+	XHashMap<XString,BinaryOperatorCreator*> mBinaryOperatorTable;
+	XHashMap<XString,FunctionCreator*> mFunctionTable;
 	XString mOperatorChars;
 };
 

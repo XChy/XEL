@@ -2,6 +2,7 @@
 #define EVALUATENODE_H
 
 #include <xel_global.h>
+#include <XHashMap.h>
 #include <Variant.h>
 
 class XEL_EXPORT EvaluateNode
@@ -30,13 +31,13 @@ public:
 	virtual Variant evaluate() const;
 
 	XString variableName() const;
-	std::unordered_map<XString, Variant>* variableTable() const;
+	XHashMap<XString, Variant>* variableTable() const;
 
 	void setVariableName(const XString& variableName);
-	void setVariableTable(std::unordered_map<XString, Variant>* variableTable);
+	void setVariableTable(XHashMap<XString, Variant>* variableTable);
 private:
 	XString mVariableName;
-	std::unordered_map<XString, Variant>* mVariableTable;
+	XHashMap<XString, Variant>* mVariableTable;
 };
 
 class XEL_EXPORT UnaryOperatorNode:public EvaluateNode{

@@ -3,32 +3,32 @@
 StringData::StringData(const StringData& other){
 	allocate(other.allocSize);
 	size=other.size;
-	data[size]='\0';
-	memcpy(data,other.data,other.size*sizeof(char16_t));
+	str[size]='\0';
+	memcpy(str,other.str,other.size*sizeof(char16_t));
 }
 
 StringData::StringData(uint allocSize)
 {
 	allocate(allocSize);
 	size=0;
-	data[0]='\0';
+	str[0]='\0';
 }
 
 void StringData::allocate(uint allocSize){
-	data=new char16_t[allocSize];
+	str=new char16_t[allocSize];
 	this->allocSize=allocSize;
 }
 
 void StringData::reallocate(uint allocSize){
 	char16_t* newData=new char16_t[allocSize];
 	this->allocSize=allocSize;
-	memcpy(newData,data,size*sizeof(char16_t));
-	delete data;
-	data=newData;
+	memcpy(newData,str,size*sizeof(char16_t));
+	delete str;
+	str=newData;
 }
 
 StringData::~StringData(){
-	delete data;
+	delete str;
 }
 
 bool XChar::isDigit() const
@@ -131,7 +131,7 @@ XString::XString(const wchar_t* wstr)
 	int len=wcslen(wstr);
 	d.ref=new Ref<StringData>(new StringData(len+1));
 	d.data()->size=len;
-	xstrcpy(d.data()->data,wstr,len+1);
+	xstrcpy(d.data()->str,wstr,len+1);
 }
 
 XString::XString(const char16_t* ustr)
@@ -139,17 +139,22 @@ XString::XString(const char16_t* ustr)
 	int len=ucs2len(ustr);
 	d.ref=new Ref<StringData>(new StringData(len+1));
 	d.data()->size=len;
-	xstrcpy(d.data()->data,ustr,len+1);
+	xstrcpy(d.data()->str,ustr,len+1);
+}
+
+XString::XString(uint allocSize)
+	:d(new StringData(allocSize))
+{
 }
 
 const XChar* XString::data() const
 {
-	return (const XChar*)d.data()->data;
+	return (const XChar*)d.data()->str;
 }
 
 XChar* XString::data()
 {
-	return (XChar*)d.data()->data;
+	return (XChar*)d.data()->str;
 }
 
 int XString::size() const
@@ -160,11 +165,11 @@ int XString::size() const
 XString&XString::operator=(const char16_t* ustr){
 	int len=ucs2len(ustr);
 	if(d.data()->allocSize<len+1){
-		delete[] d.data()->data;
+		delete[] d.data()->str;
 		d.data()->allocate(len+1);
 	}
 	d.data()->size=len;
-	xstrcpy(d.data()->data,ustr,len+1);
+	xstrcpy(d.data()->str,ustr,len+1);
 	return *this;
 }
 
@@ -176,11 +181,11 @@ XString& XString::operator=(const char* utf8){
 XString& XString::operator=(const wchar_t* wstr){
 	int len=wcslen(wstr);
 	if(d.data()->allocSize<len+1){
-		delete d.data()->data;
+		delete d.data()->str;
 		d.data()->allocate(len+1);
 	}
 	d.data()->size=len;
-	xstrcpy(d.data()->data,wstr,len+1);
+	xstrcpy(d.data()->str,wstr,len+1);
 	return *this;
 }
 
@@ -193,7 +198,7 @@ XString& XString::append(const char* ascii){
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,ascii,otherSize+1);
+	xstrcpy(d.data()->str+d.data()->size,ascii,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -207,7 +212,7 @@ XString& XString::append(const wchar_t* wstr){
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,wstr,otherSize+1);
+	xstrcpy(d.data()->str+d.data()->size,wstr,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -221,7 +226,7 @@ XString& XString::append(const XString& other){
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,other.d.data()->data,otherSize+1);
+	xstrcpy(d.data()->str+d.data()->size,other.d.data()->str,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -235,7 +240,7 @@ XString& XString::append(const char16_t* ustr){
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	xstrcpy(d.data()->data+d.data()->size,ustr,otherSize+1);
+	xstrcpy(d.data()->str+d.data()->size,ustr,otherSize+1);
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -249,8 +254,8 @@ XString& XString::append(XChar xc)
 	if(d.data()->allocSize<totalSize+1){
 		d.data()->reallocate((totalSize+1)*2);
 	}
-	d.data()->data[totalSize-1]=xc.ucs;
-	d.data()->data[totalSize]='\0';
+	d.data()->str[totalSize-1]=xc.ucs;
+	d.data()->str[totalSize]='\0';
 	d.data()->size=totalSize;
 	return *this;
 }
@@ -288,7 +293,7 @@ XString XString::operator+(XChar xc) const
 
 XChar XString::operator[](int index) const
 {
-	return d.data()->data[index];
+	return d.data()->str[index];
 }
 
 XChar& XString::operator[](int index)
@@ -321,23 +326,23 @@ void XString::removeAt(int pos){
 	if(!isDetach()){
 		detach();
 	}
-	xstrcpy(d.data()->data+pos,d.data()->data+pos+1,d.data()->size-pos-1);
-	d.data()->data[--d.data()->size]='\0';
+	xstrcpy(d.data()->str+pos,d.data()->str+pos+1,d.data()->size-pos-1);
+	d.data()->str[--d.data()->size]='\0';
 }
 
 void XString::remove(int pos, int len){
 	if(!isDetach()){
 		detach();
 	}
-	xstrcpy(d.data()->data+pos,d.data()->data+pos+len,d.data()->size-pos-len);
-	d.data()->data[d.data()->size-=len]='\0';
+	xstrcpy(d.data()->str+pos,d.data()->str+pos+len,d.data()->size-pos-len);
+	d.data()->str[d.data()->size-=len]='\0';
 }
 
 void XString::removeLast(){
 	if(!isDetach()){
 		detach();
 	}
-	d.data()->data[--d.data()->size]='\0';
+	d.data()->str[--d.data()->size]='\0';
 }
 
 std::string XString::toStdString() const
@@ -448,10 +453,18 @@ E:
 	return result;
 }
 
-XString XString::fromUtf8(const char* data)
+XString XString::fromAscii(const char* asciiStr)
+{
+	int len=strlen(asciiStr);
+	XString result(len+1);
+	result.d.data()->size=len;
+	xstrcpy(result.d.data()->str,asciiStr,len+1);
+}
+
+XString XString::fromUtf8(const char* utf8Str)
 {
 	XString result;
-	for(uchar* it=(uchar*)data;(*it)!='\0';++it){
+	for(uchar* it=(uchar*)utf8Str;(*it)!='\0';++it){
 		if(*it<192){
 			result.append(*it);
 		}else if(*it<224){
@@ -526,25 +539,25 @@ XString XString::number(double v)
 {
 	char buffer[256];
 	snprintf(buffer, sizeof(buffer), "%g", v);
-	return XString(buffer);
+	return XString::fromAscii(buffer);
 }
 
 XString::iterator XString::begin(){
-	return (iterator)d.data()->data;
+	return (iterator)d.data()->str;
 }
 
 XString::iterator XString::end(){
-	return (iterator)(d.data()->data+d.data()->size);
+	return (iterator)(d.data()->str+d.data()->size);
 }
 
 XString::const_iterator XString::begin() const
 {
-	return (iterator)d.data()->data;
+	return (iterator)d.data()->str;
 }
 
 XString::const_iterator XString::end() const
 {
-	return (iterator)(d.data()->data+d.data()->size);
+	return (iterator)(d.data()->str+d.data()->size);
 }
 
 bool XString::isDetach(){

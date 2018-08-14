@@ -48,7 +48,9 @@ HEADERS += \
     xel_global.h \
     XELError.h \
     XELContext.h \
-    XString.h
+    XString.h \
+    XHashMap.h \
+    SharedData.h
 
 unix {
     target.path = /usr/lib

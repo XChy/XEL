@@ -2,93 +2,7 @@
 #define XSTRING_H
 
 #include <xel_global.h>
-
-template<typename T>
-class XEL_EXPORT Ref{
-public:
-	Ref(T* ptr)
-		:mPointer(ptr),
-		  mRefCount(1)
-	{}
-	Ref(const Ref<T>& ref)
-		:mRefCount(1)
-	{
-		mPointer=new T(*ref.pointer());
-	}
-	int ref(){
-		return ++mRefCount;
-	}
-	int unref(){
-		return --mRefCount;
-	}
-	~Ref()
-	{
-		delete mPointer;
-	}
-
-	T* pointer() const
-	{
-		return mPointer;
-	}
-	int refCount() const
-	{
-		return mRefCount;
-	}
-private:
-	T* mPointer;
-	int mRefCount;
-};
-
-class XEL_EXPORT StringData{
-public:
-	StringData(const StringData& other);
-	StringData(uint size=1);
-	void allocate(uint allocSize);
-	void reallocate(uint allocSize);
-	~StringData();
-	char16_t* data;
-	uint size;
-	uint allocSize;
-};
-
-template<typename T>
-class XEL_EXPORT SharedData{
-public:
-	SharedData(){}
-	SharedData(T* p)
-		:ref(new Ref<T>(p))
-	{}
-	SharedData(const SharedData& d)
-		:ref(d.ref)
-	{
-		ref->ref();
-	}
-	SharedData& operator=(const SharedData& d)
-	{
-		if(this==&d){
-			return *this;
-		}
-		if(ref->unref()==0){
-			delete ref;
-		}
-		ref=d.ref;
-		ref->ref();
-		return *this;
-	}
-	T* data() const
-	{
-		return ref->pointer();
-	}
-	~SharedData()
-	{
-		if(ref->unref()==0)
-		{
-			delete ref;
-		}
-	}
-
-	Ref<T>* ref;
-};
+#include <SharedData.h>
 
 class XEL_EXPORT XChar{
 	friend class XString;
@@ -117,6 +31,18 @@ private:
 	char16_t ucs;
 };
 
+class XEL_EXPORT StringData{
+public:
+	StringData(const StringData& other);
+	StringData(uint allocSize=1);
+	void allocate(uint allocSize);
+	void reallocate(uint allocSize);
+	~StringData();
+	char16_t* str;
+	uint size;
+	uint allocSize;
+};
+
 //XString
 // Encoding:UCS2
 // Copy on write
@@ -128,6 +54,7 @@ public:
 	XString(const char* utf8);
 	XString(const wchar_t* wstr);
 	XString(const char16_t* ustr);
+	XString(uint allocSize);
 
 	const XChar* data() const;
 	XChar* data();
@@ -171,7 +98,8 @@ public:
 	int toInt(int base=10) const;
 	double toDouble() const;
 
-	static XString fromUtf8(const char* data);
+	static XString fromAscii(const char* asciiStr);
+	static XString fromUtf8(const char* utf8Str);
 
 	static XString number(int v, int base=10);
 	static XString number(double v);
