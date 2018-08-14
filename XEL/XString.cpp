@@ -387,11 +387,11 @@ int XString::toInt(int base) const
 			}
 			break;
 		case 16:
-			for(auto it=begin();end();++it){
+			for(auto it=begin();it!=end();++it){
 				result<<=4;
 				if(it->isDigit()){
 					result+=it->digitValue();
-				}else if(*it>='a'||*it<='f'){
+				}else if((*it>='a'&&*it<='f')||(*it>='A'&&*it<='F')){
 					result+=10+it->digitValue();
 				}
 			}

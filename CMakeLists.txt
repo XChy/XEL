@@ -1,5 +1,5 @@
-project(XEL)#工程名字
-cmake_minimum_required(VERSION 2.8)#CMAKE版本
+project(XEL)
+cmake_minimum_required(VERSION 2.8)
 
 option(BUILD_SHARED_LIBRARY "Set to switch to build shared library" ON)
 option(BUILD_STATIC_LIBRARY "Set to switch to build static library" OFF)
@@ -33,21 +33,5 @@ if(BUILD_STATIC_LIBRARY)
     add_library(XEL_STATIC STATIC ${SRC})
     SET_TARGET_PROPERTIES(XEL_STATIC PROPERTIES OUTPUT_NAME "XEL")
 endif()
-
-#INSTALL(FILES XEL/XELEngine.cpp
-#    XEL/XELContext.h
-#    XEL/XString.h
-#    XEL/XHashMap
-#    XEL/xel_global.h
-#    XEL/SharedData
-#    XEL/Token.h
-#    XEL/EvaluateNode.h
-#    XEL/NodeCreator.h
-#    XEL/XELError.h
-#    XEL/Variant.h
-#    XEL/Parser.h
-#    XEL/Tokenizer.h
-#    XEL/Preprocessor.h
-#    DESTINATION XEL)
 
 add_definitions(-std=c++11)
