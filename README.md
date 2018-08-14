@@ -1,5 +1,4 @@
 # XEL - A Expression Engine
-### Features
 
 ## Scalability
   #### Variables can be customed
