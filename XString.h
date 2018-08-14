@@ -47,6 +47,10 @@ public:
 // Encoding:UCS2
 // Copy on write
 
+enum Initialization{
+	unInitialization
+};
+
 class XEL_EXPORT XString{
 public:
 	XString();
@@ -54,7 +58,7 @@ public:
 	XString(const char* utf8);
 	XString(const wchar_t* wstr);
 	XString(const char16_t* ustr);
-	XString(uint allocSize);
+	XString(uint allocSize,Initialization init);
 
 	const XChar* data() const;
 	XChar* data();

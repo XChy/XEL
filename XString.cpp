@@ -43,7 +43,7 @@ bool XChar::isSpace() const
 
 bool XChar::isLetter() const
 {
-	return (ucs>='a'&&ucs<='z')||(ucs>='A'&&ucs<='Z');
+	return (ucs>='a'&&ucs<='z')||(ucs>='A'&&ucs<='Z')||(ucs>=0x4e00&&ucs<=0x9fa5);
 }
 
 bool XChar::isLetterOrDigit() const{
@@ -142,7 +142,7 @@ XString::XString(const char16_t* ustr)
 	xstrcpy(d.data()->str,ustr,len+1);
 }
 
-XString::XString(uint allocSize)
+XString::XString(uint allocSize,Initialization init)
 	:d(new StringData(allocSize))
 {
 }
@@ -456,9 +456,10 @@ E:
 XString XString::fromAscii(const char* asciiStr)
 {
 	int len=strlen(asciiStr);
-	XString result(len+1);
+	XString result(len+1,unInitialization);
 	result.d.data()->size=len;
 	xstrcpy(result.d.data()->str,asciiStr,len+1);
+	return result;
 }
 
 XString XString::fromUtf8(const char* utf8Str)

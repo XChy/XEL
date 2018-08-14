@@ -38,8 +38,7 @@ void Tokenizer::analyzeDecAndNext(XString::const_iterator& it, XString& value, s
 
 void Tokenizer::analyzeHexAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const
 {
-	bool isHexLetter=((*it)>'a'&&(*it)<'f')||((*it)>'A'&&(*it)<'F');
-	while(it->isDigit()||isHexLetter){
+	while(it->isDigit()||(((*it)>'a'&&(*it)<'f')||((*it)>'A'&&(*it)<'F'))){
 		value.append(*it);++it;
 	}
 	tokens.push_back(Token(Literal,value.toInt(16)));

@@ -10,6 +10,36 @@ XELEngine::XELEngine()
 	mParser->setContext(mContext.get());
 	mTokenizer->setContext(mContext.get());
 	mPreprocessor->setContext(mContext.get());
+	setUnaryOperator("-",[](double o){
+		return -o;
+	});
+	setUnaryOperator("!",[](bool o){
+		return !o;
+	});
+	setBinaryOperator("==",[](const Variant& left,const Variant& right){
+		return left==right;
+	},1);
+	setBinaryOperator("||",[](bool left,bool right){
+		return left==right;
+	},1);
+	setBinaryOperator("&&",[](bool left,bool right){
+		return left==right;
+	},1);
+	setBinaryOperator("+",[](double left,double right){
+		return left+right;
+	},1);
+	setBinaryOperator("-",[](double left,double right){
+		return left-right;
+	},1);
+	setBinaryOperator("*",[](double left,double right){
+		return left*right;
+	},2);
+	setBinaryOperator("/",[](double left,double right){
+		return left/right;
+	},2);
+	setBinaryOperator("^",[](double left,double right){
+		return pow(left,right);
+	},3);
 }
 
 XString XELEngine::expression() const
