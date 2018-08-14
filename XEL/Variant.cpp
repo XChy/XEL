@@ -111,8 +111,10 @@ XString Variant::convertString() const
 
 bool Variant::convertBool() const
 {
-	if(mType==VariantType::Bool||mType==VariantType::Int){
+	if(mType==VariantType::Bool){
 		return mHolder.boolValue;
+	}else if(mType==VariantType::Int){
+		return mHolder.intValue;
 	}
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Bool");
 }

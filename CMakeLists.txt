@@ -34,4 +34,14 @@ if(BUILD_STATIC_LIBRARY)
     SET_TARGET_PROPERTIES(XEL_STATIC PROPERTIES OUTPUT_NAME "XEL")
 endif()
 
+if( NOT CMAKE_BUILD_TYPE )
+    set( CMAKE_BUILD_TYPE Release )
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -g -Wall -Wno-unused-variable -pthread")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O2 -pthread -fopenmp")
+endif()
+
+
 add_definitions(-std=c++11)
