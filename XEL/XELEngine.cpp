@@ -16,6 +16,10 @@ XELEngine::XELEngine()
 	setUnaryOperator("!",[](bool o){
 		return !o;
 	});
+	setBinaryOperator("=",[](XELValOrVar left,XELValOrVar right){
+		left.setVariable(right.value());
+		return left;
+	},0);
 	setBinaryOperator("==",[](const Variant& left,const Variant& right){
 		return left==right;
 	},1);

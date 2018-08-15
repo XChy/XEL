@@ -7,6 +7,7 @@
 #include <XEL/Preprocessor.h>
 #include <XEL/Tokenizer.h>
 #include <XEL/Parser.h>
+#include <XEL/XELValOrVar.h>
 
 class XEL_EXPORT XELEngine
 {
@@ -26,7 +27,7 @@ public:
 						UnaryOperatorNode(),
 						mEvalFunc(func){}
 					Variant evaluate() const{
-						return mEvalFunc(operand()->evaluate());
+						return mEvalFunc(XELValOrVar(operand()));
 					}
 					Func mEvalFunc;
 				};
@@ -49,7 +50,7 @@ public:
 						BinaryOperatorNode(),
 						mEvalFunc(func){}
 					Variant evaluate() const{
-						return mEvalFunc(leftOperand()->evaluate(),rightOperand()->evaluate());
+						return mEvalFunc(XELValOrVar(leftOperand()),XELValOrVar(rightOperand()));
 					}
 					Func mEvalFunc;
 				};
@@ -72,9 +73,9 @@ public:
 						FunctionNode(),
 						mEvalFunc(func){}
 					Variant evaluate() const{
-						std::vector<Variant> variants;
+						std::vector<XELValOrVar> variants;
 						for(EvaluateNode* node:parameters()){
-							variants.push_back(node->evaluate());
+							variants.push_back(XELValOrVar(node));
 						}
 						return mEvalFunc(variants);
 					}

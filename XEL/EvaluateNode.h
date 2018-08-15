@@ -10,6 +10,8 @@ class XEL_EXPORT EvaluateNode
 public:
 	EvaluateNode();
 	virtual Variant evaluate() const=0;
+	virtual bool isVariable() const=0;
+	virtual void setVariable(const Variant& v)=0;
 	virtual ~EvaluateNode();
 };
 
@@ -17,6 +19,8 @@ class XEL_EXPORT ValueNode:public EvaluateNode{
 public:
 	ValueNode();
 	virtual Variant evaluate() const;
+	virtual bool isVariable() const{return false;}
+	virtual void setVariable(const Variant& v){throw XELError("value cannot be a variable");}
 
 	Variant value() const;
 
@@ -29,6 +33,10 @@ class XEL_EXPORT VariableNode:public EvaluateNode{
 public:
 	VariableNode();
 	virtual Variant evaluate() const;
+	virtual bool isVariable() const{return true;}
+	virtual void setVariable(const Variant& v){
+		mVariableTable->insert(mVariableName,v);
+	}
 
 	XString variableName() const;
 	XHashMap<XString, Variant>* variableTable() const;
@@ -44,6 +52,8 @@ class XEL_EXPORT UnaryOperatorNode:public EvaluateNode{
 public:
 	UnaryOperatorNode();
 	virtual Variant evaluate() const=0;
+	virtual bool isVariable() const{return false;}
+	virtual void setVariable(const Variant& v){throw XELError("Operator cannot be a variable");}
 
 	EvaluateNode* operand() const;
 	void setOperand(EvaluateNode* operand);
@@ -57,6 +67,8 @@ class XEL_EXPORT BinaryOperatorNode:public EvaluateNode{
 public:
 	BinaryOperatorNode();
 	virtual Variant evaluate() const=0;
+	virtual bool isVariable() const{return false;}
+	virtual void setVariable(const Variant& v){throw XELError("Operator cannot be a variable");}
 
 	EvaluateNode* leftOperand() const;
 	void setLeftOperand(EvaluateNode* leftOperand);
@@ -74,6 +86,8 @@ class XEL_EXPORT FunctionNode:public EvaluateNode{
 public:
 	FunctionNode();
 	virtual Variant evaluate() const=0;
+	virtual bool isVariable() const{return false;}
+	virtual void setVariable(const Variant& v){throw XELError("Function cannot be a variable");}
 
 	std::vector<EvaluateNode*> parameters() const;
 	void setParameters(const std::vector<EvaluateNode*>& parameters);

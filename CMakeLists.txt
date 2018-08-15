@@ -16,7 +16,10 @@ set(SRC
     XEL/Variant.cpp
     XEL/Parser.cpp
     XEL/Tokenizer.cpp
-    XEL/Preprocessor.cpp)
+    XEL/Preprocessor.cpp
+    XEL/XELObject.cpp
+    XEL/XELValOrVar
+    )
 
 if (BUILD_SHARED_LIBRARY)
     add_definitions(-DXEL_SHARED_LIBRARY)

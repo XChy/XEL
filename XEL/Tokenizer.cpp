@@ -98,6 +98,8 @@ std::vector<Token> Tokenizer::analyze(XString expression) const
 				result.push_back(Token(Literal,true));
 			}else if(value=="false"){
 				result.push_back(Token(Literal,false));
+			}else if(value=="null"){
+				result.push_back(Token(Literal,Variant()));
 			}else{
 				result.push_back(Token(Identifier,value));
 			}

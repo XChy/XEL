@@ -131,7 +131,7 @@ XString Variant::toString() const
 		case VariantType::Bool:
 			return mHolder.boolValue?"true":"false";
 		case VariantType::Null:
-			return "Null";
+			return "null";
 	}
 }
 
