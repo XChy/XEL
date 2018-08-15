@@ -21,7 +21,7 @@ private:
 	ValueNode* createValue(TokenIt it);
 	VariableNode* createVariable(TokenIt it);
 	UnaryOperatorNode* createUnaryOperator(TokenIt it);
-	std::tuple<BinaryOperatorNode*,int> createBinaryOperator(TokenIt it);
+	std::tuple<BinaryOperatorNode*,int,Assoc> createBinaryOperator(TokenIt it);
 	FunctionNode* createFunction(TokenIt it);
 	EvaluateNode* parseAll(TokenIt begin, TokenIt end);
 	EvaluateNode* parseNoUnaryOperatorOperand(TokenIt& it, TokenIt end);

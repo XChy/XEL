@@ -68,13 +68,13 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 	}
 }
 
-std::tuple<BinaryOperatorNode*,int> Parser::createBinaryOperator(TokenIt it){
+std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator){
 		if(!mContext->binaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No binary Operator called "+it->value().stringValue());
 		}
 		auto creator=mContext->binaryOperatorTable()[it->value().stringValue()];
-		return std::make_tuple(creator->create(),creator->priority());
+		return std::make_tuple(creator->create(),creator->priority(),creator->assoc());
 	}else{
 		throw XELError("Is not binary operator");
 	}
@@ -185,7 +185,6 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 		BinaryOperatorNode* operator2=std::get<0>(tuple);
 		int priority2=std::get<1>(tuple);
 		if(++it==end)throw XELError("No value after operator");
-
 		EvaluateNode* operand3=parseOperand(it,end);
 
 		if(priority2<priority1){
@@ -193,12 +192,19 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 			operator2->setRightOperand(operand3);
 			root=operator2;
 		}else if(priority2==priority1){
-			operator2->setLeftOperand(operator1);
-			operator2->setRightOperand(operand3);
-			if(root==operator1){
-				root=operator2;
-			}else{
-				((BinaryOperatorNode*)root)->setRightOperand(operator2);
+			Assoc assoc=std::get<2>(tuple);
+			if(assoc==LeftToRight){
+				operator2->setLeftOperand(operator1);
+				operator2->setRightOperand(operand3);
+				if(root==operator1){
+					root=operator2;
+				}else{
+					((BinaryOperatorNode*)root)->setRightOperand(operator2);
+				}
+			}else if(assoc==RightToLeft){
+				operator2->setLeftOperand(operand2);
+				operator2->setRightOperand(operand3);
+				operator1->setRightOperand(operator2);
 			}
 		}else{
 			operator1->setRightOperand(operator2);

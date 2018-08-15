@@ -39,10 +39,15 @@ public:
 	}
 
 	template<typename Func>
-	void setBinaryOperator(const XString& name,Func func,int priority){
+	void setBinaryOperator(const XString& name,Func func,int priority,Assoc assoc=LeftToRight){
 		class Creator:public BinaryOperatorCreator{
 		public:
-			Creator(Func func,int priority):mEvalFunc(func){setPriority(priority);}
+			Creator(Func func,int priority,Assoc assoc):
+				mEvalFunc(func)
+			{
+				setPriority(priority);
+				setAssoc(assoc);
+			}
 			BinaryOperatorNode* create() const{
 				class Operator:public BinaryOperatorNode{
 				public:
@@ -58,7 +63,7 @@ public:
 			}
 			Func mEvalFunc;
 		};
-		mContext->binaryOperatorTable()[name]=new Creator(func,priority);
+		mContext->binaryOperatorTable()[name]=new Creator(func,priority,assoc);
 	}
 
 	template<typename EvalFunc>

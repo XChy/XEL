@@ -20,6 +20,16 @@ void BinaryOperatorCreator::setPriority(int priority)
 	mPriority = priority;
 }
 
+Assoc BinaryOperatorCreator::assoc() const
+{
+	return mAssoc;
+}
+
+void BinaryOperatorCreator::setAssoc(const Assoc& assoc)
+{
+	mAssoc = assoc;
+}
+
 FunctionCreator::FunctionCreator()
 {
 

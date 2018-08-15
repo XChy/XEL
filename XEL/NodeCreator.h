@@ -10,6 +10,11 @@ public:
 	virtual UnaryOperatorNode* create() const=0;
 };
 
+enum Assoc{//Associativity
+	LeftToRight,
+	RightToLeft
+};
+
 class XEL_EXPORT BinaryOperatorCreator{
 public:
 	BinaryOperatorCreator();
@@ -17,8 +22,12 @@ public:
 
 	int priority() const;
 	void setPriority(int priority);
+
+	Assoc assoc() const;
+	void setAssoc(const Assoc& assoc);
 private:
 	int mPriority;
+	Assoc mAssoc;
 };
 
 class XEL_EXPORT FunctionCreator{

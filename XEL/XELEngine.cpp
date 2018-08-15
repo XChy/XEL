@@ -19,7 +19,7 @@ XELEngine::XELEngine()
 	setBinaryOperator("=",[](XELValOrVar left,XELValOrVar right){
 		left.setVariable(right.value());
 		return left;
-	},0);
+	},0,RightToLeft);
 	setBinaryOperator("==",[](const Variant& left,const Variant& right){
 		return left==right;
 	},1);
@@ -43,7 +43,7 @@ XELEngine::XELEngine()
 	},2);
 	setBinaryOperator("^",[](double left,double right){
 		return pow(left,right);
-	},3);
+	},3,RightToLeft);
 }
 
 XString XELEngine::expression() const
