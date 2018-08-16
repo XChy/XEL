@@ -81,7 +81,7 @@ std::vector<Token> Tokenizer::analyze(XString expression) const
 			value.append(*it);++it;
 			while(mContext->operatorChars().contains(*it)){
 				value.append(*it);++it;
-				if((!mContext->binaryOperatorTable().operator [](value))&&(!mContext->unaryOperatorTable().operator [](value))){
+				if((!mContext->binaryOperatorTable().contains(value))&&(!mContext->unaryOperatorTable().contains(value))){
 					value.remove(value.size()-1,1);
 					--it;
 					break;
@@ -117,6 +117,11 @@ std::vector<Token> Tokenizer::analyze(XString expression) const
 			}
 			++it;
 			result.push_back(Token(Literal,value));
+		}else if(*it=='.'){
+			++it;
+			result.push_back(Token(Dot));
+		}else if(it->isSpace()){
+			++it;
 		}else{
 			throw XELError(XString("Unknown char:").append(*it));
 		}

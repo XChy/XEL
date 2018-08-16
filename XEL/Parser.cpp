@@ -68,8 +68,8 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 	}
 }
 
-std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt it){
-	if(it->type()==Operator){
+std::tuple<BinaryOperatorNode*, int, Assoc> Parser::parseBinaryOperator(TokenIt it){
+	if(it->type()==Operator||it->type()==Identifier){
 		if(!mContext->binaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No binary Operator called "+it->value().stringValue());
 		}
@@ -96,8 +96,7 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 	}else if(it->type()==Identifier){
 		if(it+1==end){
 			return createVariable(it);
-		}
-		if((it+1)->type()==OpenParentheses){
+		}else if((it+1)->type()==OpenParentheses){
 			FunctionNode* func1=createFunction(it);
 			auto subFunctionEnd=findNextCloseParenthese(it+2,end);
 			if(subFunctionEnd!=it+2){
@@ -149,7 +148,8 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 		nodeEnd->setOperand(parseNoUnaryOperatorOperand(it,end));
 		return root;
 	}else{
-		return parseNoUnaryOperatorOperand(it,end);
+		EvaluateNode* root=parseNoUnaryOperatorOperand(it,end);
+		return root;
 	}
 }
 
@@ -169,10 +169,11 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 
 	BinaryOperatorNode* operator1;
 	int priority1;
-	auto tuple=createBinaryOperator(it);
+	auto tuple=parseBinaryOperator(it);
 	root=operator1=std::get<0>(tuple);
 	priority1=std::get<1>(tuple);
 	operator1->setLeftOperand(operand1);
+
 	if(++it==end)throw XELError("No value after operator");
 
 	EvaluateNode* operand2=parseOperand(it,end);
@@ -181,7 +182,7 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	++it;if(it==end)return root;
 
 	while(it!=end){
-		auto tuple=createBinaryOperator(it);
+		auto tuple=parseBinaryOperator(it);
 		BinaryOperatorNode* operator2=std::get<0>(tuple);
 		int priority2=std::get<1>(tuple);
 		if(++it==end)throw XELError("No value after operator");

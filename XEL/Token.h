@@ -10,7 +10,8 @@ enum TokenType{
 	Identifier,
 	OpenParentheses,
 	CloseParentheses,
-	Comma
+	Comma,
+	Dot
 };
 
 class XEL_EXPORT Token{

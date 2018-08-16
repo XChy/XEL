@@ -4,7 +4,6 @@
 #include "XEL/xel_global.h"
 #include <XEL/XELContext.h>
 #include <XEL/Variant.h>
-#include <XEL/Preprocessor.h>
 #include <XEL/Tokenizer.h>
 #include <XEL/Parser.h>
 #include <XEL/XELValOrVar.h>
@@ -105,9 +104,6 @@ public:
 	std::shared_ptr<XELContext> context() const;
 	void setContext(const std::shared_ptr<XELContext>& context);
 
-	std::shared_ptr<Preprocessor> preprocessor() const;
-	void setPreprocessor(const std::shared_ptr<Preprocessor>& preprocessor);
-
 	std::shared_ptr<Tokenizer> tokenizer() const;
 	void setTokenizer(const std::shared_ptr<Tokenizer>& tokenizer);
 
@@ -120,7 +116,6 @@ private:
 	EvaluateNode* mRootNode;
 
 	std::shared_ptr<XELContext> mContext;
-	std::shared_ptr<Preprocessor> mPreprocessor;
 	std::shared_ptr<Tokenizer> mTokenizer;
 	std::shared_ptr<Parser> mParser;
 };

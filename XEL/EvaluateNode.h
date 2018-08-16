@@ -97,5 +97,23 @@ private:
 	std::vector<EvaluateNode*> mParameters;
 };
 
+//class XEL_EXPORT MemberNode:public EvaluateNode{
+//public:
+//	MemberNode();
+//	virtual Variant evaluate() const;
+//	virtual bool isVariable() const{return false;}
+//	virtual void setVariable(const Variant& v){throw XELError("member cannot be a variable");}
+
+//	EvaluateNode* owner() const;
+//	void setOwner(EvaluateNode* owner);
+
+//	XString memberName() const;
+//	void setMemberName(const XString& memberName);
+
+//	virtual ~MemberNode();
+//private:
+//	EvaluateNode* mOwner;
+//	XString mMemberName;
+//};
 
 #endif // EVALUATENODE_H

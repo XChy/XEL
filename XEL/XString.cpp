@@ -382,6 +382,33 @@ int XString::toInt(int base) const
 			break;
 		case 10:
 			for(auto it=begin();it!=end();++it){
+				if(*it=='e'){
+					++it;
+					bool isMinus=false;
+					if(*it=='+'){
+						++it;
+					}else if(*it=='-')
+					{
+						++it;
+						isMinus=true;
+					}
+					double ePart=0;
+					while(it!=end()){
+						ePart*=10;
+						ePart+=it->digitValue();
+						++it;
+					}
+					if(isMinus){
+						while(ePart--){
+							result/=10;
+						}
+					}else{
+						while(ePart--){
+							result*=10;
+						}
+					}
+					break;
+				}
 				result*=10;
 				result+=it->digitValue();
 			}
@@ -417,8 +444,8 @@ double XString::toDouble() const
 			}
 			break;
 		}else if(*it=='e'){
-			++it;
 E:
+			++it;
 			bool isMinus=false;
 			if(*it=='+'){
 				++it;
@@ -499,27 +526,33 @@ XString XString::fromUtf8(const char* utf8Str)
 XString XString::number(int v,int base)
 {
 	XString result;
+	bool isMinus=v<0;
 	switch (base) {
 		case 2:
-			if(v<0){
+			if(isMinus){
 				result.append('-');
 			}
 			while(v){
 				result.append((v&1)?'1':'0');
 				v>>=1;
 			}
+			break;
 		case 10:
-			while(v){
+			if(v==0){
+				result.append('0');
+				break;
+			}
+			while(v!=0){
 				result.append(XChar(char(v%10+'0')));
 				v/=10;
 			}
-			if(v<0){
+			if(isMinus){
 				result.append('-');
 			}
 			result.reverse();
 			break;
 		case 16:
-			if(v<0){
+			if(isMinus){
 				result.append('-');
 			}
 			while(v){
@@ -531,6 +564,7 @@ XString XString::number(int v,int base)
 				}
 				v>>=4;
 			}
+			break;
 	}
 	return result;
 

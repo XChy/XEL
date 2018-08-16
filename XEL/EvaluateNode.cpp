@@ -141,3 +141,39 @@ FunctionNode::~FunctionNode()
 		delete *it;
 	}
 }
+
+//MemberNode::MemberNode()
+//	:mOwner(nullptr)
+//{
+
+//}
+
+//Variant MemberNode::evaluate() const
+//{
+//	return mOwner->evaluate().convertObject()->member(mMemberName);
+//}
+
+//EvaluateNode* MemberNode::owner() const
+//{
+//	return mOwner;
+//}
+
+//void MemberNode::setOwner(EvaluateNode* owner)
+//{
+//	mOwner = owner;
+//}
+
+//XString MemberNode::memberName() const
+//{
+//	return mMemberName;
+//}
+
+//void MemberNode::setMemberName(const XString& memberName)
+//{
+//	mMemberName = memberName;
+//}
+
+//MemberNode::~MemberNode()
+//{
+//	delete mOwner;
+//}

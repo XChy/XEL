@@ -16,7 +16,6 @@ set(SRC
     XEL/Variant.cpp
     XEL/Parser.cpp
     XEL/Tokenizer.cpp
-    XEL/Preprocessor.cpp
     XEL/XELObject.cpp
     XEL/XELValOrVar
     )

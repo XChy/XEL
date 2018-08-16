@@ -4,12 +4,10 @@ XELEngine::XELEngine()
 	:mContext(new XELContext),
 	  mParser(new Parser),
 	  mTokenizer(new Tokenizer),
-	  mPreprocessor(new Preprocessor),
 	  mRootNode(nullptr)
 {
 	mParser->setContext(mContext.get());
 	mTokenizer->setContext(mContext.get());
-	mPreprocessor->setContext(mContext.get());
 	setUnaryOperator("-",[](double o){
 		return -o;
 	});
@@ -24,10 +22,19 @@ XELEngine::XELEngine()
 		return left==right;
 	},1);
 	setBinaryOperator("||",[](bool left,bool right){
-		return left==right;
+		return left||right;
+	},1);
+	setBinaryOperator("or",[](int left,int right){
+		return left|right;
+	},1);
+	setBinaryOperator("and",[](int left,int right){
+		return left&right;
+	},1);
+	setBinaryOperator("xor",[](int left,int right){
+		return left^right;
 	},1);
 	setBinaryOperator("&&",[](bool left,bool right){
-		return left==right;
+		return left&&right;
 	},1);
 	setBinaryOperator("+",[](double left,double right){
 		return left+right;
@@ -53,7 +60,7 @@ XString XELEngine::expression() const
 
 void XELEngine::setExpression(XString expression)
 {
-	mRootNode=mParser->parse(mTokenizer->analyze(mPreprocessor->process(expression)));
+	mRootNode=mParser->parse(mTokenizer->analyze(expression));
 	mExpression=expression;
 }
 
@@ -89,18 +96,7 @@ void XELEngine::setContext(const std::shared_ptr<XELContext>& context)
 {
 	mParser->setContext(context.get());
 	mTokenizer->setContext(context.get());
-	mPreprocessor->setContext(context.get());
 	mContext = context;
-}
-
-std::shared_ptr<Preprocessor> XELEngine::preprocessor() const
-{
-	return mPreprocessor;
-}
-
-void XELEngine::setPreprocessor(const std::shared_ptr<Preprocessor>& preprocessor)
-{
-	mPreprocessor = preprocessor;
 }
 
 std::shared_ptr<Tokenizer> XELEngine::tokenizer() const
