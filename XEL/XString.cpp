@@ -527,12 +527,13 @@ XString XString::number(int v,int base)
 {
 	XString result;
 	bool isMinus=v<0;
+	v=abs(v);
 	switch (base) {
 		case 2:
 			if(isMinus){
 				result.append('-');
 			}
-			while(v){
+			while(v!=0){
 				result.append((v&1)?'1':'0');
 				v>>=1;
 			}
@@ -555,7 +556,7 @@ XString XString::number(int v,int base)
 			if(isMinus){
 				result.append('-');
 			}
-			while(v){
+			while(v!=0){
 				int base16=v&0xf;
 				if(base16>=0&&base16<=9){
 					result.append(char(base16+'0'));
