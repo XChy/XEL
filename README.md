@@ -1,4 +1,4 @@
-# XEL - 一个表达式引擎((A Expression Engine))
+# XEL - 一个表达式引擎(A Expression Engine)
 
 ## 可伸缩性(Scalability)
   #### 允许自定义变量(Variables can be customed)
@@ -20,7 +20,7 @@
   ```
   XEL支持二进制数和十六进制数(XEL supports Bin and Hex as number)
   
-  XEL支持英文和中文的标识符(XEL supports English and Chinese identitier_
+  XEL支持英文和中文的标识符(XEL supports English and Chinese identitier)
 
   ....
 
