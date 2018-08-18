@@ -92,33 +92,35 @@ FunctionNode* Parser::createFunction(TokenIt it)
 std::vector<EvaluateNode*> Parser::parseFunctionParams(TokenIt& it, TokenIt end)
 {
 	if(it->type()==OpenParentheses){
-		auto subFunctionEnd=findNextCloseParenthese(it+1,end);
+			auto subFunctionEnd=findNextCloseParenthese(it+1,end);
 
-		if(subFunctionEnd==end){
-			throw XELError("Cannot find function closeparenthese");
-		}
-
-		if(subFunctionEnd!=it+1){
-			std::vector<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
-			if(commas.empty()){
-				return {parseAll(it+1,it=subFunctionEnd)};
-			}else{
-				std::vector<EvaluateNode*> params;
-				params.push_back(parseAll(it+1,commas[0]));
-				for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
-					if(itOfIt==commas.end()-1){
-						params.push_back(parseAll((*itOfIt)+1,subFunctionEnd));
-					}else{
-						params.push_back(parseAll((*itOfIt)+1,*(itOfIt+1)));
-					}
-				}
-				it=subFunctionEnd;
-				return params;
+			if(subFunctionEnd==end){
+				throw XELError("Cannot find function closeparenthese");
 			}
+
+			if(subFunctionEnd!=it+1){
+				std::vector<TokenIt> commas=findFunctionComma(it+1,subFunctionEnd);
+				if(commas.empty()){
+					auto OldIt=it;
+					it=subFunctionEnd;
+					return {parseAll(OldIt+1,subFunctionEnd)};
+				}else{
+					std::vector<EvaluateNode*> params;
+					params.push_back(parseAll(it+1,commas[0]));
+					for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
+						if(itOfIt==commas.end()-1){
+							params.push_back(parseAll((*itOfIt)+1,subFunctionEnd));
+						}else{
+							params.push_back(parseAll((*itOfIt)+1,*(itOfIt+1)));
+						}
+					}
+					it=subFunctionEnd;
+					return params;
+				}
+			}
+			it=subFunctionEnd;
+			return std::vector<EvaluateNode*>();
 		}
-		it=subFunctionEnd;
-		return std::vector<EvaluateNode*>();
-	}
 }
 
 EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
@@ -137,7 +139,7 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 			return createVariable(it);
 		}
 	}else if(it->type()==OpenParentheses){
-		auto subParsingEnd=findNextCloseParenthese(it+1,end);
+		auto subParsingEnd=findNextCloseParenthese(it,end);
 		if(subParsingEnd==end){
 			throw XELError("missing closeparenthese");
 		}
@@ -177,8 +179,7 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 					}else{
 						MemberNode* mem=new MemberNode;
 						mem->setOwner(root);
-						mem->setMemberName((it+2)->value().convertString());
-						it+=2;
+						mem->setMemberName((it+=2)->value().convertString());
 						root=mem;
 					}
 				}else{

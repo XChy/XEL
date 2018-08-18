@@ -37,10 +37,12 @@ XString XELObjectWrapper::toString() const
 }
 
 
-Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& paramss)
+Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& params)
 {
 	if(funcName=="size"){
 		return int(vec.size());
+	}else if(funcName=="at"){
+		return vec.at(params.at(0).convertInt());
 	}
 }
 
