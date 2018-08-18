@@ -68,7 +68,7 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 	}
 }
 
-std::tuple<BinaryOperatorNode*, int, Assoc> Parser::parseBinaryOperator(TokenIt it){
+std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator||it->type()==Identifier){
 		if(!mContext->binaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No binary Operator called "+it->value().stringValue());
@@ -89,6 +89,38 @@ FunctionNode* Parser::createFunction(TokenIt it)
 	return creator->create();
 }
 
+std::vector<EvaluateNode*> Parser::parseFunctionParams(TokenIt& it, TokenIt end)
+{
+	if(it->type()==OpenParentheses){
+		auto subFunctionEnd=findNextCloseParenthese(it+1,end);
+
+		if(subFunctionEnd==end){
+			throw XELError("Cannot find function closeparenthese");
+		}
+
+		if(subFunctionEnd!=it+1){
+			std::vector<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
+			if(commas.empty()){
+				return {parseAll(it+1,it=subFunctionEnd)};
+			}else{
+				std::vector<EvaluateNode*> params;
+				params.push_back(parseAll(it+1,commas[0]));
+				for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
+					if(itOfIt==commas.end()-1){
+						params.push_back(parseAll((*itOfIt)+1,subFunctionEnd));
+					}else{
+						params.push_back(parseAll((*itOfIt)+1,*(itOfIt+1)));
+					}
+				}
+				it=subFunctionEnd;
+				return params;
+			}
+		}
+		it=subFunctionEnd;
+		return std::vector<EvaluateNode*>();
+	}
+}
+
 EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 {
 	if(it->type()==Literal){
@@ -98,25 +130,8 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 			return createVariable(it);
 		}else if((it+1)->type()==OpenParentheses){
 			FunctionNode* func1=createFunction(it);
-			auto subFunctionEnd=findNextCloseParenthese(it+2,end);
-			if(subFunctionEnd!=it+2){
-				std::vector<TokenIt> commas=findFunctionComma(it+2,subFunctionEnd);
-				if(commas.empty()){
-					func1->setParameters({parseAll(it+2,subFunctionEnd)});
-				}else{
-					std::vector<EvaluateNode*> params;
-					params.push_back(parseAll(it+2,commas[0]));
-					for(auto itOfIt=commas.begin();itOfIt!=commas.end();++itOfIt){
-						if(itOfIt==commas.end()-1){
-							params.push_back(parseAll((*itOfIt)+1,subFunctionEnd));
-						}else{
-							params.push_back(parseAll((*itOfIt)+1,*(itOfIt+1)));
-						}
-					}
-					func1->setParameters(params);
-				}
-			}
-			it=subFunctionEnd;
+			auto params=parseFunctionParams(++it,end);
+			func1->setParameters(params);
 			return func1;
 		}else{
 			return createVariable(it);
@@ -149,6 +164,30 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 		return root;
 	}else{
 		EvaluateNode* root=parseNoUnaryOperatorOperand(it,end);
+		while(it!=end){
+			if((it+1)!=end&&(it+1)->type()==Dot){
+				if((it+2)!=end&&(it+2)->type()==Identifier){
+					if((it+3)!=end&&(it+3)->type()==OpenParentheses){
+						MemberFunctionNode* func=new MemberFunctionNode;
+						func->setMemberFunctionName((it+2)->value().convertString());
+						auto params=parseFunctionParams(it+=3,end);
+						func->setParameters(params);
+						func->setOwner(root);
+						root=func;
+					}else{
+						MemberNode* mem=new MemberNode;
+						mem->setOwner(root);
+						mem->setMemberName((it+2)->value().convertString());
+						it+=2;
+						root=mem;
+					}
+				}else{
+					throw XELError("No identitier after dot");
+				}
+			}else{
+				break;
+			}
+		}
 		return root;
 	}
 }
@@ -169,7 +208,7 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 
 	BinaryOperatorNode* operator1;
 	int priority1;
-	auto tuple=parseBinaryOperator(it);
+	auto tuple=createBinaryOperator(it);
 	root=operator1=std::get<0>(tuple);
 	priority1=std::get<1>(tuple);
 	operator1->setLeftOperand(operand1);
@@ -182,7 +221,7 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	++it;if(it==end)return root;
 
 	while(it!=end){
-		auto tuple=parseBinaryOperator(it);
+		auto tuple=createBinaryOperator(it);
 		BinaryOperatorNode* operator2=std::get<0>(tuple);
 		int priority2=std::get<1>(tuple);
 		if(++it==end)throw XELError("No value after operator");
@@ -219,7 +258,6 @@ EvaluateNode* Parser::parseAll(TokenIt begin, TokenIt end){
 	}
 	return root;
 }
-
 
 EvaluateNode* Parser::parse(const std::vector<Token>& tokenList)
 {

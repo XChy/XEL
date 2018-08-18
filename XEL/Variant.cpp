@@ -24,10 +24,10 @@ Variant::Variant(bool value)
 	reset(value);
 }
 
-//Variant::Variant(const std::shared_ptr<XELObject>& value)
-//{
-//	reset(value);
-//}
+Variant::Variant(XELObjectWrapper value)
+{
+	reset(value);
+}
 
 Variant::Variant(const Variant& value)
 	:mType(value.type()),
@@ -57,10 +57,10 @@ void Variant::set(bool value)
 	mHolder.boolValue=value;
 }
 
-//void Variant::set(const std::shared_ptr<XELObject>& value)
-//{
-//	mHolder.objectValue=value;
-//}
+void Variant::set(XELObjectWrapper value)
+{
+	mHolder.objectValue=value;
+}
 
 void Variant::reset(double value)
 {
@@ -86,11 +86,11 @@ void Variant::reset(bool value)
 	set(value);
 }
 
-//void Variant::reset(const std::shared_ptr<XELObject>& value)
-//{
-//	mType=VariantType::Object;
-//	set(value);
-//}
+void Variant::reset(XELObjectWrapper value)
+{
+	mType=VariantType::Object;
+	set(value);
+}
 
 void Variant::clear()
 {
@@ -135,13 +135,13 @@ bool Variant::convertBool() const
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Bool");
 }
 
-//std::shared_ptr<XELObject> Variant::convertObject() const
-//{
-//	if(mType==VariantType::Object){
-//		return mHolder.objectValue;
-//	}
-//	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Object");
-//}
+XELObjectWrapper Variant::convertObject() const
+{
+	if(mType==VariantType::Object){
+		return mHolder.objectValue;
+	}
+	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Object");
+}
 
 XString Variant::toString() const
 {
@@ -154,8 +154,8 @@ XString Variant::toString() const
 			return mHolder.stringValue;
 		case VariantType::Bool:
 			return mHolder.boolValue?"true":"false";
-//		case VariantType::Object:
-//			return mHolder.objectValue->toString();
+		case VariantType::Object:
+			return mHolder.objectValue.data()->toString();
 		case VariantType::Null:
 			return "null";
 	}
@@ -181,10 +181,10 @@ bool Variant::boolValue() const
 	return mHolder.boolValue;
 }
 
-//std::shared_ptr<XELObject> Variant::objectValue() const
-//{
-//	return mHolder.objectValue;
-//}
+XELObjectWrapper Variant::objectValue() const
+{
+	return mHolder.objectValue;
+}
 
 Variant& Variant::operator=(const Variant& variant)
 {
@@ -217,11 +217,11 @@ Variant& Variant::operator=(bool value)
 	return *this;
 }
 
-//Variant&Variant::operator=(const std::shared_ptr<XELObject> value)
-//{
-//	reset(value);
-//	return *this;
-//}
+Variant&Variant::operator=(XELObjectWrapper value)
+{
+	reset(value);
+	return *this;
+}
 
 bool Variant::operator==(const Variant& variant) const
 {
@@ -286,7 +286,7 @@ Variant::operator bool() const
 	return convertBool();
 }
 
-//Variant::operator std::shared_ptr<XELObject>() const
-//{
-//	return convertObject();
-//}
+Variant::operator XELObjectWrapper() const
+{
+	return convertObject();
+}

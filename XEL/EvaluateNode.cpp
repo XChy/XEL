@@ -142,38 +142,91 @@ FunctionNode::~FunctionNode()
 	}
 }
 
-//MemberNode::MemberNode()
-//	:mOwner(nullptr)
-//{
+MemberNode::MemberNode()
+	:mOwner(nullptr)
+{
 
-//}
+}
 
-//Variant MemberNode::evaluate() const
-//{
-//	return mOwner->evaluate().convertObject()->member(mMemberName);
-//}
+Variant MemberNode::evaluate() const
+{
+	return mOwner->evaluate().convertObject().member(mMemberName);
+}
 
-//EvaluateNode* MemberNode::owner() const
-//{
-//	return mOwner;
-//}
+EvaluateNode* MemberNode::owner() const
+{
+	return mOwner;
+}
 
-//void MemberNode::setOwner(EvaluateNode* owner)
-//{
-//	mOwner = owner;
-//}
+void MemberNode::setOwner(EvaluateNode* owner)
+{
+	mOwner = owner;
+}
 
-//XString MemberNode::memberName() const
-//{
-//	return mMemberName;
-//}
+XString MemberNode::memberName() const
+{
+	return mMemberName;
+}
 
-//void MemberNode::setMemberName(const XString& memberName)
-//{
-//	mMemberName = memberName;
-//}
+void MemberNode::setMemberName(const XString& memberName)
+{
+	mMemberName = memberName;
+}
 
-//MemberNode::~MemberNode()
-//{
-//	delete mOwner;
-//}
+MemberNode::~MemberNode()
+{
+	delete mOwner;
+}
+
+MemberFunctionNode::MemberFunctionNode()
+	:mOwner(nullptr)
+{
+
+}
+
+Variant MemberFunctionNode::evaluate() const
+{
+	std::vector<Variant> variants;
+	for(EvaluateNode* node:parameters()){
+		variants.push_back(node->evaluate());
+	}
+	return mOwner->evaluate().convertObject().invoke(mMemberFunctionName,variants);
+}
+
+EvaluateNode* MemberFunctionNode::owner() const
+{
+	return mOwner;
+}
+
+void MemberFunctionNode::setOwner(EvaluateNode* owner)
+{
+	mOwner = owner;
+}
+
+XString MemberFunctionNode::MemberFunctionName() const
+{
+	return mMemberFunctionName;
+}
+
+void MemberFunctionNode::setMemberFunctionName(const XString& MemberFunctionName)
+{
+	mMemberFunctionName = MemberFunctionName;
+}
+
+std::vector<EvaluateNode*> MemberFunctionNode::parameters() const
+{
+	return mParameters;
+}
+
+void MemberFunctionNode::setParameters(const std::vector<EvaluateNode*>& parameters)
+{
+	mParameters = parameters;
+}
+
+MemberFunctionNode::~MemberFunctionNode()
+{
+	for(auto it=parameters().begin();it!=parameters().end();++it){
+		delete *it;
+	}
+	delete mOwner;
+}

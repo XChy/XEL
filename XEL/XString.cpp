@@ -93,7 +93,7 @@ bool XChar::operator<=(XChar other)const
 
 int ucs2len(const char16_t* str){
 	const char16_t* it=str;
-	while(*(++it)){}
+	while(*it)++it;
 	return it-str;
 }
 
@@ -129,7 +129,7 @@ XString::XString(const char* utf8)
 XString::XString(const wchar_t* wstr)
 {
 	int len=wcslen(wstr);
-	d.ref=new Ref<StringData>(new StringData(len+1));
+	d=new StringData(len+1);
 	d.data()->size=len;
 	xstrcpy(d.data()->str,wstr,len+1);
 }
@@ -137,7 +137,7 @@ XString::XString(const wchar_t* wstr)
 XString::XString(const char16_t* ustr)
 {
 	int len=ucs2len(ustr);
-	d.ref=new Ref<StringData>(new StringData(len+1));
+	d=new StringData(len+1);
 	d.data()->size=len;
 	xstrcpy(d.data()->str,ustr,len+1);
 }
@@ -602,7 +602,7 @@ bool XString::isDetach(){
 
 void XString::detach(){
 	d.ref->unref();
-	d.ref=new Ref<StringData>(new StringData(*d.data()));
+	d=new StringData(*d.data());
 }
 
 XString operator+(const char* utf8,const XString& xstr)

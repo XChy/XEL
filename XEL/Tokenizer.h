@@ -9,7 +9,7 @@ class XEL_EXPORT Tokenizer
 {
 public:
 	Tokenizer();
-	virtual std::vector<Token> analyze(XString expression) const;
+	virtual std::vector<Token> analyze(const XString& expression) const;
 
 	XELContext* context() const;
 	void setContext(XELContext* context);

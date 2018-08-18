@@ -121,7 +121,7 @@ public:
 
 
 private:
-	SharedData<StringData> d;
+	XSharedData<StringData> d;
 };
 
 XString operator+(const char* utf8,const XString& xstr);

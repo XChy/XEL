@@ -97,23 +97,49 @@ private:
 	std::vector<EvaluateNode*> mParameters;
 };
 
-//class XEL_EXPORT MemberNode:public EvaluateNode{
-//public:
-//	MemberNode();
-//	virtual Variant evaluate() const;
-//	virtual bool isVariable() const{return false;}
-//	virtual void setVariable(const Variant& v){throw XELError("member cannot be a variable");}
+class XEL_EXPORT MemberNode:public EvaluateNode{
+public:
+	MemberNode();
+	virtual Variant evaluate() const;
+	virtual bool isVariable() const{return true;}
+	virtual void setVariable(const Variant& v)
+	{
+		mOwner->evaluate().convertObject().setMember(memberName(),v);
+	}
 
-//	EvaluateNode* owner() const;
-//	void setOwner(EvaluateNode* owner);
+	EvaluateNode* owner() const;
+	void setOwner(EvaluateNode* owner);
 
-//	XString memberName() const;
-//	void setMemberName(const XString& memberName);
+	XString memberName() const;
+	void setMemberName(const XString& memberName);
 
-//	virtual ~MemberNode();
-//private:
-//	EvaluateNode* mOwner;
-//	XString mMemberName;
-//};
+	virtual ~MemberNode();
+private:
+	EvaluateNode* mOwner;
+	XString mMemberName;
+};
+
+class XEL_EXPORT MemberFunctionNode:public EvaluateNode{
+public:
+	MemberFunctionNode();
+	virtual Variant evaluate() const;
+	virtual bool isVariable() const{return false;}
+	virtual void setVariable(const Variant& v){throw XELError("member function cannot be a variable");}
+
+	EvaluateNode* owner() const;
+	void setOwner(EvaluateNode* owner);
+
+	XString MemberFunctionName() const;
+	void setMemberFunctionName(const XString& MemberFunctionName);
+
+	std::vector<EvaluateNode*> parameters() const;
+	void setParameters(const std::vector<EvaluateNode*>& parameters);
+
+	virtual ~MemberFunctionNode();
+private:
+	EvaluateNode* mOwner;
+	XString mMemberFunctionName;
+	std::vector<EvaluateNode*> mParameters;
+};
 
 #endif // EVALUATENODE_H

@@ -3,79 +3,74 @@
 
 #include <XEL/xel_global.h>
 
-template<typename T>
-class XEL_EXPORT Ref{
+class XEL_EXPORT XRefCount{
 public:
-	Ref(T* ptr)
-		:mPointer(ptr),
-		  mRefCount(1)
-	{}
-	Ref(const Ref<T>& ref)
+	XRefCount()
 		:mRefCount(1)
-	{
-		mPointer=new T(*ref.pointer());
-	}
+	{}
+	XRefCount(const XRefCount& other)
+		:mRefCount(other.refCount())
+	{}
 	int ref(){
 		return ++mRefCount;
 	}
 	int unref(){
 		return --mRefCount;
 	}
-	~Ref()
-	{
-		delete mPointer;
-	}
-
-	T* pointer() const
-	{
-		return mPointer;
-	}
 	int refCount() const
 	{
 		return mRefCount;
 	}
 private:
-	T* mPointer;
 	int mRefCount;
 };
 
 template<typename T>
-class XEL_EXPORT SharedData{
+class XEL_EXPORT XSharedData{
 public:
-	SharedData(){}
-	SharedData(T* p)
-		:ref(new Ref<T>(p))
+	XSharedData()
+		:ref(new XRefCount),
+		  mData(nullptr)
 	{}
-	SharedData(const SharedData& d)
-		:ref(d.ref)
+	XSharedData(T* p)
+		:ref(new XRefCount),
+		  mData(p)
+	{}
+	XSharedData(const XSharedData& other)
+		:ref(other.ref),
+		  mData(other.data())
 	{
 		ref->ref();
 	}
-	SharedData& operator=(const SharedData& d)
+	XSharedData& operator=(const XSharedData& other)
 	{
-		if(this==&d){
+		if(this==&other){
 			return *this;
 		}
 		if(ref->unref()==0){
 			delete ref;
+			delete mData;
 		}
-		ref=d.ref;
+		ref=other.ref;
+		mData=other.data();
 		ref->ref();
 		return *this;
 	}
 	T* data() const
 	{
-		return ref->pointer();
+		return mData;
 	}
-	~SharedData()
+	~XSharedData()
 	{
 		if(ref->unref()==0)
 		{
 			delete ref;
+			delete mData;
 		}
 	}
 
-	Ref<T>* ref;
+	XRefCount* ref;
+	T* mData;
 };
 
 #endif // SHAREDDATA_H

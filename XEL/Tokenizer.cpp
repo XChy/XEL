@@ -52,7 +52,7 @@ void Tokenizer::analyzeBinAndNext(XString::const_iterator& it, XString& value, s
 	tokens.push_back(Token(Literal,value.toInt(2)));
 }
 
-std::vector<Token> Tokenizer::analyze(XString expression) const
+std::vector<Token> Tokenizer::analyze(const XString& expression) const
 {
 	std::vector<Token> result;
 	XString::const_iterator it=expression.begin();

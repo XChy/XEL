@@ -1,7 +1,7 @@
 #ifndef VARIANT_H
 #define VARIANT_H
 
-//#include <XEL/XELObject.h>
+#include <XEL/XELObject.h>
 #include <XEL/XELError.h>
 
 enum class VariantType{
@@ -9,7 +9,7 @@ enum class VariantType{
 	Int,
 	String,
 	Bool,
-//	Object,
+	Object,
 	Null
 };
 
@@ -21,7 +21,7 @@ public:
 	bool boolValue;
 	};
 	XString stringValue;
-//	std::shared_ptr<XELObject> objectValue;
+	XELObjectWrapper objectValue;
 };
 
 class XEL_EXPORT Variant
@@ -32,7 +32,7 @@ public:
 	Variant(int value);
 	Variant(const XString& value);
 	Variant(bool value);
-//	Variant(const std::shared_ptr<XELObject>& value);
+	Variant(XELObjectWrapper value);
 
 	Variant(const Variant& value);
 
@@ -41,14 +41,14 @@ public:
 	void set(int value);
 	void set(const XString& value);
 	void set(bool value);
-//	void set(const std::shared_ptr<XELObject>& value);
+	void set(XELObjectWrapper value);
 
 	// Change data member "type" as corresponding VariantType
 	void reset(double value);
 	void reset(int value);
 	void reset(const XString& value);
 	void reset(bool value);
-//	void reset(const std::shared_ptr<XELObject>& value);
+	void reset(XELObjectWrapper value);
 
 	// Change data member "type" as VariantType::Null
 	void clear();
@@ -60,7 +60,7 @@ public:
 	int convertInt() const;
 	XString convertString() const;
 	bool convertBool() const;
-//	std::shared_ptr<XELObject> convertObject() const;
+	XELObjectWrapper convertObject() const;
 
 	//convert double,int,bool,Null to string
 	XString toString() const;
@@ -70,7 +70,7 @@ public:
 	int intValue() const;
 	XString stringValue() const;
 	bool boolValue() const;
-//	std::shared_ptr<XELObject> objectValue() const;
+	XELObjectWrapper objectValue() const;
 
 	Variant& operator=(const Variant& variant);
 
@@ -79,7 +79,7 @@ public:
 	Variant& operator=(int value);
 	Variant& operator=(const XString& value);
 	Variant& operator=(bool value);
-//	Variant& operator=(const std::shared_ptr<XELObject> value);
+	Variant& operator=(XELObjectWrapper value);
 
 	// (1==1.0):true
 	bool operator==(const Variant& variant) const;
@@ -93,7 +93,7 @@ public:
 	operator int() const;
 	operator XString() const;
 	operator bool() const;
-//	operator std::shared_ptr<XELObject>() const;
+	operator XELObjectWrapper() const;
 private:
 	VariantHolder mHolder;
 	VariantType mType;
