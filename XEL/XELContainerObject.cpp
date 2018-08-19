@@ -5,18 +5,34 @@ Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant
 	if(funcName=="size"){
 		return int(vec.size());
 	}else if(funcName=="at"){
-		return vec.at(params.at(0).convertInt());
+		return vec.at(params[0].convertInt());
 	}else if(funcName=="append"){
-		vec.push_back(params.at(0));
+		vec.push_back(params[0]);
 		return thisWrapper;
 	}else if(funcName=="remove"){
-		vec.erase(vec.begin()+int(params.at(0)));
+		vec.erase(vec.begin()+int(params[0]));
 		return thisWrapper;
 	}
 }
 
+bool XVectorObject::hasMemberFunction(const XString& funcName, int paramNum) const
+{
+	return (funcName=="size"&&paramNum==0)||
+			(funcName=="at"&&paramNum==1)||
+			(funcName=="append"&&paramNum==1)||
+			(funcName=="remove"&&paramNum==1)
+			;
+}
+
 void XVectorObject::setMember(const XString& memberName, const Variant& v)
 {}
+
+Variant XVectorObject::member(const XString& memberName) const{}
+
+bool XVectorObject::hasMember(const XString& memberName) const
+{
+	return false;
+}
 
 std::vector<Variant>& XVectorObject::vector()
 {
@@ -27,8 +43,6 @@ void XVectorObject::setVector(const std::vector<Variant>& vec)
 {
 	this->vec=vec;
 }
-
-Variant XVectorObject::member(const XString& memberName) const{}
 
 XString XVectorObject::toString() const
 {
@@ -50,19 +64,33 @@ Variant XMapObject::invoke(const XString& funcName, const std::vector<Variant>& 
 	if(funcName=="size"){
 		return int(mMap.size());
 	}else if(funcName=="value"){
-		return mMap[params.at(0).convertString()];
+		return mMap[params[0].convertString()];
 	}else if(funcName=="insert"){
-		mMap.insert(params.at(0).convertString(),params.at(1));
+		mMap.insert(params[0].convertString(),params.at(1));
 		return thisWrapper;
 	}else if(funcName=="remove"){
-		mMap.remove(params.at(0).convertString());
+		mMap.remove(params[0].convertString());
 		return thisWrapper;
 	}
+}
+
+bool XMapObject::hasMemberFunction(const XString& funcName, int paramNum) const
+{
+	return (funcName=="size"&&paramNum==0)||
+			(funcName=="value"&&paramNum==1)||
+			(funcName=="insert"&&paramNum==1)||
+			(funcName=="remove"&&paramNum==1)
+			;
 }
 
 void XMapObject::setMember(const XString& memberName, const Variant& v){}
 
 Variant XMapObject::member(const XString& memberName) const{}
+
+bool XMapObject::hasMember(const XString& memberName) const
+{
+	return false;
+}
 
 XHashMap<XString, Variant>& XMapObject::map()
 {

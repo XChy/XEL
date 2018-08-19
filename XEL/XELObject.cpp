@@ -17,6 +17,11 @@ Variant XELObjectWrapper::invoke(const XString& funcName, const std::vector<Vari
 	return object()->invoke(funcName,params,*this);
 }
 
+bool XELObjectWrapper::hasMemberFunction(const XString& funcName, int paramNum) const
+{
+	return object()->hasMemberFunction(funcName,paramNum);
+}
+
 void XELObjectWrapper::setMember(const XString& memberName, const Variant& v){
 	object()->setMember(memberName,v);
 }
@@ -24,6 +29,11 @@ void XELObjectWrapper::setMember(const XString& memberName, const Variant& v){
 Variant XELObjectWrapper::member(const XString& memberName) const
 {
 	return object()->member(memberName);
+}
+
+bool XELObjectWrapper::hasMember(const XString& memberName) const
+{
+	return object()->hasMember(memberName);
 }
 XString XELObjectWrapper::toString() const
 {

@@ -12,8 +12,10 @@ class XEL_EXPORT XELObject{
 public:
 	XELObject(){}
 	virtual Variant invoke(const XString& funcName,const std::vector<Variant>& params,const XELObjectWrapper& thisWrapper)=0;
+	virtual bool hasMemberFunction(const XString& funcName,int paramNum) const=0;
 	virtual void setMember(const XString& memberName,const Variant& v)=0;
 	virtual Variant member(const XString& memberName) const=0;
+	virtual bool hasMember(const XString& memberName) const=0;
 	virtual XString toString() const=0;
 	virtual ~XELObject(){}
 };
@@ -25,8 +27,10 @@ public:
 	XELObjectWrapper(const XELObjectWrapper& other);
 	XELObject* object() const;
 	virtual Variant invoke(const XString& funcName,const std::vector<Variant>& params);
+	virtual bool hasMemberFunction(const XString& funcName,int paramNum) const;
 	virtual void setMember(const XString& memberName,const Variant& v);
 	virtual Variant member(const XString& memberName) const;
+	virtual bool hasMember(const XString& memberName) const;
 	virtual XString toString() const;
 };
 

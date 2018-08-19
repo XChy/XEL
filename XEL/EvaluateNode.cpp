@@ -150,7 +150,12 @@ MemberNode::MemberNode()
 
 Variant MemberNode::evaluate() const
 {
-	return mOwner->evaluate().convertObject().member(mMemberName);
+	XELObjectWrapper wrapper=mOwner->evaluate().convertObject();
+	if(wrapper.hasMember(memberName())){
+		return wrapper.member(mMemberName);
+	}else{
+		throw XELError("No member called "+memberName());
+	}
 }
 
 EvaluateNode* MemberNode::owner() const
@@ -186,11 +191,16 @@ MemberFunctionNode::MemberFunctionNode()
 
 Variant MemberFunctionNode::evaluate() const
 {
-	std::vector<Variant> variants;
-	for(EvaluateNode* node:parameters()){
-		variants.push_back(node->evaluate());
+	XELObjectWrapper wrapper=mOwner->evaluate().convertObject();
+	if(wrapper.hasMemberFunction(mMemberFunctionName,parameters().size())){
+		std::vector<Variant> variants;
+		for(EvaluateNode* node:parameters()){
+			variants.push_back(node->evaluate());
+		}
+		return wrapper.invoke(mMemberFunctionName,variants);
+	}else{
+		throw XELError("No function called "+mMemberFunctionName+" or size of params is not right");
 	}
-	return mOwner->evaluate().convertObject().invoke(mMemberFunctionName,variants);
 }
 
 EvaluateNode* MemberFunctionNode::owner() const
