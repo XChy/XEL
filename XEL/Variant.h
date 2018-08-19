@@ -32,7 +32,7 @@ public:
 	Variant(int value);
 	Variant(const XString& value);
 	Variant(bool value);
-	Variant(XELObjectWrapper value);
+	Variant(const XELObjectWrapper& value);
 
 	Variant(const Variant& value);
 
@@ -41,14 +41,14 @@ public:
 	void set(int value);
 	void set(const XString& value);
 	void set(bool value);
-	void set(XELObjectWrapper value);
+	void set(const XELObjectWrapper& value);
 
 	// Change data member "type" as corresponding VariantType
 	void reset(double value);
 	void reset(int value);
 	void reset(const XString& value);
 	void reset(bool value);
-	void reset(XELObjectWrapper value);
+	void reset(const XELObjectWrapper& value);
 
 	// Change data member "type" as VariantType::Null
 	void clear();
@@ -79,7 +79,7 @@ public:
 	Variant& operator=(int value);
 	Variant& operator=(const XString& value);
 	Variant& operator=(bool value);
-	Variant& operator=(XELObjectWrapper value);
+	Variant& operator=(const XELObjectWrapper& value);
 
 	// (1==1.0):true
 	bool operator==(const Variant& variant) const;

@@ -24,7 +24,7 @@ Variant::Variant(bool value)
 	reset(value);
 }
 
-Variant::Variant(XELObjectWrapper value)
+Variant::Variant(const XELObjectWrapper& value)
 {
 	reset(value);
 }
@@ -57,7 +57,7 @@ void Variant::set(bool value)
 	mHolder.boolValue=value;
 }
 
-void Variant::set(XELObjectWrapper value)
+void Variant::set(const XELObjectWrapper& value)
 {
 	mHolder.objectValue=value;
 }
@@ -86,7 +86,7 @@ void Variant::reset(bool value)
 	set(value);
 }
 
-void Variant::reset(XELObjectWrapper value)
+void Variant::reset(const XELObjectWrapper& value)
 {
 	mType=VariantType::Object;
 	set(value);
@@ -217,7 +217,7 @@ Variant& Variant::operator=(bool value)
 	return *this;
 }
 
-Variant&Variant::operator=(XELObjectWrapper value)
+Variant& Variant::operator=(const XELObjectWrapper& value)
 {
 	reset(value);
 	return *this;

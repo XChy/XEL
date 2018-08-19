@@ -62,7 +62,7 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 		if(!mContext->unaryOperatorTable().operator [](it->value().convertString())){
 			throw XELError("No unary Operator called "+it->value().stringValue());
 		}
-		return mContext->unaryOperatorTable()[it->value().toString()]->create();
+		return mContext->unaryOperatorTable()[it->value().stringValue()]->create();
 	}else{
 		throw XELError("Is not unary operator");
 	}
@@ -139,7 +139,7 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 			return createVariable(it);
 		}
 	}else if(it->type()==OpenParentheses){
-		auto subParsingEnd=findNextCloseParenthese(it,end);
+		auto subParsingEnd=findNextCloseParenthese(it+1,end);
 		if(subParsingEnd==end){
 			throw XELError("missing closeparenthese");
 		}
