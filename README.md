@@ -3,13 +3,13 @@
 ## 基本特性
   使用Variant包装值,可支持double,int,bool,Object,null<br/>
   允许用户自定义变量,操作符,函数<br/>
-  内置(+ - \* / ^ =)等操作符<br/>
+  内置(+ - \* / ^ =)等操作符,(sin,cos,tan)等函数<br/>
   发现表达式非法时,抛出XELError<br/>
 
 ## Basic Features
   Value be wrapped with Variant,supports double,int,bool,Object,null<br/>
   Allows users to customize variables, operators, functions<br/>
-  Built-in operator(+ - \* / ^ =) .etc<br/>
+  Built-in operator(+ - \* / ^ =) functoin(sin cos tan) .etc<br/>
   When it find the expression is NOT right,it will throw XELError<br/>
 
 ## 高级特性
