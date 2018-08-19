@@ -1,4 +1,5 @@
 #include "XELEngine.h"
+#include <XEL/XELContainerObject.h>
 
 XELEngine::XELEngine()
 	:mContext(new XELContext),
@@ -8,8 +9,14 @@ XELEngine::XELEngine()
 {
 	mParser->setContext(mContext.get());
 	mTokenizer->setContext(mContext.get());
-	setUnaryOperator("-",[](double o){
-		return -o;
+	setUnaryOperator("-",[](const Variant& v)->Variant{
+		if(v.type()==VariantType::Int){
+			return -v.intValue();
+		}else if(v.type()==VariantType::Double){
+			return -v.doubleValue();
+		}else{
+			throw XELError("Unary operator '-' cannot eval value as "+Variant::convertString(v.type()));
+		}
 	});
 	setUnaryOperator("!",[](bool o){
 		return !o;
@@ -18,20 +25,81 @@ XELEngine::XELEngine()
 		left.setVariable(right.value());
 		return left;
 	},0,RightToLeft);
+	setBinaryOperator("+=",[](XELValOrVar left,XELValOrVar right){
+		Variant leftValue=left.value();
+		if(leftValue.type()==VariantType::Double){
+			left.setVariable(leftValue.doubleValue()+double(right));
+		}else if(leftValue.type()==VariantType::Int){
+			left.setVariable(leftValue.intValue()+int(right));
+		}
+		return left;
+	},0,RightToLeft);
+	setBinaryOperator("-=",[](XELValOrVar left,XELValOrVar right){
+		Variant leftValue=left.value();
+		if(leftValue.type()==VariantType::Double){
+			left.setVariable(leftValue.doubleValue()-double(right));
+		}else if(leftValue.type()==VariantType::Int){
+			left.setVariable(leftValue.intValue()-int(right));
+		}
+		return left;
+	},0,RightToLeft);
+	setBinaryOperator(">",[](const Variant& left,const Variant& right){
+		switch (left.type()) {
+			case VariantType::Double:
+				return left.doubleValue()>double(right);
+			case VariantType::Int:
+				if(right.type()==VariantType::Int)
+					return left.intValue()>right.intValue();
+				else if(right.type()==VariantType::Double)
+					return double(left.intValue())>right.doubleValue();
+			default:
+				return false;
+		}
+	},1);
+	setBinaryOperator(">=",[](const Variant& left,const Variant& right){
+		switch (left.type()) {
+			case VariantType::Double:
+				return left.doubleValue()>=double(right);
+			case VariantType::Int:
+				if(right.type()==VariantType::Int)
+					return left.intValue()>=right.intValue();
+				else if(right.type()==VariantType::Double)
+					return double(left.intValue())>=right.doubleValue();
+			default:
+				return false;
+		}
+	},1);
+	setBinaryOperator("<",[](const Variant& left,const Variant& right){
+		switch (left.type()) {
+			case VariantType::Double:
+				return left.doubleValue()<double(right);
+			case VariantType::Int:
+				if(right.type()==VariantType::Int)
+					return left.intValue()<right.intValue();
+				else if(right.type()==VariantType::Double)
+					return double(left.intValue())<right.doubleValue();
+			default:
+				return false;
+		}
+	},1);
+	setBinaryOperator("<=",[](const Variant& left,const Variant& right){
+		switch (left.type()) {
+			case VariantType::Double:
+				return left.doubleValue()<=double(right);
+			case VariantType::Int:
+				if(right.type()==VariantType::Int)
+					return left.intValue()<=right.intValue();
+				else if(right.type()==VariantType::Double)
+					return double(left.intValue())<=right.doubleValue();
+			default:
+				return false;
+		}
+	},1);
 	setBinaryOperator("==",[](const Variant& left,const Variant& right){
 		return left==right;
-	},1);
+	},0);
 	setBinaryOperator("||",[](bool left,bool right){
 		return left||right;
-	},1);
-	setBinaryOperator("or",[](int left,int right){
-		return left|right;
-	},1);
-	setBinaryOperator("and",[](int left,int right){
-		return left&right;
-	},1);
-	setBinaryOperator("xor",[](int left,int right){
-		return left^right;
 	},1);
 	setBinaryOperator("&&",[](bool left,bool right){
 		return left&&right;
@@ -48,9 +116,34 @@ XELEngine::XELEngine()
 	setBinaryOperator("/",[](double left,double right){
 		return left/right;
 	},2);
-	setBinaryOperator("^",[](double left,double right){
-		return pow(left,right);
+	setBinaryOperator("|",[](int left,int right){
+		return left|right;
 	},3,RightToLeft);
+	setBinaryOperator("&",[](int left,int right){
+		return left&right;
+	},3,RightToLeft);
+	setBinaryOperator("^",[](int left,int right){
+		return left^right;
+	},3,RightToLeft);
+	setFunction("Vector",[](const std::vector<XELValOrVar>& params){
+		XVectorObject* vec=new XVectorObject;
+		for(auto v:params)
+			vec->vector().push_back(v.value());
+		return XELObjectWrapper((XELObject*)vec);
+	});
+	setFunction("Map",[](const std::vector<XELValOrVar>& params){
+		XMapObject* map=new XMapObject;
+		return XELObjectWrapper((XELObject*)map);
+	});
+	setFunction("sin",[](const std::vector<XELValOrVar>& params){
+		return sin(params.at(0));
+	});
+	setFunction("cos",[](const std::vector<XELValOrVar>& params){
+		return cos(params.at(0));
+	});
+	setFunction("tan",[](const std::vector<XELValOrVar>& params){
+		return tan(params.at(0));
+	});
 }
 
 XString XELEngine::expression() const
@@ -121,5 +214,5 @@ void XELEngine::setParser(const std::shared_ptr<Parser>& parser)
 
 EvaluateNode* XELEngine::rootNode() const
 {
-    return mRootNode;
+	return mRootNode;
 }

@@ -46,6 +46,16 @@ public:
 		return map.find(key)!=map.end();
 	}
 
+	bool isEmpty() const
+	{
+		return map.empty();
+	}
+
+	size_t size() const
+	{
+		return map.size();
+	}
+
 	std::unordered_map<K,V>& data(){return map;}
 	const std::unordered_map<K,V>& data() const {return map;}
 

@@ -151,7 +151,7 @@ XString Variant::toString() const
 		case VariantType::Int:
 			return XString::number(mHolder.intValue);
 		case VariantType::String:
-			return mHolder.stringValue;
+			return XString("\"").append(mHolder.stringValue).append("\"");
 		case VariantType::Bool:
 			return mHolder.boolValue?"true":"false";
 		case VariantType::Object:
