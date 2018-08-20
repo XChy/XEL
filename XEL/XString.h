@@ -99,13 +99,19 @@ public:
 
 	const XChar* unicode() const;
 
+	template<typename Interger>
+	Interger toInterger(int base=10) const;
 	int toInt(int base=10) const;
+	long long toLongLong(int base=10);
 	double toDouble() const;
 
 	static XString fromAscii(const char* asciiStr);
 	static XString fromUtf8(const char* utf8Str);
 
+	template<typename Interger>
+	static XString fromInterger(Interger v,int base);
 	static XString number(int v, int base=10);
+	static XString number(long long v, int base=10);
 	static XString number(double v);
 
 	typedef XChar* iterator;

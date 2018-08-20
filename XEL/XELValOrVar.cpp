@@ -20,7 +20,7 @@ XELValOrVar::operator double() const
 	return value();
 }
 
-XELValOrVar::operator int() const
+XELValOrVar::operator long long() const
 {
 	return value();
 }

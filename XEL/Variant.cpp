@@ -9,7 +9,7 @@ Variant::Variant(double value)
 	reset(value);
 }
 
-Variant::Variant(int value)
+Variant::Variant(long long value)
 {
 	reset(value);
 }
@@ -42,9 +42,9 @@ void Variant::set(double value)
 	mHolder.doubleValue=value;
 }
 
-void Variant::set(int value)
+void Variant::set(long long value)
 {
-	mHolder.intValue=value;
+	mHolder.intergerValue=value;
 }
 
 void Variant::set(const XString& value)
@@ -68,9 +68,9 @@ void Variant::reset(double value)
 	set(value);
 }
 
-void Variant::reset(int value)
+void Variant::reset(long long value)
 {
-	mType=VariantType::Int;
+	mType=VariantType::Interger;
 	set(value);
 }
 
@@ -101,18 +101,18 @@ double Variant::convertDouble() const
 {
 	if(mType==VariantType::Double){
 		return mHolder.doubleValue;
-	}else if(mType==VariantType::Int){
-		return double(mHolder.intValue);
+	}else if(mType==VariantType::Interger){
+		return double(mHolder.intergerValue);
 	}
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Double");
 }
 
-int Variant::convertInt() const
+long long Variant::convertInterger() const
 {
 	if(mType==VariantType::Double){
 		return int(mHolder.doubleValue);
-	}else if(mType==VariantType::Int){
-		return mHolder.intValue;
+	}else if(mType==VariantType::Interger){
+		return mHolder.intergerValue;
 	}
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Double");
 }
@@ -129,8 +129,8 @@ bool Variant::convertBool() const
 {
 	if(mType==VariantType::Bool){
 		return mHolder.boolValue;
-	}else if(mType==VariantType::Int){
-		return mHolder.intValue;
+	}else if(mType==VariantType::Interger){
+		return mHolder.intergerValue;
 	}
 	throw XELError("Cannot convert "+Variant::convertString(mType)+" to Bool");
 }
@@ -148,8 +148,8 @@ XString Variant::toString() const
 	switch (type()) {
 		case VariantType::Double:
 			return XString::number(mHolder.doubleValue);
-		case VariantType::Int:
-			return XString::number(mHolder.intValue);
+		case VariantType::Interger:
+			return XString::number(mHolder.intergerValue);
 		case VariantType::String:
 			return XString("\"").append(mHolder.stringValue).append("\"");
 		case VariantType::Bool:
@@ -166,9 +166,9 @@ double Variant::doubleValue() const
 	return mHolder.doubleValue;
 }
 
-int Variant::intValue() const
+long long Variant::intergerValue() const
 {
-	return mHolder.intValue;
+	return mHolder.intergerValue;
 }
 
 XString Variant::stringValue() const
@@ -199,7 +199,7 @@ Variant& Variant::operator=(double value)
 	return *this;
 }
 
-Variant& Variant::operator=(int value)
+Variant& Variant::operator=(long long value)
 {
 	reset(value);
 	return *this;
@@ -226,16 +226,16 @@ Variant& Variant::operator=(const XELObjectWrapper& value)
 bool Variant::operator==(const Variant& variant) const
 {
 	if(type()==VariantType::Double){
-		if(variant.type()==VariantType::Int){
-			return mHolder.doubleValue==double(variant.mHolder.intValue);
+		if(variant.type()==VariantType::Interger){
+			return mHolder.doubleValue==double(variant.mHolder.intergerValue);
 		}else if(variant.type()==VariantType::Double){
 			return mHolder.doubleValue==variant.mHolder.doubleValue;
 		}
-	}else if(type()==VariantType::Int){
-		if(variant.type()==VariantType::Int){
-			return mHolder.intValue==variant.mHolder.intValue;
+	}else if(type()==VariantType::Interger){
+		if(variant.type()==VariantType::Interger){
+			return mHolder.intergerValue==variant.mHolder.intergerValue;
 		}else if(variant.type()==VariantType::Double){
-			return double(mHolder.intValue)==variant.mHolder.doubleValue;
+			return double(mHolder.intergerValue)==variant.mHolder.doubleValue;
 		}
 	}else if(type()==VariantType::String&&variant.type()==VariantType::String){
 		return mHolder.stringValue==variant.mHolder.stringValue;
@@ -255,7 +255,7 @@ XString Variant::convertString(VariantType type)
 	switch(type){
 		case VariantType::Double:
 			return "Double";
-		case VariantType::Int:
+		case VariantType::Interger:
 			return "Int";
 		case VariantType::String:
 			return "String";
@@ -271,9 +271,9 @@ Variant::operator double() const
 	return convertDouble();
 }
 
-Variant::operator int() const
+Variant::operator long long() const
 {
-	return convertInt();
+	return convertInterger();
 }
 
 Variant::operator XString() const

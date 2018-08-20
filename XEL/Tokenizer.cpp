@@ -32,7 +32,7 @@ void Tokenizer::analyzeDecAndNext(XString::const_iterator& it, XString& value, s
 	if(isDouble){
 		tokens.push_back(Token(Literal,value.toDouble()));
 	}else{
-		tokens.push_back(Token(Literal,value.toInt()));
+		tokens.push_back(Token(Literal,value.toLongLong()));
 	}
 }
 
@@ -41,7 +41,7 @@ void Tokenizer::analyzeHexAndNext(XString::const_iterator& it, XString& value, s
 	while(it->isDigit()||((*it)>='a'&&(*it)<='f')||((*it)>='A'&&(*it)<='F')){
 		value.append(*it);++it;
 	}
-	tokens.push_back(Token(Literal,value.toInt(16)));
+	tokens.push_back(Token(Literal,value.toLongLong(16)));
 }
 
 void Tokenizer::analyzeBinAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const
@@ -49,7 +49,7 @@ void Tokenizer::analyzeBinAndNext(XString::const_iterator& it, XString& value, s
 	while(*it=='0'||*it=='1'){
 		value.append(*it);++it;
 	}
-	tokens.push_back(Token(Literal,value.toInt(2)));
+	tokens.push_back(Token(Literal,value.toLongLong(2)));
 }
 
 std::vector<Token> Tokenizer::analyze(const XString& expression) const

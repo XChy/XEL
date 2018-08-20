@@ -368,9 +368,10 @@ const XChar* XString::unicode() const
 	return data();
 }
 
-int XString::toInt(int base) const
+template<typename Interger>
+Interger XString::toInterger(int base) const
 {
-	int result=0;
+	Interger result=0;
 	switch (base) {
 		case 2:
 			for(auto it=begin();it!=end();++it){
@@ -392,7 +393,7 @@ int XString::toInt(int base) const
 						++it;
 						isMinus=true;
 					}
-					double ePart=0;
+					Interger ePart=0;
 					while(it!=end()){
 						ePart*=10;
 						ePart+=it->digitValue();
@@ -425,6 +426,16 @@ int XString::toInt(int base) const
 			break;
 	}
 	return result;
+}
+
+int XString::toInt(int base) const
+{
+	return toInterger<int>(base);
+}
+
+long long XString::toLongLong(int base)
+{
+	return toInterger<long long>(base);
 }
 
 double XString::toDouble() const
@@ -523,11 +534,12 @@ XString XString::fromUtf8(const char* utf8Str)
 	return result;
 }
 
-XString XString::number(int v,int base)
+template<typename Interger>
+XString XString::fromInterger(Interger v,int base)
 {
 	XString result;
 	bool isMinus=v<0;
-	v=abs(v);
+	v=llabs(v);
 	switch (base) {
 		case 2:
 			if(isMinus){
@@ -568,7 +580,16 @@ XString XString::number(int v,int base)
 			break;
 	}
 	return result;
+}
 
+XString XString::number(int v, int base)
+{
+	return fromInterger<int>(v,base);
+}
+
+XString XString::number(long long v, int base)
+{
+	return fromInterger<long long>(v,base);
 }
 
 XString XString::number(double v)

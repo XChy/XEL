@@ -11,8 +11,8 @@ XELEngine::XELEngine()
 	mParser->setContext(mContext.get());
 	mTokenizer->setContext(mContext.get());
 	setUnaryOperator("-",[](const Variant& v)->Variant{
-		if(v.type()==VariantType::Int){
-			return -v.intValue();
+		if(v.type()==VariantType::Interger){
+			return -v.intergerValue();
 		}else if(v.type()==VariantType::Double){
 			return -v.doubleValue();
 		}else{
@@ -30,8 +30,8 @@ XELEngine::XELEngine()
 		Variant leftValue=left.value();
 		if(leftValue.type()==VariantType::Double){
 			left.setVariable(leftValue.doubleValue()+double(right));
-		}else if(leftValue.type()==VariantType::Int){
-			left.setVariable(leftValue.intValue()+int(right));
+		}else if(leftValue.type()==VariantType::Interger){
+			left.setVariable(leftValue.intergerValue()+int(right));
 		}
 		return left;
 	},0,RightToLeft);
@@ -39,8 +39,8 @@ XELEngine::XELEngine()
 		Variant leftValue=left.value();
 		if(leftValue.type()==VariantType::Double){
 			left.setVariable(leftValue.doubleValue()-double(right));
-		}else if(leftValue.type()==VariantType::Int){
-			left.setVariable(leftValue.intValue()-int(right));
+		}else if(leftValue.type()==VariantType::Interger){
+			left.setVariable(leftValue.intergerValue()-int(right));
 		}
 		return left;
 	},0,RightToLeft);
@@ -48,11 +48,11 @@ XELEngine::XELEngine()
 		switch (left.type()) {
 			case VariantType::Double:
 				return left.doubleValue()>double(right);
-			case VariantType::Int:
-				if(right.type()==VariantType::Int)
-					return left.intValue()>right.intValue();
+			case VariantType::Interger:
+				if(right.type()==VariantType::Interger)
+					return left.intergerValue()>right.intergerValue();
 				else if(right.type()==VariantType::Double)
-					return double(left.intValue())>right.doubleValue();
+					return double(left.intergerValue())>right.doubleValue();
 			default:
 				return false;
 		}
@@ -61,11 +61,11 @@ XELEngine::XELEngine()
 		switch (left.type()) {
 			case VariantType::Double:
 				return left.doubleValue()>=double(right);
-			case VariantType::Int:
-				if(right.type()==VariantType::Int)
-					return left.intValue()>=right.intValue();
+			case VariantType::Interger:
+				if(right.type()==VariantType::Interger)
+					return left.intergerValue()>=right.intergerValue();
 				else if(right.type()==VariantType::Double)
-					return double(left.intValue())>=right.doubleValue();
+					return double(left.intergerValue())>=right.doubleValue();
 			default:
 				return false;
 		}
@@ -74,11 +74,11 @@ XELEngine::XELEngine()
 		switch (left.type()) {
 			case VariantType::Double:
 				return left.doubleValue()<double(right);
-			case VariantType::Int:
-				if(right.type()==VariantType::Int)
-					return left.intValue()<right.intValue();
+			case VariantType::Interger:
+				if(right.type()==VariantType::Interger)
+					return left.intergerValue()<right.intergerValue();
 				else if(right.type()==VariantType::Double)
-					return double(left.intValue())<right.doubleValue();
+					return double(left.intergerValue())<right.doubleValue();
 			default:
 				return false;
 		}
@@ -87,11 +87,11 @@ XELEngine::XELEngine()
 		switch (left.type()) {
 			case VariantType::Double:
 				return left.doubleValue()<=double(right);
-			case VariantType::Int:
-				if(right.type()==VariantType::Int)
-					return left.intValue()<=right.intValue();
+			case VariantType::Interger:
+				if(right.type()==VariantType::Interger)
+					return left.intergerValue()<=right.intergerValue();
 				else if(right.type()==VariantType::Double)
-					return double(left.intValue())<=right.doubleValue();
+					return double(left.intergerValue())<=right.doubleValue();
 			default:
 				return false;
 		}
@@ -117,13 +117,13 @@ XELEngine::XELEngine()
 	setBinaryOperator("/",[](double left,double right){
 		return left/right;
 	},2);
-	setBinaryOperator("|",[](int left,int right){
+	setBinaryOperator("|",[](long long left,long long right){
 		return left|right;
 	},3,RightToLeft);
-	setBinaryOperator("&",[](int left,int right){
+	setBinaryOperator("&",[](long long left,long long right){
 		return left&right;
 	},3,RightToLeft);
-	setBinaryOperator("^",[](int left,int right){
+	setBinaryOperator("^",[](long long left,long long right){
 		return left^right;
 	},3,RightToLeft);
 	mContext->functionTable()["sin"]=new SinFunction;

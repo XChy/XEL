@@ -3,8 +3,8 @@
 Variant SinFunction::SinNode::evaluate() const
 {
 	Variant arg=parameters()[0]->evaluate();
-	if(arg.type()==VariantType::Int){
-		return sin(arg.intValue());
+	if(arg.type()==VariantType::Interger){
+		return sin(arg.intergerValue());
 	}else if(arg.type()==VariantType::Double){
 		return sin(arg.doubleValue());
 	}
@@ -19,8 +19,8 @@ FunctionNode* SinFunction::create(int paramSize) const
 Variant CosFunction::CosNode::evaluate() const
 {
 	Variant arg=parameters()[0]->evaluate();
-	if(arg.type()==VariantType::Int){
-		return cos(arg.intValue());
+	if(arg.type()==VariantType::Interger){
+		return cos(arg.intergerValue());
 	}else if(arg.type()==VariantType::Double){
 		return cos(arg.doubleValue());
 	}
@@ -35,8 +35,8 @@ FunctionNode* CosFunction::create(int paramSize) const
 Variant TanFunction::TanNode::evaluate() const
 {
 	Variant arg=parameters()[0]->evaluate();
-	if(arg.type()==VariantType::Int){
-		return tan(arg.intValue());
+	if(arg.type()==VariantType::Interger){
+		return tan(arg.intergerValue());
 	}else if(arg.type()==VariantType::Double){
 		return tan(arg.doubleValue());
 	}
@@ -56,8 +56,8 @@ double cot(double x)
 Variant CotFunction::CotNode::evaluate() const
 {
 	Variant arg=parameters()[0]->evaluate();
-	if(arg.type()==VariantType::Int){
-		return cot(arg.intValue());
+	if(arg.type()==VariantType::Interger){
+		return cot(arg.intergerValue());
 	}else if(arg.type()==VariantType::Double){
 		return cot(arg.doubleValue());
 	}

@@ -6,7 +6,7 @@
 
 enum class VariantType{
 	Double,
-	Int,
+	Interger,
 	String,
 	Bool,
 	Object,
@@ -17,7 +17,7 @@ struct VariantHolder{
 public:
 	union{
 	double doubleValue;
-	int intValue;
+	long long intergerValue;
 	bool boolValue;
 	};
 	XString stringValue;
@@ -29,7 +29,7 @@ class XEL_EXPORT Variant
 public:
 	Variant();
 	Variant(double value);
-	Variant(int value);
+	Variant(long long value);
 	Variant(const XString& value);
 	Variant(bool value);
 	Variant(const XELObjectWrapper& value);
@@ -38,14 +38,14 @@ public:
 
 	// Don't change data member "type"
 	void set(double value);
-	void set(int value);
+	void set(long long value);
 	void set(const XString& value);
 	void set(bool value);
 	void set(const XELObjectWrapper& value);
 
 	// Change data member "type" as corresponding VariantType
 	void reset(double value);
-	void reset(int value);
+	void reset(long long value);
 	void reset(const XString& value);
 	void reset(bool value);
 	void reset(const XELObjectWrapper& value);
@@ -57,7 +57,7 @@ public:
 	// and convert int to double,double to int,int to bool
 	// but don't convert double,int,bool to string
 	double convertDouble() const;
-	int convertInt() const;
+	long long convertInterger() const;
 	XString convertString() const;
 	bool convertBool() const;
 	XELObjectWrapper convertObject() const;
@@ -67,7 +67,7 @@ public:
 
 	// Unsafe:read from memory directly
 	double doubleValue() const;
-	int intValue() const;
+	long long intergerValue() const;
 	XString stringValue() const;
 	bool boolValue() const;
 	XELObjectWrapper objectValue() const;
@@ -76,7 +76,7 @@ public:
 
 	//reset(value)
 	Variant& operator=(double value);
-	Variant& operator=(int value);
+	Variant& operator=(long long value);
 	Variant& operator=(const XString& value);
 	Variant& operator=(bool value);
 	Variant& operator=(const XELObjectWrapper& value);
@@ -90,7 +90,7 @@ public:
 
 	// convertXXX()
 	operator double() const;
-	operator int() const;
+	operator long long() const;
 	operator XString() const;
 	operator bool() const;
 	operator XELObjectWrapper() const;

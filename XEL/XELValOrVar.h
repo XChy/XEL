@@ -14,7 +14,7 @@ public:
     Variant value() const;
     operator Variant() const;
     operator double() const;
-    operator int() const;
+	operator long long() const;
     operator bool() const;
     operator XString() const;
 private:

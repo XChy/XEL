@@ -3,9 +3,9 @@
 Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& params,const XELObjectWrapper& thisWrapper)
 {
 	if(funcName=="size"){
-		return int(vec.size());
+		return (long long)(vec.size());
 	}else if(funcName=="at"){
-		return vec.at(params[0].convertInt());
+		return vec.at(params[0].convertInterger());
 	}else if(funcName=="append"){
 		vec.push_back(params[0]);
 		return thisWrapper;
@@ -62,7 +62,7 @@ XString XVectorObject::toString() const
 Variant XMapObject::invoke(const XString& funcName, const std::vector<Variant>& params, const XELObjectWrapper& thisWrapper)
 {
 	if(funcName=="size"){
-		return int(mMap.size());
+		return (long long)(mMap.size());
 	}else if(funcName=="value"){
 		return mMap[params[0].convertString()];
 	}else if(funcName=="insert"){
