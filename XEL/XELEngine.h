@@ -65,33 +65,6 @@ public:
 		mContext->binaryOperatorTable()[name]=new Creator(func,priority,assoc);
 	}
 
-	template<typename EvalFunc>
-	void setFunction(const XString& name,EvalFunc evalFunc){
-		class Creator:public FunctionCreator{
-		public:
-			Creator(EvalFunc func):mEvalFunc(func){}
-			FunctionNode* create() const{
-				class Function:public FunctionNode{
-				public:
-					Function(EvalFunc func):
-						FunctionNode(),
-						mEvalFunc(func){}
-					Variant evaluate() const{
-						std::vector<XELValOrVar> variants;
-						for(EvaluateNode* node:parameters()){
-							variants.push_back(XELValOrVar(node));
-						}
-						return mEvalFunc(variants);
-					}
-					EvalFunc mEvalFunc;
-				};
-				return new Function(mEvalFunc);
-			}
-			EvalFunc mEvalFunc;
-		};
-		mContext->functionTable()[name]=new Creator(evalFunc);
-	}
-
 	Variant evaluate() const;
 
 	XString expression() const;

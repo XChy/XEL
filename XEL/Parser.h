@@ -22,7 +22,7 @@ private:
 	VariableNode* createVariable(TokenIt it);
 	UnaryOperatorNode* createUnaryOperator(TokenIt it);
 	std::tuple<BinaryOperatorNode*,int,Assoc> createBinaryOperator(TokenIt it);
-	FunctionNode* createFunction(TokenIt it);
+	FunctionNode* createFunction(TokenIt it, int paramSize);
 	EvaluateNode* parseAll(TokenIt begin, TokenIt end);
 	std::vector<EvaluateNode*> parseFunctionParams(TokenIt& it,TokenIt end);
 	EvaluateNode* parseNoUnaryOperatorOperand(TokenIt& it, TokenIt end);

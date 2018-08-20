@@ -30,10 +30,13 @@ private:
 	Assoc mAssoc;
 };
 
-class XEL_EXPORT FunctionCreator{
+class XEL_EXPORT XELFunction{
 public:
-	FunctionCreator();
+	XELFunction();
 	virtual FunctionNode* create() const=0;
+	virtual FunctionNode* create(int paramSize) const=0;
+	virtual bool isVariableParam() const=0;
+	virtual bool isSupportParamSize(int paramSize) const=0;
 };
 
 #endif // NODECREATOR_H

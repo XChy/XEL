@@ -1,5 +1,6 @@
 #include "XELEngine.h"
 #include <XEL/XELContainerObject.h>
+#include <XEL/XELFunctions.h>
 
 XELEngine::XELEngine()
 	:mContext(new XELContext),
@@ -125,25 +126,29 @@ XELEngine::XELEngine()
 	setBinaryOperator("^",[](int left,int right){
 		return left^right;
 	},3,RightToLeft);
-	setFunction("Vector",[](const std::vector<XELValOrVar>& params){
-		XVectorObject* vec=new XVectorObject;
-		for(auto v:params)
-			vec->vector().push_back(v.value());
-		return XELObjectWrapper((XELObject*)vec);
-	});
-	setFunction("Map",[](const std::vector<XELValOrVar>& params){
-		XMapObject* map=new XMapObject;
-		return XELObjectWrapper((XELObject*)map);
-	});
-	setFunction("sin",[](const std::vector<XELValOrVar>& params){
-		return sin(params.at(0));
-	});
-	setFunction("cos",[](const std::vector<XELValOrVar>& params){
-		return cos(params.at(0));
-	});
-	setFunction("tan",[](const std::vector<XELValOrVar>& params){
-		return tan(params.at(0));
-	});
+	mContext->functionTable()["sin"]=new SinFunction;
+	mContext->functionTable()["cos"]=new CosFunction;
+	mContext->functionTable()["tan"]=new TanFunction;
+	mContext->functionTable()["cot"]=new CotFunction;
+//	setFunction("Vector",[](const std::vector<XELValOrVar>& params){
+//		XVectorObject* vec=new XVectorObject;
+//		for(auto v:params)
+//			vec->vector().push_back(v.value());
+//		return XELObjectWrapper((XELObject*)vec);
+//	});
+//	setFunction("Map",[](const std::vector<XELValOrVar>& params){
+//		XMapObject* map=new XMapObject;
+//		return XELObjectWrapper((XELObject*)map);
+//	});
+//	setFunction("sin",[](const std::vector<XELValOrVar>& params){
+//		return sin(params.at(0));
+//	});
+//	setFunction("cos",[](const std::vector<XELValOrVar>& params){
+//		return cos(params.at(0));
+//	});
+//	setFunction("tan",[](const std::vector<XELValOrVar>& params){
+//		return tan(params.at(0));
+//	});
 }
 
 XString XELEngine::expression() const

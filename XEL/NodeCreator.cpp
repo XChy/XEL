@@ -30,7 +30,7 @@ void BinaryOperatorCreator::setAssoc(const Assoc& assoc)
 	mAssoc = assoc;
 }
 
-FunctionCreator::FunctionCreator()
+XELFunction::XELFunction()
 {
 
 }

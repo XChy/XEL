@@ -19,8 +19,8 @@ public:
 	XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable();
 	void setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable);
 
-	XHashMap<XString, FunctionCreator*>& functionTable();
-	void setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable);
+	XHashMap<XString, XELFunction*>& functionTable();
+	void setFunctionTable(const XHashMap<XString, XELFunction*>& functionTable);
 
 	XHashMap<XString, Variant>& variableTable();
 	void setVariableTable(const XHashMap<XString, Variant>& variableTable);
@@ -29,7 +29,7 @@ private:
 	XHashMap<XString,Variant> mVariableTable;
 	XHashMap<XString,UnaryOperatorCreator*> mUnaryOperatorTable;
 	XHashMap<XString,BinaryOperatorCreator*> mBinaryOperatorTable;
-	XHashMap<XString,FunctionCreator*> mFunctionTable;
+	XHashMap<XString,XELFunction*> mFunctionTable;
 	XString mOperatorChars;
 };
 

@@ -59,7 +59,7 @@ VariableNode* Parser::createVariable(TokenIt it)
 UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 {
 	if(it->type()==Operator){
-		if(!mContext->unaryOperatorTable().operator [](it->value().convertString())){
+		if(!mContext->unaryOperatorTable().contains(it->value().convertString())){
 			throw XELError("No unary Operator called "+it->value().stringValue());
 		}
 		return mContext->unaryOperatorTable()[it->value().stringValue()]->create();
@@ -70,7 +70,7 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 
 std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt it){
 	if(it->type()==Operator||it->type()==Identifier){
-		if(!mContext->binaryOperatorTable().operator [](it->value().convertString())){
+		if(!mContext->binaryOperatorTable().contains(it->value().convertString())){
 			throw XELError("No binary Operator called "+it->value().stringValue());
 		}
 		auto creator=mContext->binaryOperatorTable()[it->value().stringValue()];
@@ -80,13 +80,19 @@ std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt
 	}
 }
 
-FunctionNode* Parser::createFunction(TokenIt it)
+FunctionNode* Parser::createFunction(TokenIt it,int paramSize)
 {
-	if(!mContext->functionTable().operator [](it->value().convertString())){
+	if(!mContext->functionTable().contains(it->value().convertString())){
 		throw XELError("No function called "+it->value().stringValue());
 	}
 	auto creator=mContext->functionTable()[it->value().stringValue()];
-	return creator->create();
+	if(creator->isVariableParam()){
+		return creator->create();
+	}
+	if(!creator->isSupportParamSize(paramSize)){
+		throw XELError("Size of params is not right");
+	}
+	return creator->create(paramSize);
 }
 
 std::vector<EvaluateNode*> Parser::parseFunctionParams(TokenIt& it, TokenIt end)
@@ -131,8 +137,10 @@ EvaluateNode* Parser::parseNoUnaryOperatorOperand(TokenIt& it,TokenIt end)
 		if(it+1==end){
 			return createVariable(it);
 		}else if((it+1)->type()==OpenParentheses){
-			FunctionNode* func1=createFunction(it);
+			FunctionNode* func1;
+			TokenIt idIt=it;
 			auto params=parseFunctionParams(++it,end);
+			func1=createFunction(idIt,params.size());
 			func1->setParameters(params);
 			return func1;
 		}else{
@@ -161,8 +169,31 @@ EvaluateNode* Parser::parseOperand(TokenIt& it, TokenIt end)
 			nodeEnd=createUnaryOperator(it);
 			last->setOperand(nodeEnd);
 		}
-		if(it==end)throw XELError("No value after operator");
-		nodeEnd->setOperand(parseNoUnaryOperatorOperand(it,end));
+		EvaluateNode* operand=parseNoUnaryOperatorOperand(it,end);
+		while(it!=end){
+			if((it+1)!=end&&(it+1)->type()==Dot){
+				if((it+2)!=end&&(it+2)->type()==Identifier){
+					if((it+3)!=end&&(it+3)->type()==OpenParentheses){
+						MemberFunctionNode* func=new MemberFunctionNode;
+						func->setMemberFunctionName((it+2)->value().convertString());
+						auto params=parseFunctionParams(it+=3,end);
+						func->setParameters(params);
+						func->setOwner(operand);
+						operand=func;
+					}else{
+						MemberNode* mem=new MemberNode;
+						mem->setOwner(operand);
+						mem->setMemberName((it+=2)->value().convertString());
+						operand=mem;
+					}
+				}else{
+					throw XELError("No identitier after dot");
+				}
+			}else{
+				break;
+			}
+		}
+		nodeEnd->setOperand(operand);
 		return root;
 	}else{
 		EvaluateNode* root=parseNoUnaryOperatorOperand(it,end);
