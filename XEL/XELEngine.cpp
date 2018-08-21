@@ -29,18 +29,18 @@ XELEngine::XELEngine()
 	setBinaryOperator("+=",[](XELValOrVar left,XELValOrVar right){
 		Variant leftValue=left.value();
 		if(leftValue.type()==VariantType::Double){
-			left.setVariable(leftValue.doubleValue()+double(right));
+			left.setVariable(leftValue.doubleValue()+right.value().convertDouble());
 		}else if(leftValue.type()==VariantType::Interger){
-			left.setVariable(leftValue.intergerValue()+int(right));
+			left.setVariable(leftValue.intergerValue()+right.value().convertInterger());
 		}
 		return left;
 	},0,RightToLeft);
 	setBinaryOperator("-=",[](XELValOrVar left,XELValOrVar right){
 		Variant leftValue=left.value();
 		if(leftValue.type()==VariantType::Double){
-			left.setVariable(leftValue.doubleValue()-double(right));
+			left.setVariable(leftValue.doubleValue()-right.value().convertDouble());
 		}else if(leftValue.type()==VariantType::Interger){
-			left.setVariable(leftValue.intergerValue()-int(right));
+			left.setVariable(leftValue.intergerValue()-right.value().convertInterger());
 		}
 		return left;
 	},0,RightToLeft);
