@@ -1,5 +1,4 @@
 environment:
-  matrix:
      - GENERATOR: "Visual Studio 14"
        CONFIG: Debug
      - GENERATOR: "Visual Studio 14"
@@ -7,6 +6,3 @@ environment:
 
 build_script:
   - python test/appveyor.helper.py 
-
- matrix:
-  fast_finish: true
