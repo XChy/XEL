@@ -1,5 +1,10 @@
 #include <XEL/XELContainerObject.h>
 
+XELObjectWrapper XVectorObject::construct()
+{
+    return XELObjectWrapper(new XVectorObject());
+}
+
 Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& params,const XELObjectWrapper& thisWrapper)
 {
 	if(funcName=="size"){

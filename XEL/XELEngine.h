@@ -7,6 +7,7 @@
 #include <XEL/Tokenizer.h>
 #include <XEL/Parser.h>
 #include <XEL/XELValOrVar.h>
+#include <XEL/XELUtils.h>
 
 class XEL_EXPORT XELEngine
 {

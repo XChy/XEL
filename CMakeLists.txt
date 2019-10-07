@@ -19,7 +19,8 @@ set(SRC
     XEL/XELObject.cpp
     XEL/XELFunctions.cpp
     XEL/XELContainerObject.cpp
-    XEL/XELValOrVar
+    XEL/XELValOrVar.cpp
+    XEL/XELUtils.cpp
     )
 
 if (BUILD_SHARED_LIBRARY)

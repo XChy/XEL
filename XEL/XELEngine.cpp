@@ -1,6 +1,7 @@
 #include "XELEngine.h"
 #include <XEL/XELContainerObject.h>
 #include <XEL/XELFunctions.h>
+#include <iostream>
 
 XELEngine::XELEngine()
 	:mContext(new XELContext),
@@ -126,10 +127,14 @@ XELEngine::XELEngine()
 	setBinaryOperator("^",[](long long left,long long right){
 		return left^right;
 	},3,RightToLeft);
-	mContext->functionTable()["sin"]=new SinFunction;
-	mContext->functionTable()["cos"]=new CosFunction;
-	mContext->functionTable()["tan"]=new TanFunction;
-	mContext->functionTable()["cot"]=new CotFunction;
+    XELUtils::registerFuntion(mContext,&sin,"sin");
+    XELUtils::registerFuntion(mContext,&cos,"cos");
+    XELUtils::registerFuntion(mContext,&tan,"tan");
+    XELUtils::registerFuntion(mContext,&fabs,"abs");
+    XELUtils::registerFuntion(mContext,&exp,"exp");
+    XELUtils::registerFuntion(mContext,&log,"log");
+    XELUtils::registerFuntion(mContext,&log10,"log10");
+    XELUtils::registerObject<XVectorObject>(mContext,"vector");
 //	setFunction("Vector",[](const std::vector<XELValOrVar>& params){
 //		XVectorObject* vec=new XVectorObject;
 //		for(auto v:params)
@@ -199,7 +204,7 @@ void XELEngine::setContext(const std::shared_ptr<XELContext>& context)
 
 std::shared_ptr<Tokenizer> XELEngine::tokenizer() const
 {
-	return mTokenizer;
+    return mTokenizer;
 }
 
 void XELEngine::setTokenizer(const std::shared_ptr<Tokenizer>& tokenizer)

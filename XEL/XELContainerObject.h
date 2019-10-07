@@ -6,6 +6,8 @@
 
 class XEL_EXPORT XVectorObject:public XELObject{
 public:
+    static XELObjectWrapper construct();
+
 	virtual Variant invoke(const XString& funcName, const std::vector<Variant>& params, const XELObjectWrapper& thisWrapper);
 	virtual bool hasMemberFunction(const XString& funcName,int paramNum) const;
 	virtual void setMember(const XString& memberName,const Variant& v);
