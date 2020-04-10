@@ -26,13 +26,13 @@ public:
 	Assoc assoc() const;
 	void setAssoc(const Assoc& assoc);
 private:
-	int mPriority;
-	Assoc mAssoc;
+	int _priority;
+	Assoc _assoc;
 };
 
-class XEL_EXPORT XELFunction{
+class XEL_EXPORT FunctionCreator{
 public:
-	XELFunction();
+	FunctionCreator() {};
 	virtual FunctionNode* create() const=0;
 	virtual FunctionNode* create(int paramSize) const=0;
 	virtual bool isVariableParam() const=0;

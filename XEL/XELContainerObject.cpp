@@ -32,7 +32,9 @@ bool XVectorObject::hasMemberFunction(const XString& funcName, int paramNum) con
 void XVectorObject::setMember(const XString& memberName, const Variant& v)
 {}
 
-Variant XVectorObject::member(const XString& memberName) const{}
+Variant XVectorObject::member(const XString& memberName) const{
+	return Variant();
+}
 
 bool XVectorObject::hasMember(const XString& memberName) const
 {
@@ -90,7 +92,9 @@ bool XMapObject::hasMemberFunction(const XString& funcName, int paramNum) const
 
 void XMapObject::setMember(const XString& memberName, const Variant& v){}
 
-Variant XMapObject::member(const XString& memberName) const{}
+Variant XMapObject::member(const XString& memberName) const{
+	return Variant();
+}
 
 bool XMapObject::hasMember(const XString& memberName) const
 {

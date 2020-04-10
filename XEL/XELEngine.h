@@ -1,12 +1,13 @@
 #ifndef XELENGINE_H
 #define XELENGINE_H
 
+#include <cmath>
+
 #include "XEL/xel_global.h"
 #include <XEL/XELContext.h>
 #include <XEL/Variant.h>
 #include <XEL/Tokenizer.h>
 #include <XEL/Parser.h>
-#include <XEL/XELValOrVar.h>
 #include <XEL/XELUtils.h>
 
 class XEL_EXPORT XELEngine
@@ -16,54 +17,18 @@ public:
 	XELEngine();
 
 	template<typename Func>
-	void setUnaryOperator(const XString& name,Func func){
-		class Creator:public UnaryOperatorCreator{
-		public:
-			Creator(Func func):mEvalFunc(func){}
-			UnaryOperatorNode* create() const{
-				class Operator:public UnaryOperatorNode{
-				public:
-					Operator(Func func):
-						UnaryOperatorNode(),
-						mEvalFunc(func){}
-					Variant evaluate() const{
-						return mEvalFunc(XELValOrVar(operand()));
-					}
-					Func mEvalFunc;
-				};
-				return new Operator(mEvalFunc);
-			}
-			Func mEvalFunc;
-		};
-		mContext->unaryOperatorTable()[name]=new Creator(func);
+	void setUnaryOperator(const XString& name, Func func) {
+		_context->unaryOperatorTable()[name] = XELUtils::creatorForUnaryOperator<Func>(func);
 	}
 
 	template<typename Func>
-	void setBinaryOperator(const XString& name,Func func,int priority,Assoc assoc=LeftToRight){
-		class Creator:public BinaryOperatorCreator{
-		public:
-			Creator(Func func,int priority,Assoc assoc):
-				mEvalFunc(func)
-			{
-				setPriority(priority);
-				setAssoc(assoc);
-			}
-			BinaryOperatorNode* create() const{
-				class Operator:public BinaryOperatorNode{
-				public:
-					Operator(Func func):
-						BinaryOperatorNode(),
-						mEvalFunc(func){}
-					Variant evaluate() const{
-						return mEvalFunc(XELValOrVar(leftOperand()),XELValOrVar(rightOperand()));
-					}
-					Func mEvalFunc;
-				};
-				return new Operator(mEvalFunc);
-			}
-			Func mEvalFunc;
-		};
-		mContext->binaryOperatorTable()[name]=new Creator(func,priority,assoc);
+	void setBinaryOperator(const XString& name, Func func, int priority, Assoc assoc = LeftToRight) {
+		_context->binaryOperatorTable()[name] = XELUtils::creatorForBinaryOperator<Func>(func, priority, assoc);
+	}
+
+	template<typename Func>
+	void setFunction(const XString& name, Func func) {
+		_context->functionTable()[name] = XELUtils::creatorForFunction<Func>(func);
 	}
 
 	Variant evaluate() const;
@@ -86,12 +51,12 @@ public:
 
 	EvaluateNode* rootNode() const;
 private:
-	XString mExpression;
-	EvaluateNode* mRootNode;
+	XString _expression;
+	EvaluateNode* _rootNode;
 
-	std::shared_ptr<XELContext> mContext;
-	std::shared_ptr<Tokenizer> mTokenizer;
-	std::shared_ptr<Parser> mParser;
+	std::shared_ptr<XELContext> _context;
+	std::shared_ptr<Tokenizer> _tokenizer;
+	std::shared_ptr<Parser> _parser;
 };
 
 #endif // FORMULAENGINE_H

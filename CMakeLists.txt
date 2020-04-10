@@ -1,6 +1,7 @@
 project(XEL)
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
 
+option(BUILD_TEST "Set to complie the test sample" ON)
 option(BUILD_SHARED_LIBRARY "Set to switch to build shared library" ON)
 option(BUILD_STATIC_LIBRARY "Set to switch to build static library" OFF)
 
@@ -17,12 +18,10 @@ set(SRC
     XEL/Parser.cpp
     XEL/Tokenizer.cpp
     XEL/XELObject.cpp
-    XEL/XELFunctions.cpp
     XEL/XELContainerObject.cpp
-    XEL/XELValOrVar.cpp
+    
     XEL/XELUtils.cpp
     )
-
 if (BUILD_SHARED_LIBRARY)
     add_definitions(-DXEL_SHARED_LIBRARY)
     message(STATUS "Build shared library")
@@ -39,6 +38,14 @@ if(BUILD_STATIC_LIBRARY)
     SET_TARGET_PROPERTIES(XEL_STATIC PROPERTIES OUTPUT_NAME "XEL")
 endif()
 
+if (BUILD_TEST)
+    add_definitions(-DXEL_TEST)
+    message(STATUS "Build test sample")
+
+    add_executable(XEL_TEST test/test.cpp ${SRC})
+    SET_TARGET_PROPERTIES(XEL_TEST PROPERTIES OUTPUT_NAME "XEL")
+endif()
+
 if( NOT CMAKE_BUILD_TYPE )
     set( CMAKE_BUILD_TYPE Release )
 endif()
@@ -48,5 +55,4 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O2 -pthread -fopenmp")
 endif()
 
-
-add_definitions(-std=c++11)
+set(CMAKE_CXX_STANDARD 11)

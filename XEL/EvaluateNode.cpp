@@ -26,12 +26,11 @@ void ValueNode::setValue(const Variant& value)
 {
 	mValue = value;
 }
-
+#include <functional>
 VariableNode::VariableNode()
 	:EvaluateNode(),
 	  mVariableTable(nullptr)
 {
-
 }
 
 Variant VariableNode::evaluate() const

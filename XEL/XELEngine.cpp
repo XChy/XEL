@@ -1,228 +1,161 @@
 #include "XELEngine.h"
 #include <XEL/XELContainerObject.h>
-#include <XEL/XELFunctions.h>
 #include <iostream>
 
 XELEngine::XELEngine()
-	:mContext(new XELContext),
-	  mParser(new Parser),
-	  mTokenizer(new Tokenizer),
-	  mRootNode(nullptr)
+	:_context(new XELContext),
+	_parser(new Parser),
+	_tokenizer(new Tokenizer),
+	_rootNode(nullptr)
 {
-	mParser->setContext(mContext.get());
-	mTokenizer->setContext(mContext.get());
-	setUnaryOperator("-",[](const Variant& v)->Variant{
-		if(v.type()==VariantType::Interger){
+	_parser->setContext(_context.get());
+	_tokenizer->setContext(_context.get());
+	setUnaryOperator("-", [](const Variant& v)->Variant {
+		if (v.type() == VariantType::Interger) {
 			return -v.intergerValue();
-		}else if(v.type()==VariantType::Double){
+		}
+		else if (v.type() == VariantType::Double) {
 			return -v.doubleValue();
-		}else{
-			throw XELError("Unary operator '-' cannot eval value as "+Variant::convertString(v.type()));
 		}
-	});
-	setUnaryOperator("!",[](bool o){
+		else {
+			throw XELError("Unary operator '-' cannot eval value as " + Variant::convertString(v.type()));
+		}
+		});
+	setUnaryOperator("!", [](bool o) {
 		return !o;
-	});
-	setBinaryOperator("=",[](XELValOrVar left,XELValOrVar right){
-		left.setVariable(right.value());
-		return left;
-	},0,RightToLeft);
-	setBinaryOperator("+=",[](XELValOrVar left,XELValOrVar right){
-		Variant leftValue=left.value();
-		if(leftValue.type()==VariantType::Double){
-			left.setVariable(leftValue.doubleValue()+right.value().convertDouble());
-		}else if(leftValue.type()==VariantType::Interger){
-			left.setVariable(leftValue.intergerValue()+right.value().convertInterger());
-		}
-		return left;
-	},0,RightToLeft);
-	setBinaryOperator("-=",[](XELValOrVar left,XELValOrVar right){
-		Variant leftValue=left.value();
-		if(leftValue.type()==VariantType::Double){
-			left.setVariable(leftValue.doubleValue()-right.value().convertDouble());
-		}else if(leftValue.type()==VariantType::Interger){
-			left.setVariable(leftValue.intergerValue()-right.value().convertInterger());
-		}
-		return left;
-	},0,RightToLeft);
-	setBinaryOperator(">",[](const Variant& left,const Variant& right){
+		});
+	setBinaryOperator("<", [](const Variant& left, const Variant& right) {
 		switch (left.type()) {
-			case VariantType::Double:
-				return left.doubleValue()>double(right);
-			case VariantType::Interger:
-				if(right.type()==VariantType::Interger)
-					return left.intergerValue()>right.intergerValue();
-				else if(right.type()==VariantType::Double)
-					return double(left.intergerValue())>right.doubleValue();
-			default:
-				return false;
+		case VariantType::Double:
+			return left.doubleValue() < double(right);
+		case VariantType::Interger:
+			if (right.type() == VariantType::Interger)
+				return left.intergerValue() < right.intergerValue();
+			else if (right.type() == VariantType::Double)
+				return double(left.intergerValue()) < right.doubleValue();
+		default:
+			return false;
 		}
-	},1);
-	setBinaryOperator(">=",[](const Variant& left,const Variant& right){
+		}, 1);
+	setBinaryOperator("<=", [](const Variant& left, const Variant& right) {
 		switch (left.type()) {
-			case VariantType::Double:
-				return left.doubleValue()>=double(right);
-			case VariantType::Interger:
-				if(right.type()==VariantType::Interger)
-					return left.intergerValue()>=right.intergerValue();
-				else if(right.type()==VariantType::Double)
-					return double(left.intergerValue())>=right.doubleValue();
-			default:
-				return false;
+		case VariantType::Double:
+			return left.doubleValue() <= double(right);
+		case VariantType::Interger:
+			if (right.type() == VariantType::Interger)
+				return left.intergerValue() <= right.intergerValue();
+			else if (right.type() == VariantType::Double)
+				return double(left.intergerValue()) <= right.doubleValue();
+		default:
+			return false;
 		}
-	},1);
-	setBinaryOperator("<",[](const Variant& left,const Variant& right){
-		switch (left.type()) {
-			case VariantType::Double:
-				return left.doubleValue()<double(right);
-			case VariantType::Interger:
-				if(right.type()==VariantType::Interger)
-					return left.intergerValue()<right.intergerValue();
-				else if(right.type()==VariantType::Double)
-					return double(left.intergerValue())<right.doubleValue();
-			default:
-				return false;
-		}
-	},1);
-	setBinaryOperator("<=",[](const Variant& left,const Variant& right){
-		switch (left.type()) {
-			case VariantType::Double:
-				return left.doubleValue()<=double(right);
-			case VariantType::Interger:
-				if(right.type()==VariantType::Interger)
-					return left.intergerValue()<=right.intergerValue();
-				else if(right.type()==VariantType::Double)
-					return double(left.intergerValue())<=right.doubleValue();
-			default:
-				return false;
-		}
-	},1);
-	setBinaryOperator("==",[](const Variant& left,const Variant& right){
-		return left==right;
-	},0);
-	setBinaryOperator("||",[](bool left,bool right){
-		return left||right;
-	},1);
-	setBinaryOperator("&&",[](bool left,bool right){
-		return left&&right;
-	},1);
-	setBinaryOperator("+",[](double left,double right){
-		return left+right;
-	},1);
-	setBinaryOperator("-",[](double left,double right){
-		return left-right;
-	},1);
-	setBinaryOperator("*",[](double left,double right){
-		return left*right;
-	},2);
-	setBinaryOperator("/",[](double left,double right){
-		return left/right;
-	},2);
-	setBinaryOperator("|",[](long long left,long long right){
-		return left|right;
-	},3,RightToLeft);
-	setBinaryOperator("&",[](long long left,long long right){
-		return left&right;
-	},3,RightToLeft);
-	setBinaryOperator("^",[](long long left,long long right){
-		return left^right;
-	},3,RightToLeft);
-    XELUtils::registerFuntion(mContext,&sin,"sin");
-    XELUtils::registerFuntion(mContext,&cos,"cos");
-    XELUtils::registerFuntion(mContext,&tan,"tan");
-    XELUtils::registerFuntion(mContext,&fabs,"abs");
-    XELUtils::registerFuntion(mContext,&exp,"exp");
-    XELUtils::registerFuntion(mContext,&log,"log");
-    XELUtils::registerFuntion(mContext,&log10,"log10");
-    XELUtils::registerObject<XVectorObject>(mContext,"vector");
-//	setFunction("Vector",[](const std::vector<XELValOrVar>& params){
-//		XVectorObject* vec=new XVectorObject;
-//		for(auto v:params)
-//			vec->vector().push_back(v.value());
-//		return XELObjectWrapper((XELObject*)vec);
-//	});
-//	setFunction("Map",[](const std::vector<XELValOrVar>& params){
-//		XMapObject* map=new XMapObject;
-//		return XELObjectWrapper((XELObject*)map);
-//	});
-//	setFunction("sin",[](const std::vector<XELValOrVar>& params){
-//		return sin(params.at(0));
-//	});
-//	setFunction("cos",[](const std::vector<XELValOrVar>& params){
-//		return cos(params.at(0));
-//	});
-//	setFunction("tan",[](const std::vector<XELValOrVar>& params){
-//		return tan(params.at(0));
-//	});
+		}, 1);
+	setBinaryOperator("==", [](const Variant& left, const Variant& right) {
+		return left == right;
+		}, 0);
+	setBinaryOperator("||", [](bool left, bool right) {
+		return left || right;
+		}, 1);
+	setBinaryOperator("&&", [](bool left, bool right) {
+		return left && right;
+		}, 1);
+	setBinaryOperator("+", [](double left, double right) {
+		return left + right;
+		}, 1);
+	setBinaryOperator("-", [](double left, double right) {
+		return left - right;
+		}, 1);
+	setBinaryOperator("*", [](double left, double right) {
+		return left * right;
+		}, 2);
+	setBinaryOperator("/", [](double left, double right) {
+		return left / right;
+		}, 2);
+	setBinaryOperator("|", [](long long left, long long right) {
+		return left | right;
+		}, 3, RightToLeft);
+	setBinaryOperator("&", [](long long left, long long right) {
+		return left & right;
+		}, 3, RightToLeft);
+	setBinaryOperator("^", [](long long left, long long right) {
+		return left ^ right;
+		}, 3, RightToLeft);
+	setFunction<double(*)(double)>("sin", &sin);
+	setFunction<double(*)(double)>("tan", &tan);
+	setFunction<double(*)(double)>("cos", &cos);
+	setFunction<double(*)(double)>("fabs", &fabs);
+	setFunction<double(*)(double)>("exp", &exp);
+	setFunction<double(*)(double)>("log10", &log10);
+	setFunction<double(*)(double)>("log2", &log2);
 }
 
 XString XELEngine::expression() const
 {
-	return mExpression;
+	return _expression;
 }
 
 void XELEngine::setExpression(XString expression)
 {
-	mRootNode=mParser->parse(mTokenizer->analyze(expression));
-	mExpression=expression;
+	_rootNode = _parser->parse(_tokenizer->analyze(expression));
+	_expression = expression;
 }
 
 Variant& XELEngine::variable(const XString& name)
 {
-	return mContext->variableTable()[name];
+	return _context->variableTable()[name];
 }
 
 void XELEngine::setVariable(const XString& name, const Variant& value)
 {
-	mContext->variableTable()[name]=value;
+	_context->variableTable()[name] = value;
 }
 
 void XELEngine::removeVariable(XString name)
 {
-	mContext->variableTable().remove(name);
+	_context->variableTable().remove(name);
 }
 
 Variant XELEngine::evaluate() const
 {
-	if(mRootNode){
-		return mRootNode->evaluate();
+	if (_rootNode) {
+		return _rootNode->evaluate();
 	}
 	return Variant();
 }
 
 std::shared_ptr<XELContext> XELEngine::context() const
 {
-	return mContext;
+	return _context;
 }
 
 void XELEngine::setContext(const std::shared_ptr<XELContext>& context)
 {
-	mParser->setContext(context.get());
-	mTokenizer->setContext(context.get());
-	mContext = context;
+	_parser->setContext(context.get());
+	_tokenizer->setContext(context.get());
+	_context = context;
 }
 
 std::shared_ptr<Tokenizer> XELEngine::tokenizer() const
 {
-    return mTokenizer;
+	return _tokenizer;
 }
 
 void XELEngine::setTokenizer(const std::shared_ptr<Tokenizer>& tokenizer)
 {
-	mTokenizer = tokenizer;
+	_tokenizer = tokenizer;
 }
 
 std::shared_ptr<Parser> XELEngine::parser() const
 {
-	return mParser;
+	return _parser;
 }
 
 void XELEngine::setParser(const std::shared_ptr<Parser>& parser)
 {
-	mParser = parser;
+	_parser = parser;
 }
 
 EvaluateNode* XELEngine::rootNode() const
 {
-	return mRootNode;
+	return _rootNode;
 }

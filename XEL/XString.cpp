@@ -1,4 +1,4 @@
-#include <XEL/XString.h>
+﻿#include <XEL/XString.h>
 
 StringData::StringData(const StringData& other){
 	allocate(other.allocSize);
@@ -348,6 +348,7 @@ void XString::removeLast(){
 std::string XString::toStdString() const
 {
 	std::string result;
+
 	for(char16_t* p=(char16_t*)data();p!=(char16_t*)data()+size();++p){
 		result.push_back(*p);
 	}
@@ -361,6 +362,11 @@ std::u16string XString::toUtf16String() const
 		result.push_back(*p);
 	}
 	return result;
+}
+
+XString XString::fromStdString(std::string str)
+{
+	return XString(str.data());
 }
 
 const XChar* XString::unicode() const

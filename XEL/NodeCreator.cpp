@@ -12,25 +12,20 @@ BinaryOperatorCreator::BinaryOperatorCreator()
 
 int BinaryOperatorCreator::priority() const
 {
-	return mPriority;
+	return _priority;
 }
 
 void BinaryOperatorCreator::setPriority(int priority)
 {
-	mPriority = priority;
+	_priority = priority;
 }
 
 Assoc BinaryOperatorCreator::assoc() const
 {
-	return mAssoc;
+	return _assoc;
 }
 
 void BinaryOperatorCreator::setAssoc(const Assoc& assoc)
 {
-	mAssoc = assoc;
-}
-
-XELFunction::XELFunction()
-{
-
+	_assoc = assoc;
 }

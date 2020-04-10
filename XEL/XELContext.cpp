@@ -36,22 +36,22 @@ void XELContext::setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCr
 	mBinaryOperatorTable = binaryOperatorTable;
 }
 
-XHashMap<XString, XELFunction*>& XELContext::functionTable()
+XHashMap<XString, FunctionCreator*>& XELContext::functionTable()
 {
 	return mFunctionTable;
 }
 
-void XELContext::setFunctionTable(const XHashMap<XString, XELFunction*>& functionTable)
+void XELContext::setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable)
 {
 	mFunctionTable = functionTable;
 }
 
 XHashMap<XString, Variant>& XELContext::variableTable()
 {
-    return mVariableTable;
+	return mVariableTable;
 }
 
 void XELContext::setVariableTable(const XHashMap<XString, Variant>& variableTable)
 {
-    mVariableTable = variableTable;
+	mVariableTable = variableTable;
 }

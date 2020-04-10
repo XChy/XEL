@@ -97,6 +97,7 @@ public:
 	std::string toStdString() const;
 	std::u16string toUtf16String() const;
 
+	static XString fromStdString(std::string str);
 	const XChar* unicode() const;
 
 	template<typename Interger>
