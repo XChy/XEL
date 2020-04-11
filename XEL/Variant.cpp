@@ -14,16 +14,6 @@ Variant::Variant(long long value)
 	reset(value);
 }
 
-Variant::Variant(int value)
-{
-	reset(long long(value));
-}
-
-Variant::Variant(long value)
-{
-	reset(long long(value));
-}
-
 Variant::Variant(const XString& value)
 {
 	reset(value);
