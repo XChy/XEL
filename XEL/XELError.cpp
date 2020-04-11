@@ -2,15 +2,15 @@
 
 XELError::XELError(XString errorString)
 {
-	mErrorString = errorString;
+	_errorString = errorString;
 }
 
 XString XELError::errorString() const
 {
-	return mErrorString;
+	return _errorString;
 }
 
 void XELError::setErrorString(const XString& error)
 {
-	mErrorString = error;
+	_errorString = error;
 }

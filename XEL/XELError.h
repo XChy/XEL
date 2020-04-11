@@ -12,7 +12,7 @@ public:
 
 	void setErrorString(const XString& errorString);
 private:
-	XString mErrorString;
+	XString _errorString;
 };
 
 #endif // FORMULAERROR_H

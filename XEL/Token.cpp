@@ -6,33 +6,33 @@ Token::Token()
 }
 
 Token::Token(TokenType type)
-	:mType(type)
+	:_type(type)
 {
 
 }
 
 Token::Token(TokenType type, const Variant& value)
-	: mType(type),
-	mValue(value)
+	: _type(type),
+	_value(value)
 {
 }
 
 TokenType Token::type() const
 {
-	return mType;
+	return _type;
 }
 
 void Token::setType(const TokenType& type)
 {
-	mType = type;
+	_type = type;
 }
 
 Variant Token::value() const
 {
-	return mValue;
+	return _value;
 }
 
 void Token::setValue(const Variant& value)
 {
-	mValue = value;
+	_value = value;
 }

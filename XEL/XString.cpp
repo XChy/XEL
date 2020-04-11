@@ -613,7 +613,7 @@ XString XString::number(long long v, int base)
 XString XString::number(double v)
 {
 	char buffer[256];
-	snprintf(buffer, sizeof(buffer), "%g", v);
+	snprintf(buffer, sizeof(buffer), "%f", v);
 	return XString::fromAscii(buffer);
 }
 

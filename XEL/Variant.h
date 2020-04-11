@@ -97,8 +97,8 @@ public:
 	operator bool() const;
 	operator XELObjectWrapper() const;
 private:
-	VariantHolder mHolder;
-	VariantType mType;
+	VariantHolder _holder;
+	VariantType _type;
 };
 
 //namespace std{

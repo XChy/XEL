@@ -29,14 +29,14 @@ void ValueNode::setValue(const Variant& value)
 
 VariableNode::VariableNode()
 	:EvaluateNode(),
-	mVariableTable(nullptr)
+	_variableTable(nullptr)
 {
 }
 
 Variant VariableNode::evaluate() const
 {
-	if (mVariableTable->contains(mVariableName)) {
-		return mVariableTable->value(mVariableName);
+	if (_variableTable->contains(mVariableName)) {
+		return _variableTable->value(mVariableName);
 	}
 	else {
 		throw XELError("No variable called " + mVariableName);
@@ -55,12 +55,12 @@ void VariableNode::setVariableName(const XString& variableName)
 
 XHashMap<XString, Variant>* VariableNode::variableTable() const
 {
-	return mVariableTable;
+	return _variableTable;
 }
 
 void VariableNode::setVariableTable(XHashMap<XString, Variant>* variableTable)
 {
-	mVariableTable = variableTable;
+	_variableTable = variableTable;
 }
 
 UnaryOperatorNode::UnaryOperatorNode()

@@ -20,7 +20,7 @@ XELEngine::XELEngine()
 			throw XELError("Unary operator '-' cannot eval value as " + Variant::convertString(v.type()));
 		}
 		});
-	setUnaryOperator("!", [](bool o) {
+	setUnaryOperator("!", [](bool o)->bool {
 		return !o;
 		});
 	setBinaryOperator(">", [](const Variant& left, const Variant& right) {
@@ -96,6 +96,9 @@ XELEngine::XELEngine()
 	setBinaryOperator("/", [](double left, double right) {
 		return left / right;
 		}, 2);
+	setBinaryOperator("**", [](double left, double right) {
+		return pow(left, right);
+		}, 2);
 	setBinaryOperator("|", [](long long left, long long right) {
 		return left | right;
 		}, 3, RightToLeft);
@@ -105,17 +108,21 @@ XELEngine::XELEngine()
 	setBinaryOperator("^", [](long long left, long long right) {
 		return left ^ right;
 		}, 3, RightToLeft);
-	setFunction<double, double>("sin", std::function<double(double)>(static_cast<double(*)(double)>(&sin)));
-	setFunction<double, double>("tan", std::function<double(double)>(static_cast<double(*)(double)>(&tan)));
-	setFunction<double, double>("cos", std::function<double(double)>(static_cast<double(*)(double)>(&cos)));
-	setFunction<double, double>("abs", std::function<double(double)>(static_cast<double(*)(double)>(&fabs)));
-	setFunction<double, double>("exp", std::function<double(double)>(static_cast<double(*)(double)>(&exp)));
-	setFunction<double, double>("log10", std::function<double(double)>(static_cast<double(*)(double)>(&log10)));
-	setFunction<double, double>("log2", std::function<double(double)>(static_cast<double(*)(double)>(&log2)));
-	setFunction<XString, XString>("reverse", std::function<XString(XString)>([](XString str)->XString {
+	setFunction("sin", std::function<double(double)>(static_cast<double(*)(double)>(&sin)));
+	setFunction("tan", std::function<double(double)>(static_cast<double(*)(double)>(&tan)));
+	setFunction("cos", std::function<double(double)>(static_cast<double(*)(double)>(&cos)));
+	setFunction("abs", std::function<double(double)>(static_cast<double(*)(double)>(&fabs)));
+	setFunction("exp", std::function<double(double)>(static_cast<double(*)(double)>(&exp)));
+	setFunction("log10", std::function<double(double)>(static_cast<double(*)(double)>(&log10)));
+	setFunction("log2", std::function<double(double)>(static_cast<double(*)(double)>(&log2)));
+	setFunction("ln", std::function<double(double)>(static_cast<double(*)(double)>(&log)));
+	setFunction("log", std::function<double(double, double)>([](double base, double n)->double {
+		return log(n) / log(base);
+		}));
+	setFunction("reverse", std::function<XString(XString)>([](XString str)->XString {
 		return str.reverse();
 		}));
-	setFunction<int, XString>("size", std::function<int(XString)>([](XString str)->int {
+	setFunction("size", std::function<int(XString)>([](XString str)->int {
 		return str.size();
 		}));
 	setVariableParamFunction("vector", [](const std::vector<Variant> params)->Variant {

@@ -14,7 +14,7 @@ public:
 	XELContext* context() const;
 	void setContext(XELContext* context);
 private:
-	XELContext* mContext;
+	XELContext* _context;
 	void analyzeDecAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
 	void analyzeHexAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
 	void analyzeBinAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;

@@ -1,7 +1,7 @@
 #include "Tokenizer.h"
 
 Tokenizer::Tokenizer()
-	:mContext(nullptr)
+	:_context(nullptr)
 {
 
 }
@@ -81,12 +81,12 @@ std::vector<Token> Tokenizer::analyze(const XString& expression) const
 				analyzeDecAndNext(it, value, result);
 			}
 		}
-		else if (mContext->operatorChars().contains(*it)) {
+		else if (_context->operatorChars().contains(*it)) {
 			XString value;
 			value.append(*it);++it;
-			while (mContext->operatorChars().contains(*it)) {
+			while (_context->operatorChars().contains(*it)) {
 				value.append(*it);++it;
-				if ((!mContext->binaryOperatorTable().contains(value)) && (!mContext->unaryOperatorTable().contains(value))) {
+				if ((!_context->binaryOperatorTable().contains(value)) && (!_context->unaryOperatorTable().contains(value))) {
 					value.remove(value.size() - 1, 1);
 					--it;
 					break;
@@ -147,10 +147,10 @@ std::vector<Token> Tokenizer::analyze(const XString& expression) const
 
 XELContext* Tokenizer::context() const
 {
-	return mContext;
+	return _context;
 }
 
 void Tokenizer::setContext(XELContext* context)
 {
-	mContext = context;
+	_context = context;
 }

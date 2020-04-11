@@ -164,7 +164,7 @@ namespace XELUtils
 					UnaryOperatorNode(),
 					_func(func) {}
 				Variant evaluate() const {
-					return _func(operand());
+					return _func(operand()->evaluate());
 				}
 				Func _func;
 			};
