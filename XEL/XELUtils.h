@@ -106,7 +106,7 @@ namespace XELUtils
 	class CreatorForBinaryOperator :public BinaryOperatorCreator {
 	public:
 		CreatorForBinaryOperator(Func func, int priority, Assoc assoc) :
-			mEvalFunc(func)
+			_func(func)
 		{
 			setPriority(priority);
 			setAssoc(assoc);
@@ -116,35 +116,35 @@ namespace XELUtils
 			public:
 				Operator(Func func) :
 					BinaryOperatorNode(),
-					mEvalFunc(func) {}
+					_func(func) {}
 				Variant evaluate() const {
-					return mEvalFunc(leftOperand()->evaluate(), rightOperand()->evaluate());
+					return _func(leftOperand()->evaluate(), rightOperand()->evaluate());
 				}
-				Func mEvalFunc;
+				Func _func;
 			};
-			return new Operator(mEvalFunc);
+			return new Operator(_func);
 		}
-		Func mEvalFunc;
+		Func _func;
 	};
 
 	template<typename Func>
 	class CreatorForUnaryOperator :public UnaryOperatorCreator {
 	public:
-		CreatorForUnaryOperator(Func func) :mEvalFunc(func) {}
+		CreatorForUnaryOperator(Func func) :_func(func) {}
 		UnaryOperatorNode* create() const {
 			class Operator :public UnaryOperatorNode {
 			public:
 				Operator(Func func) :
 					UnaryOperatorNode(),
-					mEvalFunc(func) {}
+					_func(func) {}
 				Variant evaluate() const {
-					return mEvalFunc(operand());
+					return _func(operand());
 				}
-				Func mEvalFunc;
+				Func _func;
 			};
-			return new Operator(mEvalFunc);
+			return new Operator(_func);
 		}
-		Func mEvalFunc;
+		Func _func;
 	};
 
 	template<typename Func>
@@ -160,6 +160,10 @@ namespace XELUtils
 	template<typename Func>
 	static FunctionCreator* creatorForFunction(Func func) {
 		return new CreatorForFunction<Func>(func);;//BUG Memory leak
+	}
+	template<typename Func>
+	static FunctionCreator* creatorForVariableParamFunction(Func func) {
+		return new CreatorForVariableParamFunction<Func>(func);
 	}
 };
 
