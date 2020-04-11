@@ -27,8 +27,8 @@ public:
 	void setValue(const Variant& value);
 
 private:
-	TokenType mType;
-	Variant mValue;
+	TokenType _type;
+	Variant _value;
 };
 
 #endif // TOKEN_H

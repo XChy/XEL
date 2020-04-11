@@ -26,11 +26,11 @@ public:
 	void setVariableTable(const XHashMap<XString, Variant>& variableTable);
 
 private:
-	XHashMap<XString, Variant> mVariableTable;
-	XHashMap<XString, UnaryOperatorCreator*> mUnaryOperatorTable;
-	XHashMap<XString, BinaryOperatorCreator*> mBinaryOperatorTable;
-	XHashMap<XString, FunctionCreator*> mFunctionTable;
-	XString mOperatorChars;
+	XHashMap<XString, Variant> _variableTable;
+	XHashMap<XString, UnaryOperatorCreator*> _unaryOperatorTable;
+	XHashMap<XString, BinaryOperatorCreator*> _binaryOperatorTable;
+	XHashMap<XString, FunctionCreator*> _functionTable;
+	XString _operatorChars;
 };
 
 #endif // FORMULACONTEXT_H

@@ -1,7 +1,7 @@
 #include "Parser.h"
 
 Parser::Parser()
-	:mContext(nullptr)
+	:_context(nullptr)
 {
 
 }
@@ -54,17 +54,17 @@ VariableNode* Parser::createVariable(TokenIt it)
 {
 	VariableNode* variable = new VariableNode;
 	variable->setVariableName(it->value().toString());
-	variable->setVariableTable(&mContext->variableTable());
+	variable->setVariableTable(&_context->variableTable());
 	return variable;
 }
 
 UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 {
 	if (it->type() == Operator) {
-		if (!mContext->unaryOperatorTable().contains(it->value().convertString())) {
+		if (!_context->unaryOperatorTable().contains(it->value().convertString())) {
 			throw XELError("No unary Operator called " + it->value().stringValue());
 		}
-		return mContext->unaryOperatorTable()[it->value().stringValue()]->create();
+		return _context->unaryOperatorTable()[it->value().stringValue()]->create();
 	}
 	else {
 		throw XELError("Is not unary operator");
@@ -73,10 +73,10 @@ UnaryOperatorNode* Parser::createUnaryOperator(TokenIt it)
 
 std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt it) {
 	if (it->type() == Operator || it->type() == Identifier) {
-		if (!mContext->binaryOperatorTable().contains(it->value().convertString())) {
+		if (!_context->binaryOperatorTable().contains(it->value().convertString())) {
 			throw XELError("No binary Operator called " + it->value().stringValue());
 		}
-		auto creator = mContext->binaryOperatorTable()[it->value().stringValue()];
+		auto creator = _context->binaryOperatorTable()[it->value().stringValue()];
 		return std::make_tuple(creator->create(), creator->priority(), creator->assoc());
 	}
 	else {
@@ -86,10 +86,10 @@ std::tuple<BinaryOperatorNode*, int, Assoc> Parser::createBinaryOperator(TokenIt
 
 FunctionNode* Parser::createFunction(TokenIt it, int paramSize)
 {
-	if (!mContext->functionTable().contains(it->value().convertString())) {
+	if (!_context->functionTable().contains(it->value().convertString())) {
 		throw XELError("No function called " + it->value().stringValue());
 	}
-	auto creator = mContext->functionTable()[it->value().stringValue()];
+	auto creator = _context->functionTable()[it->value().stringValue()];
 	if (creator->isVariableParam()) {
 		return creator->create();
 	}
@@ -320,10 +320,10 @@ EvaluateNode* Parser::parse(const std::vector<Token>& tokenList)
 
 XELContext* Parser::context() const
 {
-	return mContext;
+	return _context;
 }
 
 void Parser::setContext(XELContext* context)
 {
-	mContext = context;
+	_context = context;
 }

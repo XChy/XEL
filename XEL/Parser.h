@@ -17,7 +17,7 @@ public:
 	XELContext* context() const;
 	void setContext(XELContext* context);
 private:
-	XELContext* mContext;
+	XELContext* _context;
 	ValueNode* createValue(TokenIt it);
 	VariableNode* createVariable(TokenIt it);
 	UnaryOperatorNode* createUnaryOperator(TokenIt it);

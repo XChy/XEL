@@ -19,7 +19,6 @@ set(SRC
     XEL/Tokenizer.cpp
     XEL/XELObject.cpp
     XEL/XELContainerObject.cpp
-    
     XEL/XELUtils.cpp
     )
 if (BUILD_SHARED_LIBRARY)
@@ -43,7 +42,7 @@ if (BUILD_TEST)
     message(STATUS "Build test sample")
 
     add_executable(XEL_TEST test/test.cpp ${SRC})
-    SET_TARGET_PROPERTIES(XEL_TEST PROPERTIES OUTPUT_NAME "XEL")
+    SET_TARGET_PROPERTIES(XEL_TEST PROPERTIES OUTPUT_NAME "XEL_TEST")
 endif()
 
 if( NOT CMAKE_BUILD_TYPE )

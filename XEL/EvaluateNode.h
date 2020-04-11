@@ -40,7 +40,7 @@ public:
 	void setVariableTable(XHashMap<XString, Variant>* variableTable);
 private:
 	XString mVariableName;
-	XHashMap<XString, Variant>* mVariableTable;
+	XHashMap<XString, Variant>* _variableTable;
 };
 
 class XEL_EXPORT UnaryOperatorNode :public EvaluateNode {

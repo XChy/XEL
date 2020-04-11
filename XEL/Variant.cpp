@@ -1,7 +1,7 @@
 #include "Variant.h"
 
 Variant::Variant()
-	:mType(VariantType::Null)
+	:_type(VariantType::Null)
 {}
 
 Variant::Variant(double value)
@@ -40,8 +40,8 @@ Variant::Variant(const XELObjectWrapper& value)
 }
 
 Variant::Variant(const Variant& value)
-	:mType(value.type()),
-	mHolder(value.mHolder)
+	:_type(value.type()),
+	_holder(value._holder)
 {
 }
 
@@ -49,126 +49,126 @@ Variant::Variant(const Variant& value)
 
 void Variant::set(double value)
 {
-	mHolder.doubleValue = value;
+	_holder.doubleValue = value;
 }
 
 void Variant::set(long long value)
 {
-	mHolder.intergerValue = value;
+	_holder.intergerValue = value;
 }
 
 void Variant::set(const XString& value)
 {
-	mHolder.stringValue = value;
+	_holder.stringValue = value;
 }
 
 void Variant::set(bool value)
 {
-	mHolder.boolValue = value;
+	_holder.boolValue = value;
 }
 
 void Variant::set(const XELObjectWrapper& value)
 {
-	mHolder.objectValue = value;
+	_holder.objectValue = value;
 }
 
 void Variant::reset(double value)
 {
-	mType = VariantType::Double;
+	_type = VariantType::Double;
 	set(value);
 }
 
 void Variant::reset(long long value)
 {
-	mType = VariantType::Interger;
+	_type = VariantType::Interger;
 	set(value);
 }
 
 void Variant::reset(const XString& value)
 {
-	mType = VariantType::String;
+	_type = VariantType::String;
 	set(value);
 }
 
 void Variant::reset(bool value)
 {
-	mType = VariantType::Bool;
+	_type = VariantType::Bool;
 	set(value);
 }
 
 void Variant::reset(const XELObjectWrapper& value)
 {
-	mType = VariantType::Object;
+	_type = VariantType::Object;
 	set(value);
 }
 
 void Variant::clear()
 {
-	mType = VariantType::Null;
+	_type = VariantType::Null;
 }
 
 double Variant::convertDouble() const
 {
-	if (mType == VariantType::Double) {
-		return mHolder.doubleValue;
+	if (_type == VariantType::Double) {
+		return _holder.doubleValue;
 	}
-	else if (mType == VariantType::Interger) {
-		return double(mHolder.intergerValue);
+	else if (_type == VariantType::Interger) {
+		return double(_holder.intergerValue);
 	}
-	throw XELError("Cannot convert " + Variant::convertString(mType) + " to Double");
+	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Double");
 }
 
 long long Variant::convertInterger() const
 {
-	if (mType == VariantType::Double) {
-		return int(mHolder.doubleValue);
+	if (_type == VariantType::Double) {
+		return int(_holder.doubleValue);
 	}
-	else if (mType == VariantType::Interger) {
-		return mHolder.intergerValue;
+	else if (_type == VariantType::Interger) {
+		return _holder.intergerValue;
 	}
-	throw XELError("Cannot convert " + Variant::convertString(mType) + " to Double");
+	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Double");
 }
 
 XString Variant::convertString() const
 {
-	if (mType == VariantType::String) {
-		return mHolder.stringValue;
+	if (_type == VariantType::String) {
+		return _holder.stringValue;
 	}
-	throw XELError("Cannot convert " + Variant::convertString(mType) + " to String");
+	throw XELError("Cannot convert " + Variant::convertString(_type) + " to String");
 }
 
 bool Variant::convertBool() const
 {
-	if (mType == VariantType::Bool) {
-		return mHolder.boolValue;
+	if (_type == VariantType::Bool) {
+		return _holder.boolValue;
 	}
-	else if (mType == VariantType::Interger) {
-		return mHolder.intergerValue;
+	else if (_type == VariantType::Interger) {
+		return _holder.intergerValue;
 	}
-	throw XELError("Cannot convert " + Variant::convertString(mType) + " to Bool");
+	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Bool");
 }
 
 XELObjectWrapper Variant::convertObject() const
 {
-	if (mType == VariantType::Object) {
-		return mHolder.objectValue;
+	if (_type == VariantType::Object) {
+		return _holder.objectValue;
 	}
-	throw XELError("Cannot convert " + Variant::convertString(mType) + " to Object");
+	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Object");
 }
 
 XString Variant::toString() const
 {
 	switch (type()) {
 	case VariantType::Double:
-		return XString::number(mHolder.doubleValue);
+		return XString::number(_holder.doubleValue);
 	case VariantType::Interger:
-		return XString::number(mHolder.intergerValue);
+		return XString::number(_holder.intergerValue);
 	case VariantType::String:
-		return XString("\"").append(mHolder.stringValue).append("\"");
+		return XString("\"").append(_holder.stringValue).append("\"");
 	case VariantType::Bool:
-		return mHolder.boolValue ? "true" : "false";
+		return _holder.boolValue ? "true" : "false";
 	case VariantType::Object:
-		return mHolder.objectValue.data()->toString();
+		return _holder.objectValue.data()->toString();
 	case VariantType::Null:
 		return "null";
 	}
@@ -176,33 +176,33 @@ XString Variant::toString() const
 
 double Variant::doubleValue() const
 {
-	return mHolder.doubleValue;
+	return _holder.doubleValue;
 }
 
 long long Variant::intergerValue() const
 {
-	return mHolder.intergerValue;
+	return _holder.intergerValue;
 }
 
 XString Variant::stringValue() const
 {
-	return mHolder.stringValue;
+	return _holder.stringValue;
 }
 
 bool Variant::boolValue() const
 {
-	return mHolder.boolValue;
+	return _holder.boolValue;
 }
 
 XELObjectWrapper Variant::objectValue() const
 {
-	return mHolder.objectValue;
+	return _holder.objectValue;
 }
 
 Variant& Variant::operator=(const Variant& variant)
 {
-	mType = variant.type();
-	mHolder = variant.mHolder;
+	_type = variant.type();
+	_holder = variant._holder;
 	return *this;
 }
 
@@ -240,32 +240,32 @@ bool Variant::operator==(const Variant& variant) const
 {
 	if (type() == VariantType::Double) {
 		if (variant.type() == VariantType::Interger) {
-			return mHolder.doubleValue == double(variant.mHolder.intergerValue);
+			return _holder.doubleValue == double(variant._holder.intergerValue);
 		}
 		else if (variant.type() == VariantType::Double) {
-			return mHolder.doubleValue == variant.mHolder.doubleValue;
+			return _holder.doubleValue == variant._holder.doubleValue;
 		}
 	}
 	else if (type() == VariantType::Interger) {
 		if (variant.type() == VariantType::Interger) {
-			return mHolder.intergerValue == variant.mHolder.intergerValue;
+			return _holder.intergerValue == variant._holder.intergerValue;
 		}
 		else if (variant.type() == VariantType::Double) {
-			return double(mHolder.intergerValue) == variant.mHolder.doubleValue;
+			return double(_holder.intergerValue) == variant._holder.doubleValue;
 		}
 	}
 	else if (type() == VariantType::String && variant.type() == VariantType::String) {
-		return mHolder.stringValue == variant.mHolder.stringValue;
+		return _holder.stringValue == variant._holder.stringValue;
 	}
 	else if (type() == VariantType::Bool && variant.type() == VariantType::Bool) {
-		return mHolder.boolValue == variant.mHolder.boolValue;
+		return _holder.boolValue == variant._holder.boolValue;
 	}
 	return false;
 }
 
 VariantType Variant::type() const
 {
-	return mType;
+	return _type;
 }
 
 XString Variant::convertString(VariantType type)

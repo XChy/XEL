@@ -1,57 +1,57 @@
 #include "XELContext.h"
 
 XELContext::XELContext()
-	:mOperatorChars("+-*/^><=|&%!~")
+	:_operatorChars("+-*/^><=|&%!~$#@?")
 {
 
 }
 
 XString XELContext::operatorChars() const
 {
-	return mOperatorChars;
+	return _operatorChars;
 }
 
 void XELContext::setOperatorChars(const XString& operatorChars)
 {
-	mOperatorChars = operatorChars;
+	_operatorChars = operatorChars;
 }
 
 XHashMap<XString, UnaryOperatorCreator*>& XELContext::unaryOperatorTable()
 {
-	return mUnaryOperatorTable;
+	return _unaryOperatorTable;
 }
 
 void XELContext::setUnaryOperatorTable(const XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable)
 {
-	mUnaryOperatorTable = unaryOperatorTable;
+	_unaryOperatorTable = unaryOperatorTable;
 }
 
 XHashMap<XString, BinaryOperatorCreator*>& XELContext::binaryOperatorTable()
 {
-	return mBinaryOperatorTable;
+	return _binaryOperatorTable;
 }
 
 void XELContext::setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable)
 {
-	mBinaryOperatorTable = binaryOperatorTable;
+	_binaryOperatorTable = binaryOperatorTable;
 }
 
 XHashMap<XString, FunctionCreator*>& XELContext::functionTable()
 {
-	return mFunctionTable;
+	return _functionTable;
 }
 
 void XELContext::setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable)
 {
-	mFunctionTable = functionTable;
+	_functionTable = functionTable;
 }
 
 XHashMap<XString, Variant>& XELContext::variableTable()
 {
-	return mVariableTable;
+	return _variableTable;
 }
 
 void XELContext::setVariableTable(const XHashMap<XString, Variant>& variableTable)
 {
-	mVariableTable = variableTable;
+	_variableTable = variableTable;
 }
