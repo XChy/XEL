@@ -6,6 +6,7 @@ UnaryOperatorCreator::UnaryOperatorCreator()
 }
 
 BinaryOperatorCreator::BinaryOperatorCreator()
+	:_priority(0), _assoc(LeftToRight)
 {
 
 }

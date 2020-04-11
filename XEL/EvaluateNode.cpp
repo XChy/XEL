@@ -14,31 +14,32 @@ ValueNode::ValueNode()
 
 Variant ValueNode::evaluate() const
 {
-	return mValue;
+	return _value;
 }
 
 Variant ValueNode::value() const
 {
-	return mValue;
+	return _value;
 }
 
 void ValueNode::setValue(const Variant& value)
 {
-	mValue = value;
+	_value = value;
 }
-#include <functional>
+
 VariableNode::VariableNode()
 	:EvaluateNode(),
-	  mVariableTable(nullptr)
+	mVariableTable(nullptr)
 {
 }
 
 Variant VariableNode::evaluate() const
 {
-	if(mVariableTable->contains(mVariableName)){
+	if (mVariableTable->contains(mVariableName)) {
 		return mVariableTable->value(mVariableName);
-	}else{
-		throw XELError("No variable called "+mVariableName);
+	}
+	else {
+		throw XELError("No variable called " + mVariableName);
 	}
 }
 
@@ -64,60 +65,60 @@ void VariableNode::setVariableTable(XHashMap<XString, Variant>* variableTable)
 
 UnaryOperatorNode::UnaryOperatorNode()
 	:EvaluateNode(),
-	  mOperand(nullptr)
+	_operand(nullptr)
 {
 
 }
 
 EvaluateNode* UnaryOperatorNode::operand() const
 {
-	return mOperand;
+	return _operand;
 }
 
 void UnaryOperatorNode::setOperand(EvaluateNode* operand)
 {
-	mOperand = operand;
+	_operand = operand;
 }
 
 
 UnaryOperatorNode::~UnaryOperatorNode()
 {
-	delete mOperand;
+	delete _operand;
 }
 
 
 BinaryOperatorNode::BinaryOperatorNode()
 	:EvaluateNode(),
-	  mLeftOperand(nullptr),
-	  mRightOperand(nullptr)
+	_leftOperand(nullptr),
+	_rightOperand(nullptr)
 {
 
 }
 
 EvaluateNode* BinaryOperatorNode::leftOperand() const
 {
-	return mLeftOperand;
+	return _leftOperand;
 }
 
 void BinaryOperatorNode::setLeftOperand(EvaluateNode* leftOperand)
 {
-	mLeftOperand = leftOperand;
+	_leftOperand = leftOperand;
 }
 
 EvaluateNode* BinaryOperatorNode::rightOperand() const
 {
-	return mRightOperand;
+	return _rightOperand;
 }
 
 void BinaryOperatorNode::setRightOperand(EvaluateNode* rightOperand)
 {
-	mRightOperand = rightOperand;
+	_rightOperand = rightOperand;
 }
 
 BinaryOperatorNode::~BinaryOperatorNode()
 {
-	delete mLeftOperand;
-	delete mRightOperand;
+	delete _leftOperand;
+	delete _rightOperand;
 }
 
 FunctionNode::FunctionNode()
@@ -126,116 +127,118 @@ FunctionNode::FunctionNode()
 
 std::vector<EvaluateNode*> FunctionNode::parameters() const
 {
-	return mParameters;
+	return _parameters;
 }
 
 void FunctionNode::setParameters(const std::vector<EvaluateNode*>& parameters)
 {
-	mParameters = parameters;
+	_parameters = parameters;
 }
 
 FunctionNode::~FunctionNode()
 {
-	for(auto it=parameters().begin();it!=parameters().end();++it){
-		delete *it;
+	for (auto it = parameters().begin();it != parameters().end();++it) {
+		delete* it;
 	}
 }
 
 MemberNode::MemberNode()
-	:mOwner(nullptr)
+	:_owner(nullptr)
 {
 
 }
 
 Variant MemberNode::evaluate() const
 {
-	XELObjectWrapper wrapper=mOwner->evaluate().convertObject();
-	if(wrapper.hasMember(memberName())){
-		return wrapper.member(mMemberName);
-	}else{
-		throw XELError("No member called "+memberName());
+	XELObjectWrapper wrapper = _owner->evaluate().convertObject();
+	if (wrapper.hasMember(memberName())) {
+		return wrapper.member(_memberName);
+	}
+	else {
+		throw XELError("No member called " + memberName());
 	}
 }
 
 EvaluateNode* MemberNode::owner() const
 {
-	return mOwner;
+	return _owner;
 }
 
 void MemberNode::setOwner(EvaluateNode* owner)
 {
-	mOwner = owner;
+	_owner = owner;
 }
 
 XString MemberNode::memberName() const
 {
-	return mMemberName;
+	return _memberName;
 }
 
 void MemberNode::setMemberName(const XString& memberName)
 {
-	mMemberName = memberName;
+	_memberName = memberName;
 }
 
 MemberNode::~MemberNode()
 {
-	delete mOwner;
+	delete _owner;
 }
 
 MemberFunctionNode::MemberFunctionNode()
-	:mOwner(nullptr)
+	:_owner(nullptr)
 {
 
 }
 
 Variant MemberFunctionNode::evaluate() const
 {
-	XELObjectWrapper wrapper=mOwner->evaluate().convertObject();
-	if(wrapper.hasMemberFunction(mMemberFunctionName,parameters().size())){
+	XELObjectWrapper wrapper = _owner->evaluate().convertObject();
+	if (wrapper.hasMemberFunction(_memberFunctionName, parameters().size())) {
 		std::vector<Variant> variants;
-		for(EvaluateNode* node:parameters()){
+		for (EvaluateNode* node : parameters()) {
 			variants.push_back(node->evaluate());
 		}
-		return wrapper.invoke(mMemberFunctionName,variants);
-	}else{
-		throw XELError("No function called "+mMemberFunctionName+" or size of params is not right");
+		return wrapper.invoke(_memberFunctionName, variants);
+	}
+	else {
+		throw XELError("No function called " + _memberFunctionName + " or size of params is not right");
 	}
 }
 
 EvaluateNode* MemberFunctionNode::owner() const
 {
-	return mOwner;
+	return _owner;
 }
 
 void MemberFunctionNode::setOwner(EvaluateNode* owner)
 {
-	mOwner = owner;
+	_owner = owner;
 }
 
 XString MemberFunctionNode::MemberFunctionName() const
 {
-	return mMemberFunctionName;
+	return _memberFunctionName;
 }
 
 void MemberFunctionNode::setMemberFunctionName(const XString& MemberFunctionName)
 {
-	mMemberFunctionName = MemberFunctionName;
+	_memberFunctionName = MemberFunctionName;
 }
 
 std::vector<EvaluateNode*> MemberFunctionNode::parameters() const
 {
-	return mParameters;
+	return _parameters;
 }
 
 void MemberFunctionNode::setParameters(const std::vector<EvaluateNode*>& parameters)
 {
-	mParameters = parameters;
+	_parameters = parameters;
 }
 
 MemberFunctionNode::~MemberFunctionNode()
 {
-	for(auto it=parameters().begin();it!=parameters().end();++it){
-		delete *it;
+	for (auto it = parameters().begin();it != parameters().end();++it) {
+		delete* it;
 	}
-	delete mOwner;
+	delete _owner;
 }

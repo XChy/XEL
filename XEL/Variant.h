@@ -4,7 +4,7 @@
 #include <XEL/XELObject.h>
 #include <XEL/XELError.h>
 
-enum class VariantType{
+enum class VariantType {
 	Double,
 	Interger,
 	String,
@@ -13,12 +13,12 @@ enum class VariantType{
 	Null
 };
 
-struct VariantHolder{
+struct VariantHolder {
 public:
-	union{
-	double doubleValue;
-	long long intergerValue;
-	bool boolValue;
+	union {
+		double doubleValue;
+		long long intergerValue;
+		bool boolValue;
 	};
 	XString stringValue;
 	XELObjectWrapper objectValue;

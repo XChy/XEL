@@ -1,38 +1,33 @@
 #include <XEL/XELContainerObject.h>
 
-XELObjectWrapper XVectorObject::construct()
+Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& params, const XELObjectWrapper& thisWrapper)
 {
-    return XELObjectWrapper(new XVectorObject());
-}
-
-Variant XVectorObject::invoke(const XString& funcName, const std::vector<Variant>& params,const XELObjectWrapper& thisWrapper)
-{
-	if(funcName=="size"){
+	if (funcName == "size") {
 		return (long long)(vec.size());
-	}else if(funcName=="at"){
+	}
+	else if (funcName == "at") {
 		return vec.at(params[0].convertInterger());
-	}else if(funcName=="append"){
+	}
+	else if (funcName == "append") {
 		vec.push_back(params[0]);
 		return thisWrapper;
-	}else if(funcName=="remove"){
-		vec.erase(vec.begin()+int(params[0]));
+	}
+	else if (funcName == "remove") {
+		vec.erase(vec.begin() + int(params[0]));
 		return thisWrapper;
 	}
 }
 
 bool XVectorObject::hasMemberFunction(const XString& funcName, int paramNum) const
 {
-	return (funcName=="size"&&paramNum==0)||
-			(funcName=="at"&&paramNum==1)||
-			(funcName=="append"&&paramNum==1)||
-			(funcName=="remove"&&paramNum==1)
-			;
+	return (funcName == "size" && paramNum == 0) ||
+		(funcName == "at" && paramNum == 1) ||
+		(funcName == "append" && paramNum == 1) ||
+		(funcName == "remove" && paramNum == 1)
+		;
 }
 
-void XVectorObject::setMember(const XString& memberName, const Variant& v)
-{}
-
-Variant XVectorObject::member(const XString& memberName) const{
+Variant XVectorObject::member(const XString& memberName) {
 	return Variant();
 }
 
@@ -48,34 +43,43 @@ std::vector<Variant>& XVectorObject::vector()
 
 void XVectorObject::setVector(const std::vector<Variant>& vec)
 {
-	this->vec=vec;
+	this->vec = vec;
 }
 
 XString XVectorObject::toString() const
 {
-	if(!vec.empty()){
+	if (!vec.empty()) {
 		XString result;
 		result.append("Vector(").append(vec[0].toString());
-		for(auto it=vec.begin()+1;it!=vec.end();++it){
+		for (auto it = vec.begin() + 1;it != vec.end();++it) {
 			result.append(',').append((*it).toString());
 		}
 		result.append(')');
 		return result;
-	}else{
+	}
+	else {
 		return "Vector()";
 	}
 }
 
+XString XVectorObject::type() const
+{
+	return "Vector";
+}
+
 Variant XMapObject::invoke(const XString& funcName, const std::vector<Variant>& params, const XELObjectWrapper& thisWrapper)
 {
-	if(funcName=="size"){
+	if (funcName == "size") {
 		return (long long)(mMap.size());
-	}else if(funcName=="value"){
+	}
+	else if (funcName == "value") {
 		return mMap[params[0].convertString()];
-	}else if(funcName=="insert"){
-		mMap.insert(params[0].convertString(),params.at(1));
+	}
+	else if (funcName == "insert") {
+		mMap.insert(params[0].convertString(), params.at(1));
 		return thisWrapper;
-	}else if(funcName=="remove"){
+	}
+	else if (funcName == "remove") {
 		mMap.remove(params[0].convertString());
 		return thisWrapper;
 	}
@@ -83,16 +87,14 @@ Variant XMapObject::invoke(const XString& funcName, const std::vector<Variant>& 
 
 bool XMapObject::hasMemberFunction(const XString& funcName, int paramNum) const
 {
-	return (funcName=="size"&&paramNum==0)||
-			(funcName=="value"&&paramNum==1)||
-			(funcName=="insert"&&paramNum==1)||
-			(funcName=="remove"&&paramNum==1)
-			;
+	return (funcName == "size" && paramNum == 0) ||
+		(funcName == "value" && paramNum == 1) ||
+		(funcName == "insert" && paramNum == 1) ||
+		(funcName == "remove" && paramNum == 1)
+		;
 }
 
-void XMapObject::setMember(const XString& memberName, const Variant& v){}
-
-Variant XMapObject::member(const XString& memberName) const{
+Variant XMapObject::member(const XString& memberName) {
 	return Variant();
 }
 
@@ -113,17 +115,23 @@ void XMapObject::setMap(const XHashMap<XString, Variant>& map)
 
 XString XMapObject::toString() const
 {
-	if(!mMap.isEmpty()){
+	if (!mMap.isEmpty()) {
 		XString result;
-		auto it=mMap.begin();
+		auto it = mMap.begin();
 		result.append("Map(").append(mMap.begin()->first).append(":").append(mMap.begin()->second.toString());
 		++it;
-		for(;it!=mMap.end();++it){
+		for (;it != mMap.end();++it) {
 			result.append(',').append(it->first).append(":").append(it->second.toString());
 		}
 		result.append(')');
 		return result;
-	}else{
+	}
+	else {
 		return "Map()";
 	}
+}
+
+XString XMapObject::type() const
+{
+	return "Map";
 }

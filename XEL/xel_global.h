@@ -8,8 +8,8 @@
 #include <string>
 #include <algorithm>
 
-typedef unsigned char uchar;
 typedef unsigned short ushort;
+typedef unsigned char uchar;
 typedef unsigned int uint;
 typedef unsigned long ulong;
 typedef unsigned long long ulonglong;

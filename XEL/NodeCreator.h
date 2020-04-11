@@ -4,39 +4,42 @@
 #include <XEL/xel_global.h>
 #include <XEL/EvaluateNode.h>
 
-class XEL_EXPORT UnaryOperatorCreator{
+class XEL_EXPORT UnaryOperatorCreator {
 public:
 	UnaryOperatorCreator();
-	virtual UnaryOperatorNode* create() const=0;
+	virtual UnaryOperatorNode* create() const = 0;
+	virtual ~UnaryOperatorCreator() {};
 };
 
-enum Assoc{//Associativity
+enum Assoc {//Associativity
 	LeftToRight,
 	RightToLeft
 };
 
-class XEL_EXPORT BinaryOperatorCreator{
+class XEL_EXPORT BinaryOperatorCreator {
 public:
 	BinaryOperatorCreator();
-	virtual BinaryOperatorNode* create() const=0;
+	virtual BinaryOperatorNode* create() const = 0;
 
 	int priority() const;
 	void setPriority(int priority);
 
 	Assoc assoc() const;
 	void setAssoc(const Assoc& assoc);
+
+	virtual ~BinaryOperatorCreator() {};
 private:
 	int _priority;
 	Assoc _assoc;
 };
 
-class XEL_EXPORT FunctionCreator{
+class XEL_EXPORT FunctionCreator {
 public:
 	FunctionCreator() {};
-	virtual FunctionNode* create() const=0;
-	virtual FunctionNode* create(int paramSize) const=0;
-	virtual bool isVariableParam() const=0;
-	virtual bool isSupportParamSize(int paramSize) const=0;
+	virtual FunctionNode* create() const = 0;
+	virtual FunctionNode* create(int paramSize) const = 0;
+	virtual bool isVariableParam() const = 0;
+	virtual bool isSupportParamSize(int paramSize) const = 0;
 };
 
 #endif // NODECREATOR_H

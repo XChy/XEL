@@ -4,16 +4,16 @@
 #include <XEL/xel_global.h>
 #include <XEL/SharedData.h>
 
-class XEL_EXPORT XChar{
+class XEL_EXPORT XChar {
 	friend class XString;
 public:
-	XChar(const XChar& other):ucs(other.ucs){}
-	XChar(char ucs):ucs(uchar(ucs)){}
-	XChar(uchar ucs):ucs(ucs){}
-	XChar(short ucs):ucs(ushort(ucs)){}
-	XChar(ushort ucs):ucs(ucs){}
-	XChar(int ucs4):ucs(ushort(ucs4|0xFFFF)){}
-	XChar(uint ucs4):ucs(ushort(ucs4|0xFFFF)){}
+	XChar(const XChar& other) :ucs(other.ucs) {}
+	XChar(char ucs) :ucs(uchar(ucs)) {}
+	XChar(uchar ucs) :ucs(ucs) {}
+	XChar(short ucs) :ucs(ushort(ucs)) {}
+	XChar(ushort ucs) :ucs(ucs) {}
+	XChar(int ucs4) :ucs(ushort(ucs4 | 0xFFFF)) {}
+	XChar(uint ucs4) :ucs(ushort(ucs4 | 0xFFFF)) {}
 	bool isDigit() const;
 	bool isSpace() const;
 	bool isLetter() const;
@@ -31,10 +31,10 @@ private:
 	char16_t ucs;
 };
 
-class XEL_EXPORT StringData{
+class XEL_EXPORT StringData {
 public:
 	StringData(const StringData& other);
-	StringData(uint allocSize=1);
+	StringData(uint allocSize = 1);
 	void allocate(uint allocSize);
 	void reallocate(uint allocSize);
 	~StringData();
@@ -47,18 +47,18 @@ public:
 // Encoding:UCS2
 // Copy on write
 
-enum Initialization{
+enum Initialization {
 	unInitialization
 };
 
-class XEL_EXPORT XString{
+class XEL_EXPORT XString {
 public:
 	XString();
 	XString(const XString& other);
 	XString(const char* utf8);
 	XString(const wchar_t* wstr);
 	XString(const char16_t* ustr);
-	XString(uint allocSize,Initialization init);
+	XString(uint allocSize, Initialization init);
 
 	const XChar* data() const;
 	XChar* data();
@@ -91,7 +91,7 @@ public:
 	bool contains(XChar xc) const;
 
 	void removeAt(int pos);
-	void remove(int pos,int len);
+	void remove(int pos, int len);
 	void removeLast();
 
 	std::string toStdString() const;
@@ -101,18 +101,18 @@ public:
 	const XChar* unicode() const;
 
 	template<typename Interger>
-	Interger toInterger(int base=10) const;
-	int toInt(int base=10) const;
-	long long toLongLong(int base=10);
+	Interger toInterger(int base = 10) const;
+	int toInt(int base = 10) const;
+	long long toLongLong(int base = 10);
 	double toDouble() const;
 
 	static XString fromAscii(const char* asciiStr);
 	static XString fromUtf8(const char* utf8Str);
 
 	template<typename Interger>
-	static XString fromInterger(Interger v,int base);
-	static XString number(int v, int base=10);
-	static XString number(long long v, int base=10);
+	static XString fromInterger(Interger v, int base);
+	static XString number(int v, int base = 10);
+	static XString number(long long v, int base = 10);
 	static XString number(double v);
 
 	typedef XChar* iterator;
@@ -131,22 +131,22 @@ private:
 	XSharedData<StringData> d;
 };
 
-XString operator+(const char* utf8,const XString& xstr);
+XString operator+(const char* utf8, const XString& xstr);
 
 namespace std {
 
-template<>
-struct hash<XString>
-{
-	size_t operator()(const XString& xstr) const
+	template<>
+	struct hash<XString>
 	{
-		int base=131;
-		unsigned long long ans=0;
-		for(auto it=xstr.begin();it!=xstr.begin();++it)
-			ans=ans*base+(unsigned long long)(*(ushort*)it);
-		return ans&0x7fffffff;
-	}
-};
+		size_t operator()(const XString& xstr) const
+		{
+			int base = 131;
+			unsigned long long ans = 0;
+			for (auto it = xstr.begin();it != xstr.begin();++it)
+				ans = ans * base + (unsigned long long)(*(ushort*)it);
+			return ans & 0x7fffffff;
+		}
+	};
 
 }
 

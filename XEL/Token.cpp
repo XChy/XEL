@@ -2,7 +2,7 @@
 
 Token::Token()
 {
-	
+
 }
 
 Token::Token(TokenType type)
@@ -12,8 +12,8 @@ Token::Token(TokenType type)
 }
 
 Token::Token(TokenType type, const Variant& value)
-	:mType(type),
-	  mValue(value)
+	: mType(type),
+	mValue(value)
 {
 }
 

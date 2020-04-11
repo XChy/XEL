@@ -2,7 +2,7 @@
 
 XELError::XELError(XString errorString)
 {
-	mErrorString=errorString;
+	mErrorString = errorString;
 }
 
 XString XELError::errorString() const

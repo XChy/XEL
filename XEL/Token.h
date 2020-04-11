@@ -4,7 +4,7 @@
 #include <XEL/xel_global.h>
 #include <XEL/Variant.h>
 
-enum TokenType{
+enum TokenType {
 	Literal,
 	Operator,
 	Identifier,
@@ -14,11 +14,11 @@ enum TokenType{
 	Dot
 };
 
-class XEL_EXPORT Token{
+class XEL_EXPORT Token {
 public:
 	Token();
 	Token(TokenType type);
-	Token(TokenType type,const Variant& value);
+	Token(TokenType type, const Variant& value);
 
 	TokenType type() const;
 	void setType(const TokenType& type);

@@ -3,7 +3,7 @@
 
 #include <XEL/xel_global.h>
 
-class XEL_EXPORT XRefCount{
+class XEL_EXPORT XRefCount {
 public:
 	XRefCount()
 		:mRefCount(1)
@@ -11,10 +11,10 @@ public:
 	XRefCount(const XRefCount& other)
 		:mRefCount(other.refCount())
 	{}
-	int ref(){
+	int ref() {
 		return ++mRefCount;
 	}
-	int unref(){
+	int unref() {
 		return --mRefCount;
 	}
 	int refCount() const
@@ -26,33 +26,33 @@ private:
 };
 
 template<typename T>
-class XEL_EXPORT XSharedData{
+class XEL_EXPORT XSharedData {
 public:
 	XSharedData()
 		:ref(new XRefCount),
-		  mData(nullptr)
+		mData(nullptr)
 	{}
 	XSharedData(T* p)
 		:ref(new XRefCount),
-		  mData(p)
+		mData(p)
 	{}
 	XSharedData(const XSharedData& other)
 		:ref(other.ref),
-		  mData(other.data())
+		mData(other.data())
 	{
 		ref->ref();
 	}
 	XSharedData& operator=(const XSharedData& other)
 	{
-		if(this==&other){
+		if (this == &other) {
 			return *this;
 		}
-		if(ref->unref()==0){
+		if (ref->unref() == 0) {
 			delete ref;
 			delete mData;
 		}
-		ref=other.ref;
-		mData=other.data();
+		ref = other.ref;
+		mData = other.data();
 		ref->ref();
 		return *this;
 	}
@@ -62,7 +62,7 @@ public:
 	}
 	~XSharedData()
 	{
-		if(ref->unref()==0)
+		if (ref->unref() == 0)
 		{
 			delete ref;
 			delete mData;
