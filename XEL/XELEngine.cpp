@@ -1,6 +1,5 @@
 #include "XELEngine.h"
 #include <XEL/XELContainerObject.h>
-#include <iostream>
 
 XELEngine::XELEngine()
 	:_context(new XELContext),
@@ -24,6 +23,32 @@ XELEngine::XELEngine()
 	setUnaryOperator("!", [](bool o) {
 		return !o;
 		});
+	setBinaryOperator(">", [](const Variant& left, const Variant& right) {
+		switch (left.type()) {
+		case VariantType::Double:
+			return left.doubleValue() > double(right);
+		case VariantType::Interger:
+			if (right.type() == VariantType::Interger)
+				return left.intergerValue() > right.intergerValue();
+			else if (right.type() == VariantType::Double)
+				return double(left.intergerValue()) > right.doubleValue();
+		default:
+			return false;
+		}
+		}, 1);
+	setBinaryOperator(">=", [](const Variant& left, const Variant& right) {
+		switch (left.type()) {
+		case VariantType::Double:
+			return left.doubleValue() >= double(right);
+		case VariantType::Interger:
+			if (right.type() == VariantType::Interger)
+				return left.intergerValue() >= right.intergerValue();
+			else if (right.type() == VariantType::Double)
+				return double(left.intergerValue()) >= right.doubleValue();
+		default:
+			return false;
+		}
+		}, 1);
 	setBinaryOperator("<", [](const Variant& left, const Variant& right) {
 		switch (left.type()) {
 		case VariantType::Double:
@@ -80,13 +105,25 @@ XELEngine::XELEngine()
 	setBinaryOperator("^", [](long long left, long long right) {
 		return left ^ right;
 		}, 3, RightToLeft);
-	setFunction<double(*)(double)>("sin", &sin);
-	setFunction<double(*)(double)>("tan", &tan);
-	setFunction<double(*)(double)>("cos", &cos);
-	setFunction<double(*)(double)>("fabs", &fabs);
-	setFunction<double(*)(double)>("exp", &exp);
-	setFunction<double(*)(double)>("log10", &log10);
-	setFunction<double(*)(double)>("log2", &log2);
+	setFunction<double, double>("sin", std::function<double(double)>(static_cast<double(*)(double)>(&sin)));
+	setFunction<double, double>("tan", std::function<double(double)>(static_cast<double(*)(double)>(&tan)));
+	setFunction<double, double>("cos", std::function<double(double)>(static_cast<double(*)(double)>(&cos)));
+	setFunction<double, double>("abs", std::function<double(double)>(static_cast<double(*)(double)>(&fabs)));
+	setFunction<double, double>("exp", std::function<double(double)>(static_cast<double(*)(double)>(&exp)));
+	setFunction<double, double>("log10", std::function<double(double)>(static_cast<double(*)(double)>(&log10)));
+	setFunction<double, double>("log2", std::function<double(double)>(static_cast<double(*)(double)>(&log2)));
+	setFunction<XString, XString>("reverse", std::function<XString(XString)>([](XString str)->XString {
+		return str.reverse();
+		}));
+	setFunction<int, XString>("size", std::function<int(XString)>([](XString str)->int {
+		return str.size();
+		}));
+	setVariableParamFunction("vector", [](const std::vector<Variant> params)->Variant {
+		XVectorObject* obj = new XVectorObject;
+		obj->setVector(params);
+		return XELObjectWrapper(obj);
+		});
+
 }
 
 XString XELEngine::expression() const

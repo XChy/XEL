@@ -26,9 +26,15 @@ public:
 		_context->binaryOperatorTable()[name] = XELUtils::creatorForBinaryOperator<Func>(func, priority, assoc);
 	}
 
+	template<typename R,typename... args>
+	void setFunction(const XString& name,const std::function<R(args...)>& func) {
+		_context->functionTable()[name] = XELUtils::creatorForFunction<R,args...>(func);
+	}
+
 	template<typename Func>
-	void setFunction(const XString& name, Func func) {
-		_context->functionTable()[name] = XELUtils::creatorForFunction<Func>(func);
+	void setVariableParamFunction(const XString& name, Func _func)
+	{
+		_context->functionTable()[name] = XELUtils::creatorForVariableParamFunction<Func>(_func);
 	}
 
 	Variant evaluate() const;
@@ -60,3 +66,4 @@ private:
 };
 
 #endif // FORMULAENGINE_H
+

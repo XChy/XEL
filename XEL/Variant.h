@@ -30,6 +30,8 @@ public:
 	Variant();
 	Variant(double value);
 	Variant(long long value);
+	Variant(int value);
+	Variant(long value);
 	Variant(const XString& value);
 	Variant(bool value);
 	Variant(const XELObjectWrapper& value);
