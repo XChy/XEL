@@ -58,7 +58,7 @@ class funcAndParams<5> {
 public:
 	template<typename Func>
 	static Variant eval(Func func, std::vector<EvaluateNode*>& params) {
-		return func(params[0]->evaluate(), params[1]->evaluate(), params[2]->evaluate(), params[3]->evaluate());
+		return func(params[0]->evaluate(), params[1]->evaluate(), params[2]->evaluate(), params[3]->evaluate(), params[4]->evaluate());
 	}
 };
 
@@ -189,7 +189,7 @@ namespace XELUtils
 	}
 	template<typename Func>
 	static FunctionCreator* creatorForVariableParamFunction(Func func) {
-		return new CreatorForVariableParamFunction<Func>(func);
+		return new CreatorForVariableParamFunction<Func>(func);//BUG Memory leak
 	}
 };
 

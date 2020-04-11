@@ -119,6 +119,18 @@ std::vector<Token> Tokenizer::analyze(const XString& expression) const
 		else if (*it == ')') {
 			result.push_back(Token(CloseParentheses));++it;
 		}
+		else if (*it == '{') {
+			result.push_back(Token(OpenBrace));++it;
+		}
+		else if (*it == '}') {
+			result.push_back(Token(CloseBrace));++it;
+		}
+		else if (*it == '[') {
+			result.push_back(Token(OpenBracket));++it;
+		}
+		else if (*it == ']') {
+			result.push_back(Token(CloseBracket));++it;
+		}
 		else if (*it == ',') {
 			result.push_back(Token(Comma));++it;;
 		}

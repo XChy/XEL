@@ -98,7 +98,7 @@ XELEngine::XELEngine()
 		}, 2);
 	setBinaryOperator("**", [](double left, double right) {
 		return pow(left, right);
-		}, 2);
+		}, 3);
 	setBinaryOperator("|", [](long long left, long long right) {
 		return left | right;
 		}, 3, RightToLeft);

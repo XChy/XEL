@@ -10,6 +10,10 @@ enum TokenType {
 	Identifier,
 	OpenParentheses,
 	CloseParentheses,
+	OpenBrace,
+	CloseBrace,
+	OpenBracket,
+	CloseBracket,
 	Comma,
 	Dot
 };

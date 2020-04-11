@@ -8,6 +8,23 @@
 
 typedef std::vector<Token>::const_iterator TokenIt;
 
+//enum class GrammarType {
+//	UnaryOperator,
+//	BinaryOperator,
+//	Function,
+//	List,
+//	Pair,
+//	Map,
+//	Expr
+//};
+//
+//struct GrammarInfo
+//{
+//	GrammarType type;
+//	bool hasEnd;
+//	TokenIt end;
+//};
+
 class XEL_EXPORT Parser
 {
 public:
