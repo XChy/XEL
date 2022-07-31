@@ -130,6 +130,22 @@ XELEngine::XELEngine()
 		obj->setVector(params);
 		return XELObjectWrapper(obj);
 		});
+	setVariableParamFunction("map", [](const std::vector<Variant> params)->Variant {
+		XMapObject* obj = new XMapObject;
+		XHashMap<XString,Variant> map;
+		if (params.size() % 2 != 0) {
+			throw XELError("Params are not applied to the map");
+		}
+		else
+		{
+			for (size_t i = 0; i < params.size(); i+=2)
+			{
+				map[params[i]] = params[i + 1];
+			}
+		}
+		obj->setMap(std::move(map));
+		return XELObjectWrapper(obj);
+		});
 
 }
 

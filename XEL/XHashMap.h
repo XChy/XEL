@@ -6,7 +6,7 @@
 
 //XHashMap
 //No copy on write
-//use std::unordermap
+//using std::unordermap
 
 template<typename K, typename V>
 class XEL_EXPORT XHashMap

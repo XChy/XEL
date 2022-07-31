@@ -113,6 +113,11 @@ void XMapObject::setMap(const XHashMap<XString, Variant>& map)
 	mMap = map;
 }
 
+void XMapObject::setMap(XHashMap<XString, Variant>&& map)
+{
+	mMap = map;
+}
+
 XString XMapObject::toString() const
 {
 	if (!mMap.isEmpty()) {

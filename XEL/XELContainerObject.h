@@ -32,6 +32,7 @@ public:
 
 	XHashMap<XString, Variant>& map();
 	void setMap(const XHashMap<XString, Variant>& map);
+	void setMap(XHashMap<XString, Variant>&& map);
 
 	virtual XString toString() const;
 	XString type() const;
