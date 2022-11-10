@@ -1,8 +1,9 @@
 #include "Variant.h"
 
 Variant::Variant()
-	:_type(VariantType::Null)
-{}
+    : _type(VariantType::Null)
+{
+}
 
 Variant::Variant(double value)
 {
@@ -16,15 +17,15 @@ Variant::Variant(long long value)
 
 Variant::Variant(int value)
 {
-	reset(long long(value));
+	reset((long long)(value));
 }
 
 Variant::Variant(long value)
 {
-	reset(long long(value));
+	reset((long long)(value));
 }
 
-Variant::Variant(const XString& value)
+Variant::Variant(const XString &value)
 {
 	reset(value);
 }
@@ -34,18 +35,16 @@ Variant::Variant(bool value)
 	reset(value);
 }
 
-Variant::Variant(const XELObjectWrapper& value)
+Variant::Variant(const XELObjectWrapper &value)
 {
 	reset(value);
 }
 
-Variant::Variant(const Variant& value)
-	:_type(value.type()),
+Variant::Variant(const Variant &value)
+    : _type(value.type()),
 	_holder(value._holder)
 {
 }
-
-
 
 void Variant::set(double value)
 {
@@ -57,7 +56,7 @@ void Variant::set(long long value)
 	_holder.intergerValue = value;
 }
 
-void Variant::set(const XString& value)
+void Variant::set(const XString &value)
 {
 	_holder.stringValue = value;
 }
@@ -67,7 +66,7 @@ void Variant::set(bool value)
 	_holder.boolValue = value;
 }
 
-void Variant::set(const XELObjectWrapper& value)
+void Variant::set(const XELObjectWrapper &value)
 {
 	_holder.objectValue = value;
 }
@@ -84,7 +83,7 @@ void Variant::reset(long long value)
 	set(value);
 }
 
-void Variant::reset(const XString& value)
+void Variant::reset(const XString &value)
 {
 	_type = VariantType::String;
 	set(value);
@@ -96,7 +95,7 @@ void Variant::reset(bool value)
 	set(value);
 }
 
-void Variant::reset(const XELObjectWrapper& value)
+void Variant::reset(const XELObjectWrapper &value)
 {
 	_type = VariantType::Object;
 	set(value);
@@ -109,10 +108,12 @@ void Variant::clear()
 
 double Variant::convertDouble() const
 {
-	if (_type == VariantType::Double) {
+	if (_type == VariantType::Double)
+	{
 		return _holder.doubleValue;
 	}
-	else if (_type == VariantType::Interger) {
+	else if (_type == VariantType::Interger)
+	{
 		return double(_holder.intergerValue);
 	}
 	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Double");
@@ -120,10 +121,12 @@ double Variant::convertDouble() const
 
 long long Variant::convertInterger() const
 {
-	if (_type == VariantType::Double) {
+	if (_type == VariantType::Double)
+	{
 		return int(_holder.doubleValue);
 	}
-	else if (_type == VariantType::Interger) {
+	else if (_type == VariantType::Interger)
+	{
 		return _holder.intergerValue;
 	}
 	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Double");
@@ -131,7 +134,8 @@ long long Variant::convertInterger() const
 
 XString Variant::convertString() const
 {
-	if (_type == VariantType::String) {
+	if (_type == VariantType::String)
+	{
 		return _holder.stringValue;
 	}
 	throw XELError("Cannot convert " + Variant::convertString(_type) + " to String");
@@ -139,10 +143,12 @@ XString Variant::convertString() const
 
 bool Variant::convertBool() const
 {
-	if (_type == VariantType::Bool) {
+	if (_type == VariantType::Bool)
+	{
 		return _holder.boolValue;
 	}
-	else if (_type == VariantType::Interger) {
+	else if (_type == VariantType::Interger)
+	{
 		return _holder.intergerValue;
 	}
 	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Bool");
@@ -150,7 +156,8 @@ bool Variant::convertBool() const
 
 XELObjectWrapper Variant::convertObject() const
 {
-	if (_type == VariantType::Object) {
+	if (_type == VariantType::Object)
+	{
 		return _holder.objectValue;
 	}
 	throw XELError("Cannot convert " + Variant::convertString(_type) + " to Object");
@@ -158,7 +165,8 @@ XELObjectWrapper Variant::convertObject() const
 
 XString Variant::toString() const
 {
-	switch (type()) {
+	switch (type())
+	{
 	case VariantType::Double:
 		return XString::number(_holder.doubleValue);
 	case VariantType::Interger:
@@ -199,65 +207,73 @@ XELObjectWrapper Variant::objectValue() const
 	return _holder.objectValue;
 }
 
-Variant& Variant::operator=(const Variant& variant)
+Variant &Variant::operator=(const Variant &variant)
 {
 	_type = variant.type();
 	_holder = variant._holder;
 	return *this;
 }
 
-Variant& Variant::operator=(double value)
+Variant &Variant::operator=(double value)
 {
 	reset(value);
 	return *this;
 }
 
-Variant& Variant::operator=(long long value)
+Variant &Variant::operator=(long long value)
 {
 	reset(value);
 	return *this;
 }
 
-Variant& Variant::operator=(const XString& value)
+Variant &Variant::operator=(const XString &value)
 {
 	reset(value);
 	return *this;
 }
 
-Variant& Variant::operator=(bool value)
+Variant &Variant::operator=(bool value)
 {
 	reset(value);
 	return *this;
 }
 
-Variant& Variant::operator=(const XELObjectWrapper& value)
+Variant &Variant::operator=(const XELObjectWrapper &value)
 {
 	reset(value);
 	return *this;
 }
 
-bool Variant::operator==(const Variant& variant) const
+bool Variant::operator==(const Variant &variant) const
 {
-	if (type() == VariantType::Double) {
-		if (variant.type() == VariantType::Interger) {
+	if (type() == VariantType::Double)
+	{
+		if (variant.type() == VariantType::Interger)
+		{
 			return _holder.doubleValue == double(variant._holder.intergerValue);
 		}
-		else if (variant.type() == VariantType::Double) {
+		else if (variant.type() == VariantType::Double)
+		{
 			return _holder.doubleValue == variant._holder.doubleValue;
 		}
 	}
-	else if (type() == VariantType::Interger) {
-		if (variant.type() == VariantType::Interger) {
+	else if (type() == VariantType::Interger)
+	{
+		if (variant.type() == VariantType::Interger)
+		{
 			return _holder.intergerValue == variant._holder.intergerValue;
 		}
-		else if (variant.type() == VariantType::Double) {
+		else if (variant.type() == VariantType::Double)
+		{
 			return double(_holder.intergerValue) == variant._holder.doubleValue;
 		}
 	}
-	else if (type() == VariantType::String && variant.type() == VariantType::String) {
+	else if (type() == VariantType::String && variant.type() == VariantType::String)
+	{
 		return _holder.stringValue == variant._holder.stringValue;
 	}
-	else if (type() == VariantType::Bool && variant.type() == VariantType::Bool) {
+	else if (type() == VariantType::Bool && variant.type() == VariantType::Bool)
+	{
 		return _holder.boolValue == variant._holder.boolValue;
 	}
 	return false;
@@ -270,7 +286,8 @@ VariantType Variant::type() const
 
 XString Variant::convertString(VariantType type)
 {
-	switch (type) {
+	switch (type)
+	{
 	case VariantType::Double:
 		return "Double";
 	case VariantType::Interger:

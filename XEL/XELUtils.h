@@ -5,72 +5,86 @@
 #include <XEL/xel_global.h>
 #include <XEL/XELContext.h>
 
-template<typename... Args>
-struct ArgumentAmount {
+template <typename... Args>
+struct ArgumentAmount
+{
 	static size_t const value = sizeof...(Args);
 };
 
-template<int params>
+template <int params>
 class funcAndParams;
 
-template<>
-class funcAndParams<0> {
+template <>
+class funcAndParams<0>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*> params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> params)
+	{
 		return func();
 	}
 };
-template<>
-class funcAndParams<1> {
+template <>
+class funcAndParams<1>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*> params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> params)
+	{
 		return func(params[0]->evaluate());
 	}
 };
-template<>
-class funcAndParams<2> {
+template <>
+class funcAndParams<2>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*>& params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> params)
+	{
 		return func(params[0]->evaluate(), params[1]->evaluate());
 	}
 };
-template<>
-class funcAndParams<3> {
+template <>
+class funcAndParams<3>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*>& params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> &params)
+	{
 		return func(params[0]->evaluate(), params[1]->evaluate(), params[2]->evaluate());
 	}
 };
-template<>
-class funcAndParams<4> {
+template <>
+class funcAndParams<4>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*>& params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> &params)
+	{
 		return func(params[0]->evaluate(), params[1]->evaluate(), params[2]->evaluate(), params[3]->evaluate());
 	}
 };
-template<>
-class funcAndParams<5> {
+template <>
+class funcAndParams<5>
+{
 public:
-	template<typename Func>
-	static Variant eval(Func func, std::vector<EvaluateNode*>& params) {
+	template <typename Func>
+	static Variant eval(Func func, std::vector<EvaluateNode *> &params)
+	{
 		return func(params[0]->evaluate(), params[1]->evaluate(), params[2]->evaluate(), params[3]->evaluate(), params[4]->evaluate());
 	}
 };
 
-
 namespace XELUtils
 {
-	template<typename Func, int params>
-	class FuncNode :public FunctionNode {
+	template <typename Func, int params>
+	class FuncNode : public FunctionNode
+	{
 	private:
 		Func _func;
+
 	public:
-		FuncNode(Func func) :_func(func) {}
+		FuncNode(Func func) : _func(func) {}
 
 		Variant evaluate() const
 		{
@@ -78,72 +92,83 @@ namespace XELUtils
 		}
 	};
 
-	template<typename Func>
-	class VariableFuncNode :public FunctionNode {
+	template <typename Func>
+	class VariableFuncNode : public FunctionNode
+	{
 	private:
 		Func _func;
+
 	public:
-		VariableFuncNode(Func func) :_func(func) {}
+		VariableFuncNode(Func func) : _func(func) {}
 
 		Variant evaluate() const
 		{
 			std::vector<Variant> params;
-			for (EvaluateNode* node : parameters())
+			for (EvaluateNode *node : parameters())
 				params.push_back(node->evaluate());
 			return _func(params);
 		}
 	};
 
-	template<typename R, typename... args>
-	class CreatorForFunction :public FunctionCreator {
+	template <typename R, typename... args>
+	class CreatorForFunction : public FunctionCreator
+	{
 		using Func = std::function<R(args...)>;
+
 	private:
 		Func _func;
+
 	public:
-		CreatorForFunction(Func func) :_func(func) {};
-		virtual FunctionNode* create() const {
+		CreatorForFunction(Func func) : _func(func){};
+		virtual FunctionNode *create() const
+		{
 			return new FuncNode<Func, ArgumentAmount<args...>::value>(_func);
 		}
-		virtual FunctionNode* create(int paramSize) const {
+		virtual FunctionNode *create(int paramSize) const
+		{
 			return new FuncNode<Func, ArgumentAmount<args...>::value>(_func);
 		};
 		virtual bool isVariableParam() const { return false; };
 		virtual bool isSupportParamSize(int paramSize) const { return paramSize == ArgumentAmount<args...>::value; };
-
 	};
 
-	template<typename Func>
-	class CreatorForVariableParamFunction :public FunctionCreator {
+	template <typename Func>
+	class CreatorForVariableParamFunction : public FunctionCreator
+	{
 		Func _func;
+
 	public:
-		CreatorForVariableParamFunction(Func func) :_func(func) {};
-		virtual FunctionNode* create() const {
+		CreatorForVariableParamFunction(Func func) : _func(func){};
+		virtual FunctionNode *create() const
+		{
 			return new VariableFuncNode<Func>(_func);
 		}
-		virtual FunctionNode* create(int paramSize) const {
+		virtual FunctionNode *create(int paramSize) const
+		{
 			return new VariableFuncNode<Func>(_func);
 		};
 		virtual bool isVariableParam() const { return true; };
 		virtual bool isSupportParamSize(int paramSize) const { return true; };
-
 	};
 
-	template<typename Func>
-	class CreatorForBinaryOperator :public BinaryOperatorCreator {
+	template <typename Func>
+	class CreatorForBinaryOperator : public BinaryOperatorCreator
+	{
 	public:
-		CreatorForBinaryOperator(Func func, int priority, Assoc assoc) :
-			_func(func)
+		CreatorForBinaryOperator(Func func, int priority, Assoc assoc) : _func(func)
 		{
 			setPriority(priority);
 			setAssoc(assoc);
 		}
-		BinaryOperatorNode* create() const {
-			class Operator :public BinaryOperatorNode {
+		BinaryOperatorNode *create() const
+		{
+			class Operator : public BinaryOperatorNode
+			{
 			public:
-				Operator(Func func) :
-					BinaryOperatorNode(),
-					_func(func) {}
-				Variant evaluate() const {
+				Operator(Func func) : BinaryOperatorNode(),
+							    _func(func) {}
+				Variant evaluate() const
+				{
 					return _func(leftOperand()->evaluate(), rightOperand()->evaluate());
 				}
 				Func _func;
@@ -153,17 +178,20 @@ namespace XELUtils
 		Func _func;
 	};
 
-	template<typename Func>
-	class CreatorForUnaryOperator :public UnaryOperatorCreator {
+	template <typename Func>
+	class CreatorForUnaryOperator : public UnaryOperatorCreator
+	{
 	public:
-		CreatorForUnaryOperator(Func func) :_func(func) {}
-		UnaryOperatorNode* create() const {
-			class Operator :public UnaryOperatorNode {
+		CreatorForUnaryOperator(Func func) : _func(func) {}
+		UnaryOperatorNode *create() const
+		{
+			class Operator : public UnaryOperatorNode
+			{
 			public:
-				Operator(Func func) :
-					UnaryOperatorNode(),
-					_func(func) {}
-				Variant evaluate() const {
+				Operator(Func func) : UnaryOperatorNode(),
+							    _func(func) {}
+				Variant evaluate() const
+				{
 					return _func(operand()->evaluate());
 				}
 				Func _func;
@@ -173,22 +201,27 @@ namespace XELUtils
 		Func _func;
 	};
 
-	template<typename Func>
-	static BinaryOperatorCreator* creatorForBinaryOperator(Func func, int priority, Assoc assoc = LeftToRight) {
+	template <typename Func>
+	static BinaryOperatorCreator *creatorForBinaryOperator(Func func, int priority, Assoc assoc = LeftToRight)
+	{
 
-		return new CreatorForBinaryOperator<Func>(func, priority, assoc);//BUG Memory leak
+		return new CreatorForBinaryOperator<Func>(func, priority, assoc); // BUG Memory leak
 	}
-	template<typename Func>
-	static UnaryOperatorCreator* creatorForUnaryOperator(Func func) {
+	template <typename Func>
+	static UnaryOperatorCreator *creatorForUnaryOperator(Func func)
+	{
 
-		return new CreatorForUnaryOperator<Func>(func);//BUG Memory leak
+		return new CreatorForUnaryOperator<Func>(func); // BUG Memory leak
 	}
-	template<typename R, typename... args>
-	static FunctionCreator* creatorForFunction(const std::function<R(args...)>& func) {
-		return new CreatorForFunction<R, args...>(func);;//BUG Memory leak
+	template <typename R, typename... args>
+	static FunctionCreator *creatorForFunction(const std::function<R(args...)> &func)
+	{
+		return new CreatorForFunction<R, args...>(func);
+		; // BUG Memory leak
 	}
-	template<typename Func>
-	static FunctionCreator* creatorForVariableParamFunction(Func func) {
+	template <typename Func>
+	static FunctionCreator *creatorForVariableParamFunction(Func func)
+	{
 		return new CreatorForVariableParamFunction<Func>(func);
 	}
 };
