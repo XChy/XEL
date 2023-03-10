@@ -33,4 +33,4 @@ typedef unsigned long long ulonglong;
 #define XEL_EXPORT DECL_IMPORT
 #endif
 
-#endif // FORMULAENGINE_GLOBAL_H
+#endif  // FORMULAENGINE_GLOBAL_H

@@ -8,29 +8,33 @@
 
 class XEL_EXPORT XELContext
 {
-public:
-	XELContext();
-	XString operatorChars() const;
-	void setOperatorChars(const XString& operatorChars);
+   public:
+    XELContext();
+    ~XELContext();
+    XString operatorChars() const;
+    void setOperatorChars(const XString& operatorChars);
 
-	XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable();
-	void setUnaryOperatorTable(const XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable);
+    XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable();
+    void setUnaryOperatorTable(
+        const XHashMap<XString, UnaryOperatorCreator*>& unaryOperatorTable);
 
-	XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable();
-	void setBinaryOperatorTable(const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable);
+    XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable();
+    void setBinaryOperatorTable(
+        const XHashMap<XString, BinaryOperatorCreator*>& binaryOperatorTable);
 
-	XHashMap<XString, FunctionCreator*>& functionTable();
-	void setFunctionTable(const XHashMap<XString, FunctionCreator*>& functionTable);
+    XHashMap<XString, FunctionCreator*>& functionTable();
+    void setFunctionTable(
+        const XHashMap<XString, FunctionCreator*>& functionTable);
 
-	XHashMap<XString, Variant>& variableTable();
-	void setVariableTable(const XHashMap<XString, Variant>& variableTable);
+    XHashMap<XString, Variant>& variableTable();
+    void setVariableTable(const XHashMap<XString, Variant>& variableTable);
 
-private:
-	XHashMap<XString, Variant> _variableTable;
-	XHashMap<XString, UnaryOperatorCreator*> _unaryOperatorTable;
-	XHashMap<XString, BinaryOperatorCreator*> _binaryOperatorTable;
-	XHashMap<XString, FunctionCreator*> _functionTable;
-	XString _operatorChars;
+   private:
+    XHashMap<XString, Variant> _variableTable;
+    XHashMap<XString, UnaryOperatorCreator*> _unaryOperatorTable;
+    XHashMap<XString, BinaryOperatorCreator*> _binaryOperatorTable;
+    XHashMap<XString, FunctionCreator*> _functionTable;
+    XString _operatorChars;
 };
 
-#endif // FORMULACONTEXT_H
+#endif  // FORMULACONTEXT_H

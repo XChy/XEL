@@ -11,7 +11,7 @@ typedef std::vector<Token>::const_iterator TokenIt;
 class XEL_EXPORT Parser
 {
 public:
-	Parser();
+  Parser();
 	virtual EvaluateNode* parse(const std::vector<Token>& tokenList);
 
 	XELContext* context() const;
