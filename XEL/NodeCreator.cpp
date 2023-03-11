@@ -3,6 +3,8 @@
 #include <exception>
 #include <type_traits>
 
+using namespace XEL;
+
 UnaryOperatorCreator::UnaryOperatorCreator() {}
 
 BinaryOperatorCreator::BinaryOperatorCreator()

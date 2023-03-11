@@ -3,6 +3,8 @@
 #include <cmath>
 #include "XEL/EvaluateNode.h"
 
+using namespace XEL;
+
 XELEngine::XELEngine()
     : _context(new XELContext), _parser(new Parser), _tokenizer(new Tokenizer)
 {

@@ -6,13 +6,14 @@
 
 class XEL_EXPORT XELError
 {
-public:
-	XELError(XString errorString);
-	XString errorString() const;
+   public:
+    XELError(XString errorString);
+    XString errorString() const;
 
-	void setErrorString(const XString& errorString);
-private:
-	XString _errorString;
+    void setErrorString(const XString& errorString);
+
+   private:
+    XString _errorString;
 };
 
-#endif // FORMULAERROR_H
+#endif  // FORMULAERROR_H

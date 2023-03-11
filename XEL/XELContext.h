@@ -5,6 +5,7 @@
 #include <XEL/XHashMap.h>
 #include <XEL/NodeCreator.h>
 #include <XEL/Variant.h>
+namespace XEL {
 
 class XEL_EXPORT XELContext
 {
@@ -37,4 +38,5 @@ class XEL_EXPORT XELContext
     XString _operatorChars;
 };
 
+}  // namespace XEL
 #endif  // FORMULACONTEXT_H

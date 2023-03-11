@@ -1,5 +1,7 @@
 #include <XEL/XELContainerObject.h>
 
+using namespace XEL;
+
 Variant XVectorObject::invoke(const XString& funcName,
                               const std::vector<Variant>& params,
                               const XELObjectWrapper& thisWrapper)

@@ -114,3 +114,4 @@ CMakeFiles/XEL_TEST.dir/progress.make
 XEL_TEST
 CMakeFiles/XEL_TEST.dir
 compile_flags.txt
+.cache/clangd/index

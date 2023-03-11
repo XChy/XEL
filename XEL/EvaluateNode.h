@@ -5,9 +5,11 @@
 #include <XEL/XHashMap.h>
 #include <XEL/Variant.h>
 
+namespace XEL {
+
 class XEL_EXPORT EvaluateNode
 {
-  public:
+   public:
     EvaluateNode();
     virtual Variant evaluate() const = 0;
     virtual bool isVariable() const = 0;
@@ -16,7 +18,7 @@ class XEL_EXPORT EvaluateNode
 
 class XEL_EXPORT ValueNode : public EvaluateNode
 {
-  public:
+   public:
     ValueNode();
     virtual Variant evaluate() const;
     virtual bool isVariable() const { return false; }
@@ -25,13 +27,13 @@ class XEL_EXPORT ValueNode : public EvaluateNode
 
     void setValue(const Variant &value);
 
-  private:
+   private:
     Variant _value;
 };
 
 class XEL_EXPORT VariableNode : public EvaluateNode
 {
-  public:
+   public:
     VariableNode();
     virtual Variant evaluate() const;
     virtual bool isVariable() const { return true; }
@@ -42,14 +44,14 @@ class XEL_EXPORT VariableNode : public EvaluateNode
     void setVariableName(const XString &variableName);
     void setVariableTable(XHashMap<XString, Variant> *variableTable);
 
-  private:
+   private:
     XString mVariableName;
     XHashMap<XString, Variant> *_variableTable;
 };
 
 class XEL_EXPORT UnaryOperatorNode : public EvaluateNode
 {
-  public:
+   public:
     UnaryOperatorNode();
     virtual Variant evaluate() const = 0;
     virtual bool isVariable() const { return false; }
@@ -59,13 +61,13 @@ class XEL_EXPORT UnaryOperatorNode : public EvaluateNode
 
     virtual ~UnaryOperatorNode();
 
-  private:
+   private:
     EvaluateNode *_operand;
 };
 
 class XEL_EXPORT BinaryOperatorNode : public EvaluateNode
 {
-  public:
+   public:
     BinaryOperatorNode();
     virtual Variant evaluate() const = 0;
     virtual bool isVariable() const { return false; }
@@ -78,14 +80,14 @@ class XEL_EXPORT BinaryOperatorNode : public EvaluateNode
 
     virtual ~BinaryOperatorNode();
 
-  private:
+   private:
     EvaluateNode *_leftOperand;
     EvaluateNode *_rightOperand;
 };
 
 class XEL_EXPORT FunctionNode : public EvaluateNode
 {
-  public:
+   public:
     FunctionNode();
     virtual Variant evaluate() const = 0;
     virtual bool isVariable() const { return false; }
@@ -95,13 +97,13 @@ class XEL_EXPORT FunctionNode : public EvaluateNode
 
     virtual ~FunctionNode();
 
-  private:
+   private:
     std::vector<EvaluateNode *> _parameters;
 };
 
 class XEL_EXPORT MemberNode : public EvaluateNode
 {
-  public:
+   public:
     MemberNode();
     virtual Variant evaluate() const;
     virtual bool isVariable() const { return true; }
@@ -114,14 +116,14 @@ class XEL_EXPORT MemberNode : public EvaluateNode
 
     virtual ~MemberNode();
 
-  private:
+   private:
     EvaluateNode *_owner;
     XString _memberName;
 };
 
 class XEL_EXPORT MemberFunctionNode : public EvaluateNode
 {
-  public:
+   public:
     MemberFunctionNode();
     virtual Variant evaluate() const;
     virtual bool isVariable() const { return false; }
@@ -137,10 +139,12 @@ class XEL_EXPORT MemberFunctionNode : public EvaluateNode
 
     virtual ~MemberFunctionNode();
 
-  private:
+   private:
     EvaluateNode *_owner;
     XString _memberFunctionName;
     std::vector<EvaluateNode *> _parameters;
 };
 
-#endif // EVALUATENODE_H
+}  // namespace XEL
+
+#endif  // EVALUATENODE_H

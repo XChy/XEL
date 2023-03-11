@@ -6,6 +6,8 @@
 #include <XEL/XString.h>
 #include "XEL/SharedData.h"
 
+namespace XEL {
+
 class Variant;
 class XELObjectWrapper;
 
@@ -74,4 +76,6 @@ class XEL_EXPORT MappedVariable : public XELObject
     XHashMap<XString, Variant>* _map;
     XString _variableName;
 };
+
+}  // namespace XEL
 #endif

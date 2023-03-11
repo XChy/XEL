@@ -9,7 +9,7 @@ using std::string;
 
 int main(int argc, char **argv)
 {
-    XELEngine engine;
+    XEL::XELEngine engine;
     string str;
     if (argc < 2) {
         cout << "No argument\n";

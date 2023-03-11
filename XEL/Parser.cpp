@@ -1,10 +1,10 @@
 #include "Parser.h"
-#include <atomic>
-#include <cstdio>
 #include <type_traits>
 #include <vector>
 #include "XEL/EvaluateNode.h"
 #include "XEL/NodeCreator.h"
+
+using namespace XEL;
 
 Parser::Parser() : _context(nullptr) {}
 

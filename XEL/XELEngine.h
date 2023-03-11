@@ -11,6 +11,8 @@
 #include <XEL/XELUtils.h>
 #include <XEL/Expression.h>
 
+namespace XEL {
+
 class XEL_EXPORT XELEngine
 {
    public:
@@ -20,7 +22,7 @@ class XEL_EXPORT XELEngine
     void setUnaryOperator(const XString& name, Func func)
     {
         _context->unaryOperatorTable()[name] =
-            XELUtils::creatorForUnaryOperator<Func>(func);
+            creatorForUnaryOperator<Func>(func);
     }
 
     template <typename Func>
@@ -28,21 +30,20 @@ class XEL_EXPORT XELEngine
                            Assoc assoc = LeftToRight)
     {
         _context->binaryOperatorTable()[name] =
-            XELUtils::creatorForBinaryOperator<Func>(func, priority, assoc);
+            creatorForBinaryOperator<Func>(func, priority, assoc);
     }
 
     template <typename R, typename... args>
     void setFunction(const XString& name, const std::function<R(args...)>& func)
     {
-        _context->functionTable()[name] =
-            XELUtils::creatorForFunction<R, args...>(func);
+        _context->functionTable()[name] = creatorForFunction<R, args...>(func);
     }
 
     template <typename Func>
     void setVariableParamFunction(const XString& name, Func _func)
     {
         _context->functionTable()[name] =
-            XELUtils::creatorForVariableParamFunction<Func>(_func);
+            creatorForVariableParamFunction<Func>(_func);
     }
 
     Expression compile(const XString& expr);
@@ -66,4 +67,5 @@ class XEL_EXPORT XELEngine
     std::shared_ptr<Parser> _parser;
 };
 
+}  // namespace XEL
 #endif  // FORMULAENGINE_H

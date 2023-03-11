@@ -1,5 +1,10 @@
+#ifndef EXPRESSION_H_VKZODWSA
+#define EXPRESSION_H_VKZODWSA
+
 #include "XEL/EvaluateNode.h"
 #include "XEL/Variant.h"
+
+namespace XEL {
 
 class Expression
 {
@@ -15,3 +20,7 @@ class Expression
    private:
     EvaluateNode* node;
 };
+
+}  // namespace XEL
+
+#endif /* end of include guard: EXPRESSION_H_VKZODWSA */

@@ -5,19 +5,26 @@
 #include <XEL/Token.h>
 #include <XEL/XELContext.h>
 
+namespace XEL {
+
 class XEL_EXPORT Tokenizer
 {
-public:
-	Tokenizer();
-	virtual std::vector<Token> analyze(const XString& expression) const;
+   public:
+    Tokenizer();
+    virtual std::vector<Token> analyze(const XString& expression) const;
 
-	XELContext* context() const;
-	void setContext(XELContext* context);
-private:
-	XELContext* _context;
-	void analyzeDecAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
-	void analyzeHexAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
-	void analyzeBinAndNext(XString::const_iterator& it, XString& value, std::vector<Token>& tokens) const;
+    XELContext* context() const;
+    void setContext(XELContext* context);
+
+   private:
+    XELContext* _context;
+    void analyzeDecAndNext(XString::const_iterator& it, XString& value,
+                           std::vector<Token>& tokens) const;
+    void analyzeHexAndNext(XString::const_iterator& it, XString& value,
+                           std::vector<Token>& tokens) const;
+    void analyzeBinAndNext(XString::const_iterator& it, XString& value,
+                           std::vector<Token>& tokens) const;
 };
 
-#endif // TOKENIZER_H
+}  // namespace XEL
+#endif  // TOKENIZER_H

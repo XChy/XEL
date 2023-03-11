@@ -1,5 +1,7 @@
 #include "XEL/Expression.h"
 
+using namespace XEL;
+
 Expression::Expression(EvaluateNode* node) : node(node) {}
 
 Expression::Expression(Expression&& other)

@@ -4,6 +4,8 @@
 #include <XEL/xel_global.h>
 #include <XEL/EvaluateNode.h>
 
+namespace XEL {
+
 class XEL_EXPORT UnaryOperatorCreator
 {
    public:
@@ -40,11 +42,12 @@ class XEL_EXPORT FunctionCreator
 {
    public:
     FunctionCreator(){};
-    virtual ~FunctionCreator() =default;
+    virtual ~FunctionCreator() = default;
     virtual FunctionNode *create() const = 0;
     virtual FunctionNode *create(int paramSize) const = 0;
     virtual bool isVariableParam() const = 0;
     virtual bool isSupportParamSize(int paramSize) const = 0;
 };
 
+}  // namespace XEL
 #endif  // NODECREATOR_H

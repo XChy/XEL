@@ -2,7 +2,6 @@
 #define SHAREDDATA_H
 
 #include <XEL/xel_global.h>
-#include <atomic>
 
 class XEL_EXPORT XRefCount
 {

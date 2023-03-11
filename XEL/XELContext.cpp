@@ -1,5 +1,7 @@
 #include "XELContext.h"
 
+using namespace XEL;
+
 XELContext::XELContext() : _operatorChars("+-*/^><=|&%!~$#@?") {}
 
 XELContext::~XELContext()
@@ -10,7 +12,7 @@ XELContext::~XELContext()
     for (auto element : binaryOperatorTable()) {
         delete element.second;
     }
-for (auto element : functionTable()) {
+    for (auto element : functionTable()) {
         delete element.second;
     }
 }

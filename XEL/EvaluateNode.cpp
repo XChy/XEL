@@ -1,6 +1,8 @@
 #include "EvaluateNode.h"
 #include <vector>
 
+using namespace XEL;
+
 EvaluateNode::EvaluateNode() {}
 
 EvaluateNode::~EvaluateNode() {}
