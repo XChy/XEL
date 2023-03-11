@@ -192,6 +192,7 @@ XString& XString::append(XChar xc)
         char16_t* oldData = d.data()->str;
         detach();
         d.ref->unref();
+        d.ref = new XRefCount;
         d.mData = new StringData((totalSize + 1) * 2);
         d.data()->size = totalSize;
         xstrcpy(d.data()->str, oldData, oldSize);

@@ -2,6 +2,7 @@
 #define XELUTILS_H
 
 #include <functional>
+#include "XEL/XELObject.h"
 #include <XEL/xel_global.h>
 #include <XEL/XELContext.h>
 
