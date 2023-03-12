@@ -1,6 +1,7 @@
 #ifndef EXPRESSION_H_VKZODWSA
 #define EXPRESSION_H_VKZODWSA
 
+#include <memory>
 #include "XEL/EvaluateNode.h"
 #include "XEL/Variant.h"
 
@@ -12,13 +13,12 @@ class Expression
 
    public:
     Expression(EvaluateNode* node);
-    Expression(Expression&& other);
-    ~Expression();
+    Expression(const Expression& expr);
 
     Variant evaluate();
 
    private:
-    EvaluateNode* node;
+    std::shared_ptr<EvaluateNode> node;
 };
 
 }  // namespace XEL

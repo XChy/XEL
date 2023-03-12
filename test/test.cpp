@@ -1,6 +1,7 @@
 #include <XEL/XELEngine.h>
 #include <functional>
 #include <iostream>
+#include "XEL/Expression.h"
 
 using std::cin;
 using std::cout;
@@ -18,6 +19,7 @@ int main(int argc, char **argv)
     try {
         str = string(argv[1]);
         auto expr = engine.compile(XString::fromStdString(str));
+        XEL::Expression expr1 = expr;
         cout << expr.evaluate().toString().toStdString() << endl;
     } catch (const XELError &error) {
         cout << error.errorString().toStdString() << endl;
